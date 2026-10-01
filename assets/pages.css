@@ -188,6 +188,24 @@ main:focus,main:focus-visible{outline:0}
 }
 
 /* =====================================================
+   SOLUTION BLUEPRINTS
+===================================================== */
+.blueprint-list{gap:1.4rem}
+.blueprint-card{scroll-margin-top:100px}
+.blueprint-chips{display:flex;flex-wrap:wrap;gap:.55rem;margin-bottom:1.15rem}
+.blueprint-chip{
+  display:inline-flex;align-items:center;padding:.42rem .75rem;border:1px solid var(--line);border-radius:999px;
+  background:var(--card);color:var(--ink);font-size:.78rem;font-weight:600;
+}
+.blueprint-flow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin:1.2rem 0 1.4rem}
+.blueprint-flow section{padding:1rem;border:1px solid var(--line);border-radius:16px;background:var(--card)}
+.blueprint-flow h3{font-size:1rem;margin:0 0 .45rem}
+.blueprint-flow p{font-size:.9rem;margin:0}
+.doc-card ul.blueprint-build-list{grid-template-columns:repeat(2,minmax(0,1fr));padding-left:1.2rem}
+.blueprint-note{padding:.85rem 1rem;border-left:3px solid var(--cyan);border-radius:0 12px 12px 0;background:var(--card);color:var(--ink)}
+.blueprint-note strong{font-weight:700}
+
+/* =====================================================
    404 ERROR PAGE
 ===================================================== */
 .err-wrap{
@@ -232,6 +250,8 @@ main:focus,main:focus-visible{outline:0}
 @media (max-width:700px){
   .nav-actions .btn-glass{display:none}
   .err-cta .btn{width:100%}
+  .blueprint-flow{grid-template-columns:1fr}
+  .doc-card ul.blueprint-build-list{grid-template-columns:1fr}
   .f-bottom{flex-direction:column;text-align:center}
   .f-bottom nav{justify-content:center}
 }

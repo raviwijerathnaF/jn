@@ -4,8 +4,8 @@ OmniFlow Digital — WCAG 2.1 AA contrast verifier
 =================================================
 
 Parses the CSS theme tokens from `index.html` and `assets/pages.css` and
-verifies that every text, link, badge, chip, error message, and button
-combination meets or exceeds the WCAG 2.1 AA 4.5:1 contrast ratio in both
+verifies text, link, badge, chip, error message, button, and every `.gt`
+gradient color stop against both page surfaces in each theme, meeting the WCAG 2.1 AA 4.5:1 contrast ratio in both
 dark (`:root`) and light (`[data-theme="light"]`) themes.
 
 Usage (from the repository root):
@@ -103,6 +103,12 @@ def check_theme_vars(file_label, theme_name, v):
     pairs.append((".tag (--cyan on chip)", v["cyan"], tag_cyan_bg))
     pairs.append((".tag.g / .vchip (--green on chip)", v["green"], tag_green_bg))
     pairs.append((".form-fail (--err on alert bg)", v["err"], fail_bg))
+
+    # Gradient text (.gt) must remain legible at every configured color stop
+    # against both page surfaces in each theme; browsers interpolate between stops.
+    for idx, stop in enumerate(extract_hex_colors(v["grad"]), 1):
+        pairs.append((f".gt gradient stop #{idx} ({stop}) on --bg", stop, bg))
+        pairs.append((f".gt gradient stop #{idx} ({stop}) on --bg-2", stop, bg2))
 
     btn_fg = v["btn-fg"]
     for idx, stop in enumerate(extract_hex_colors(v["btn-bg"]), 1):
