@@ -1151,6 +1151,67 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
   .reveal{opacity:1}
   .chart .ln{stroke-dashoffset:0}.chart .ar{opacity:1}
 }
+
+/* =====================================================
+   LIGHT-THEME COLOUR (Round 2)
+   Every rule is prefixed [data-theme="light"] so the dark theme is untouched.
+   Contrast for these tints is verified by tools/check-contrast.py.
+===================================================== */
+[data-theme="light"]{--bg:#eaf3fb; --bg-2:#fbfdff; --wash:#e3effa; --line:#cfe0f0; --aurora:.35;
+  /* darker cyan for text/icons sitting on tinted pills & chips (>= 4.5:1 on every light tint) */
+  --cyan-ink:#07607d;}
+
+/* Cards: soft white → ice-blue gradient with a visible blue-tinted edge */
+[data-theme="light"] .card,
+[data-theme="light"] .case-card,
+[data-theme="light"] .vs-card,
+[data-theme="light"] .fw-card,
+[data-theme="light"] .seo-card,
+[data-theme="light"] .next-step,
+[data-theme="light"] .g-item,
+[data-theme="light"] .kpi,
+[data-theme="light"] .c-card,
+[data-theme="light"] .form-card,
+[data-theme="light"] .p-tier:not(.featured){background:linear-gradient(180deg,#ffffff,#f1f8ff)}
+/* border tint only at rest so each component's own :hover border colour still wins */
+[data-theme="light"] .card:not(:hover),
+[data-theme="light"] .case-card:not(:hover),
+[data-theme="light"] .vs-card:not(.before):not(.after):not(:hover),
+[data-theme="light"] .fw-card:not(:hover),
+[data-theme="light"] .seo-card:not(:hover),
+[data-theme="light"] .next-step,
+[data-theme="light"] .g-item:not(:hover),
+[data-theme="light"] .kpi,
+[data-theme="light"] .c-card:not(:hover),
+[data-theme="light"] .form-card,
+[data-theme="light"] .p-tier:not(.featured):not(:hover){border-color:#d5e6f6}
+
+/* Section bands */
+[data-theme="light"] #seo.sec.bg2{background:linear-gradient(180deg,#e3f4fb,var(--bg-2) 45%)}
+[data-theme="light"] #pricing.sec.bg2{background:linear-gradient(180deg,#e8f5e4,var(--bg-2) 45%)}
+
+/* Kicker pills */
+[data-theme="light"] .kicker{color:var(--cyan-ink);background:rgba(14,107,168,.09);border:1px solid rgba(14,107,168,.18);padding:.38rem .9rem;border-radius:999px}
+[data-theme="light"] .kicker::before,
+[data-theme="light"] .kicker::after{display:none}
+
+/* Per-service palette: web blue · social green · whatsapp cyan · pos navy · gbp green */
+[data-theme="light"] #web{--a:var(--blue);--a-soft:rgba(14,107,168,.10);--a-line:rgba(14,107,168,.28)}
+[data-theme="light"] #social{--a:var(--green);--a-soft:rgba(58,118,8,.10);--a-line:rgba(58,118,8,.28)}
+[data-theme="light"] #whatsapp{--a:var(--cyan-ink);--a-soft:rgba(10,114,150,.10);--a-line:rgba(10,114,150,.28)}
+[data-theme="light"] #pos{--a:var(--navy);--a-soft:rgba(8,58,99,.09);--a-line:rgba(8,58,99,.28)}
+[data-theme="light"] #gbp{--a:var(--green);--a-soft:rgba(58,118,8,.10);--a-line:rgba(58,118,8,.28)}
+[data-theme="light"] .g-item:nth-child(3) .g-ico,
+[data-theme="light"] .seo-ico{color:var(--cyan-ink)}
+[data-theme="light"] .card-icon{color:var(--a,var(--cyan));background:var(--a-soft,rgba(10,114,150,.10));border-color:var(--a-line,var(--line))}
+[data-theme="light"] .card-num{-webkit-text-stroke:1.6px var(--a,var(--blue))}
+[data-theme="light"] .vis{background:linear-gradient(160deg,var(--a-soft,rgba(14,107,168,.10)),rgba(255,255,255,.55));border-color:var(--a-line,var(--line))}
+
+/* Comparison table header, CTA band and idle filter pills */
+[data-theme="light"] .comp-table thead th{background:#e3effa}
+[data-theme="light"] .cta-in{background:linear-gradient(135deg,#eaf3fb,#e8f5e4)}
+[data-theme="light"] .pill:not(.on){background:#eef6fd;border-color:#c9dff0}
+[data-theme="light"] .pill:not(.on):hover{border-color:var(--cyan)}
 </style>
 
 <!-- =====================================================================
@@ -1366,6 +1427,7 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
             <a href="#whatsapp"><span class="mi"><svg class="ic"><use href="#i-chat"/></svg></span><span><b>WhatsApp Automation</b><small>Reply in seconds</small></span></a>
             <a href="#pos"><span class="mi"><svg class="ic"><use href="#i-pos"/></svg></span><span><b>POS &amp; Inventory</b><small>Real-time control</small></span></a>
             <a href="#gbp"><span class="mi"><svg class="ic"><use href="#i-pin"/></svg></span><span><b>Google Business Profile</b><small>Win local search</small></span></a>
+            <a href="#seo"><span class="mi"><svg class="ic"><use href="#i-chart"/></svg></span><span><b>Local SEO</b><small>Get found on Google</small></span></a>
           </div>
         </li>
         <li><a href="#work">Work</a></li>
@@ -2362,6 +2424,7 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
           <li><a href="#whatsapp">WhatsApp Automation</a></li>
           <li><a href="#pos">POS &amp; Inventory</a></li>
           <li><a href="#gbp">Google Business Profile</a></li>
+          <li><a href="#seo">Local SEO</a></li>
         </ul>
       </div>
 
