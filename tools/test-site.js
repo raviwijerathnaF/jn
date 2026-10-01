@@ -139,18 +139,69 @@ check('robots.txt and sitemap.xml are properly configured', () => {
 });
 
 /* 3. JSON-LD structured data */
-check('index.html JSON-LD parses cleanly and FAQPage matches the 6 DOM FAQs', () => {
+check('index.html JSON-LD parses cleanly and FAQPage matches the DOM FAQs (count and order)', () => {
   const m = indexHtml.match(/<script type="application\/ld\+json">\s*([\s\S]*?)\s*<\/script>/);
   assert(m, 'Missing JSON-LD script block');
   const data = JSON.parse(m[1]);
   assert(Array.isArray(data['@graph']) && data['@graph'].length === 4, 'Expected 4 nodes in @graph');
   const faqNode = data['@graph'].find(n => n['@type'] === 'FAQPage');
-  assert(faqNode && faqNode.mainEntity.length === 6, 'Expected 6 questions in FAQPage JSON-LD');
+  assert(faqNode && Array.isArray(faqNode.mainEntity), 'FAQPage node with mainEntity array is missing');
   const domSummaries = [...indexHtml.matchAll(/<summary>([^<]+)<span/g)].map(x => x[1].trim());
-  assert(domSummaries.length === 6, `Expected 6 <summary> elements, got ${domSummaries.length}`);
+  assert(domSummaries.length > 0, 'No <summary> FAQ elements found in index.html');
+  assert(faqNode.mainEntity.length === domSummaries.length,
+    `FAQPage schema has ${faqNode.mainEntity.length} questions but the DOM has ${domSummaries.length} <summary> elements`);
   faqNode.mainEntity.forEach((q, idx) => {
     assert(q.name === domSummaries[idx], `FAQ #${idx + 1} mismatch: "${q.name}" vs "${domSummaries[idx]}"`);
   });
+  // Answers must match too (schema text vs. visible answer)
+  const domAnswers = [...indexHtml.matchAll(/<div class="ans">([\s\S]*?)<\/div>/g)].map(x => x[1].trim().replace(/&amp;/g, '&'));
+  assert(domAnswers.length === domSummaries.length, 'Each FAQ <summary> needs exactly one .ans answer');
+  faqNode.mainEntity.forEach((q, idx) => {
+    assert(q.acceptedAnswer.text.replace(/&amp;/g, '&') === domAnswers[idx], `FAQ #${idx + 1} answer differs between JSON-LD and DOM`);
+  });
+});
+
+check('FAQ #6 answers "Will my website show up on Google?" honestly (no #1 promise) and contracts is #7', () => {
+  const domSummaries = [...indexHtml.matchAll(/<summary>([^<]+)<span/g)].map(x => x[1].trim());
+  assert(domSummaries[5] === 'Will my website show up on Google?', 'FAQ #6 should be "Will my website show up on Google?"');
+  assert(domSummaries[6] === 'Are there long-term contracts?', 'FAQ #7 should be "Are there long-term contracts?"');
+  assert(/Nobody honest can promise a #1 position/.test(indexHtml), 'FAQ #6 answer must disclaim any #1 promise');
+});
+
+check('Local SEO section #seo sits between #services and #work with 3 cards and a preselecting CTA', () => {
+  const iServices = indexHtml.indexOf('id="services"');
+  const iSeo = indexHtml.indexOf('<section class="sec bg2 glow" id="seo">');
+  const iWork = indexHtml.indexOf('id="work"');
+  assert(iServices > -1 && iSeo > iServices && iWork > iSeo, '#seo must come after #services and before #work');
+  const block = indexHtml.slice(iSeo, indexHtml.indexOf('</section>', iSeo));
+  assert((block.match(/<article class="seo-card/g) || []).length === 3, '#seo needs exactly 3 .seo-card articles');
+  assert(block.includes('class="seo-grid"'), '#seo needs a .seo-grid');
+  assert(/<a href="#contact"[^>]*data-interest="Google Business Profile Optimization"[^>]*>Check My Google Visibility/.test(block), '#seo CTA must point to #contact with the GBP data-interest');
+  assert(!/#1 on Google|number one|guarantee(d)? (rank|top)|top of google/i.test(block), '#seo must not promise rankings');
+  assert(!/\d+\s*%/.test(block), '#seo must not contain percentages');
+  assert(/@media \(max-width:900px\)\{\.seo-grid\{grid-template-columns:1fr\}\}/.test(indexHtml), 'Missing 900px single-column rule for .seo-grid');
+});
+
+check('Light-theme depth tokens, brand bars and readable .fw-num stroke are present', () => {
+  assert(/:root\{[^}]*--wash:#0a2740;/.test(indexHtml), 'Dark --wash token missing');
+  assert(/\[data-theme="light"\]\{[^}]*--wash:#e9f3fb;/.test(indexHtml), 'Light --wash token missing');
+  assert(indexHtml.includes('.sec.bg2{background:linear-gradient(180deg,var(--wash),var(--bg-2) 42%)}'), '.sec.bg2 wash gradient missing');
+  assert(indexHtml.includes('.section-head h2::after{'), '.section-head h2::after accent missing');
+  assert(/\.fw-card::before\{[^}]*height:4px[^}]*opacity:\.55/.test(indexHtml), '.fw-card::before 4px bar missing');
+  assert(/\.p-tier::before\{[^}]*height:4px[^}]*opacity:\.55/.test(indexHtml), '.p-tier::before 4px bar missing');
+  assert(/\.fw-num\{[^}]*-webkit-text-stroke:1\.6px var\(--text\)/.test(indexHtml), '.fw-num stroke must be 1.6px var(--text)');
+  assert(indexHtml.includes('@supports not (-webkit-text-stroke:1px #000){.fw-num{color:var(--muted)}}'), '.fw-num @supports fallback missing');
+  assert(indexHtml.includes('.step .num{border-color:rgba(14,107,168,.32)}'), '.step .num border tint missing');
+  for (let i = 1; i <= 4; i++) assert(indexHtml.includes(`.g-item:nth-child(${i}) .g-ico`), `.g-item:nth-child(${i}) .g-ico tint missing`);
+});
+
+check('case-studies.html has a BreadcrumbList JSON-LD (Home → Solution Blueprints) before </body>', () => {
+  const m = caseStudiesHtml.match(/<script type="application\/ld\+json">\s*([\s\S]*?)\s*<\/script>\s*<\/body>/);
+  assert(m, 'BreadcrumbList JSON-LD must sit right before </body>');
+  const d = JSON.parse(m[1]);
+  assert(d['@type'] === 'BreadcrumbList' && d.itemListElement.length === 2, 'BreadcrumbList needs 2 items');
+  assert(d.itemListElement[0].name === 'Home' && d.itemListElement[0].item === 'https://yourdomain.com/', 'Breadcrumb #1 should be Home');
+  assert(d.itemListElement[1].name === 'Solution Blueprints' && d.itemListElement[1].item === 'https://yourdomain.com/case-studies.html', 'Breadcrumb #2 should be Solution Blueprints');
 });
 
 /* 4. Internal links, anchors & SVG symbols */

@@ -110,6 +110,36 @@ def check_theme_vars(file_label, theme_name, v):
         pairs.append((f".gt gradient stop #{idx} ({stop}) on --bg", stop, bg))
         pairs.append((f".gt gradient stop #{idx} ({stop}) on --bg-2", stop, bg2))
 
+    # Round 2: sections use a --wash -> --bg-2 gradient (.sec.bg2). Text must stay
+    # legible on the wash end (darkest/most-tinted) as well as on --bg-2.
+    if "wash" in v:
+        wash = v["wash"]
+        card_on_wash = resolve_card_bg(v["card"], wash)
+        for tok in ("ink", "text", "muted", "cyan", "green", "err"):
+            pairs.append((f"--{tok} on --wash (.sec.bg2 gradient start)", v[tok], wash))
+            pairs.append((f"--{tok} on --card(--wash)", v[tok], card_on_wash))
+        pairs.append((".tag (--cyan on chip over --wash)", v["cyan"], blend_rgba_on_hex((34, 198, 232, 0.10), card_on_wash)))
+        pairs.append((".tag.g / .vchip (--green on chip over --wash)", v["green"], blend_rgba_on_hex((155, 212, 74, 0.10), card_on_wash)))
+
+    # .fw-num outlined numerals: stroke is var(--text) (was var(--line) = 1.26:1 in light theme),
+    # with a var(--muted) solid-colour fallback under @supports not (-webkit-text-stroke).
+    if "wash" in v:
+        for surf_name, surf in (("--card(--bg-2)", card_on_bg2), ("--card(--wash)", card_on_wash)):
+            pairs.append((f".fw-num stroke (--text on {surf_name})", v["text"], surf))
+            pairs.append((f".fw-num @supports fallback (--muted on {surf_name})", v["muted"], surf))
+
+        # Round 2 tinted icon chips (.g-ico 1-4 in the guarantee strip, .seo-ico) over the card surface.
+        # Colours mirror the CSS in index.html; the tint alpha is blended on --card(--bg).
+        if v["bg"].lower() == "#04172a":      # dark theme
+            ico = [("blue", "#5eb3ea", (14, 107, 168, .22)), ("green", v["green"], (155, 212, 74, .12)),
+                   ("cyan", v["cyan"], (34, 198, 232, .12)), ("navy", "#8fb8dc", (8, 58, 99, .45))]
+        else:                                  # light theme
+            ico = [("blue", v["blue"], (14, 107, 168, .10)), ("green", v["green"], (58, 118, 8, .10)),
+                   ("cyan", v["cyan"], (10, 114, 150, .10)), ("navy", v["navy"], (8, 58, 99, .09))]
+        for name, fg, rgba in ico:
+            pairs.append((f".g-ico {name} tint ({fg} on chip over --card(--bg))", fg, blend_rgba_on_hex(rgba, card_on_bg)))
+        pairs.append((".seo-ico (--cyan on chip over --card(--bg-2))", v["cyan"], tag_cyan_bg))
+
     btn_fg = v["btn-fg"]
     for idx, stop in enumerate(extract_hex_colors(v["btn-bg"]), 1):
         pairs.append((f".btn-primary stop #{idx} ({stop})", btn_fg, stop))
