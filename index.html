@@ -446,6 +446,59 @@ main:focus,main:focus-visible{outline:0}
 .g-item b{display:block;font-family:'Poppins',sans-serif;font-size:.86rem;color:var(--ink);margin-bottom:.15rem}
 .g-item small{display:block;font-size:.77rem;color:var(--muted);line-height:1.4}
 
+/* ---------- Trust Proof Bar (#proof) ---------- */
+.proof-bar{
+  position:relative;z-index:2;margin-top:1.1rem;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:.85rem;
+  padding:1rem 1.1rem;border-radius:18px;background:var(--card);border:1px solid var(--line);
+  backdrop-filter:blur(10px);
+}
+.proof-item{display:flex;flex-direction:column;align-items:center;text-align:center;gap:.25rem;padding:.5rem}
+.proof-item b{font-family:'Poppins',sans-serif;font-size:1.6rem;font-weight:800;color:var(--ink);line-height:1}
+.proof-item span{font-size:.78rem;color:var(--muted)}
+.proof-item small{display:block;font-size:.7rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;font-weight:600}
+#proof .proof-item{border-right:1px solid var(--line)}
+#proof .proof-item:last-child{border-right:0}
+
+/* ---------- ROI Calculator (#roi) ---------- */
+.roi-wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:1.6rem;align-items:start}
+.roi-inputs{display:grid;gap:1rem;padding:1.6rem;border-radius:var(--radius);background:var(--card);border:1px solid var(--line)}
+.roi-field{display:grid;gap:.4rem}
+.roi-field label{font-family:'Poppins',sans-serif;font-weight:600;font-size:.84rem;color:var(--ink)}
+.roi-field input{width:100%;font:inherit;font-size:.95rem;color:var(--ink);padding:.85rem 1rem;border-radius:12px;background:var(--bg);border:1.5px solid var(--line);transition:border-color .3s}
+.roi-field input:focus{outline:0;border-color:var(--cyan);box-shadow:0 0 0 4px rgba(34,198,232,.16)}
+.roi-result{padding:1.6rem;border-radius:var(--radius);background:var(--bg-2);border:1px solid var(--line);display:grid;gap:.9rem}
+.roi-result h4{font-size:1.1rem}
+.roi-kpi{display:flex;justify-content:space-between;align-items:baseline;gap:.6rem;padding:.6rem 0;border-bottom:1px solid var(--line);font-size:.9rem}
+.roi-kpi:last-of-type{border-bottom:0}
+.roi-kpi b{font-family:'Poppins',sans-serif;color:var(--ink);font-size:1.05rem}
+.roi-note{font-size:.78rem;color:var(--muted);line-height:1.5}
+
+/* ---------- Calendar Panel (#calendarPanel) ---------- */
+#calendarPanel{scroll-margin-top:110px}
+.calendar-panel{
+  margin-top:2rem;border-radius:var(--radius);background:var(--card);border:1px solid var(--line);
+  overflow:hidden;position:relative;min-height:420px;
+}
+.cal-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem 1.2rem;border-bottom:1px solid var(--line);background:var(--bg)}
+.cal-head h3{font-size:1.1rem}
+.cal-head small{font-size:.8rem;color:var(--muted)}
+.cal-body{position:relative;display:grid;place-items:center;min-height:380px;background:var(--bg-2)}
+.cal-placeholder{display:grid;place-items:center;gap:1rem;padding:2rem;text-align:center}
+.cal-placeholder p{max-width:420px;font-size:.92rem}
+.cal-iframe{width:100%;height:700px;border:0;display:block;background:var(--bg-2)}
+.cal-iframe[hidden]{display:none!important}
+.cal-actions{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center}
+
+/* ---------- Pricing optional publish ---------- */
+.p-price{font-family:'Poppins',sans-serif;font-weight:800;font-size:1.9rem;color:var(--ink);margin:.3rem 0 .2rem;line-height:1.1}
+.p-price small{font-size:.85rem;font-weight:600;color:var(--muted)}
+.pricing-note{
+  margin-top:1.8rem;padding:1.2rem 1.4rem;border-radius:18px;background:var(--card);border:1px dashed var(--line);
+  font-size:.9rem;color:var(--text);line-height:1.6;
+}
+.pricing-note b{color:var(--ink)}
+
 /* =====================================================
    MARQUEE
 ===================================================== */
@@ -1031,6 +1084,8 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
   .stat:nth-child(2){border-right:0}
   .stat:nth-child(-n+2){border-bottom:1px solid var(--line)}
   .guarantees{grid-template-columns:repeat(2,1fr)}
+  .proof-bar{grid-template-columns:repeat(2,1fr)}
+  .roi-wrap{grid-template-columns:1fr}
   .work-grid,.price-grid{grid-template-columns:1fr}
   .demo-bar,.estimator{grid-template-columns:1fr}
   .fw{grid-template-columns:repeat(2,1fr)}
@@ -1069,7 +1124,9 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
   .chat-body{height:150px}
   .stage{padding-bottom:3.5rem}
   .stat{padding:1.1rem}
-  .guarantees,.est-checks{grid-template-columns:1fr}
+  .guarantees,.est-checks,.proof-bar{grid-template-columns:1fr}
+  #proof .proof-item{border-right:0;border-bottom:1px solid var(--line)}
+  #proof .proof-item:last-child{border-bottom:0}
   .fw{grid-template-columns:1fr}
   .cta-in{text-align:center;justify-content:center}
   .cta-in .btn,.bp-actions .btn{width:100%}
@@ -1424,6 +1481,13 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
         <span class="g-ico"><svg class="ic"><use href="#i-check"/></svg></span>
         <div><b>Transparent Scope</b><small>Written deliverables &amp; timelines agreed upfront — zero surprise add-on fees.</small></div>
       </div>
+    </div>
+
+    <div id="proof" class="proof-bar reveal" aria-label="Trusted proof points">
+      <div class="proof-item"><b data-count="50">0</b><span>+ Projects Delivered</span><small>Across retail, clinics &amp; hospitality</small></div>
+      <div class="proof-item"><b><span data-count="24">0</span>/7</b><span>Lead Response</span><small>Automated WhatsApp &amp; booking flow</small></div>
+      <div class="proof-item"><b><span data-count="98">0</span>%</b><span>Client Ownership</span><small>Code, domains &amp; docs yours day one</small></div>
+      <div class="proof-item"><b><span data-count="30">0</span>-Day</b><span>Free Support</span><small>Bug fixes &amp; staff training included</small></div>
     </div>
   </div>
 </section>
@@ -1856,10 +1920,11 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
 
     <div class="price-grid">
       <!-- Tier 1: Starter / MVP -->
-      <article class="p-tier reveal">
+      <article class="p-tier reveal" data-tier="starter">
         <span class="p-badge">Focused Scope</span>
         <h3>Starter / MVP</h3>
         <div class="p-scope">Single-Channel Launch</div>
+        <div class="p-price" data-pricing="starter" hidden><span class="gt">—</span></div>
         <p class="p-time">Typical delivery: 1–2 weeks · Milestone payments</p>
         <p class="p-desc">Ideal for fixing your single most urgent bottleneck quickly — such as a high-converting website or Google Maps + WhatsApp setup.</p>
         <ul class="p-list">
@@ -1869,14 +1934,15 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
           <li><svg class="ic"><use href="#i-check"/></svg><span>100% ownership of code, accounts &amp; handover docs</span></li>
           <li><svg class="ic"><use href="#i-check"/></svg><span>Free 30-day post-launch support &amp; walkthrough</span></li>
         </ul>
-        <a href="#contact" class="btn btn-glass btn-block" data-interest="Starter / MVP Package">Request Starter Scope <svg class="ic"><use href="#i-arrow"/></svg></a>
+        <a href="#contact" class="btn btn-glass btn-block" data-interest="Starter / MVP Package" data-booking-tier="starter">Request Starter Scope <svg class="ic"><use href="#i-arrow"/></svg></a>
       </article>
 
       <!-- Tier 2: Growth / Professional -->
-      <article class="p-tier featured reveal" style="--d:.1s">
+      <article class="p-tier featured reveal" style="--d:.1s" data-tier="growth">
         <span class="p-badge">Most Popular - Best Value Bundle</span>
         <h3>Growth / Professional</h3>
         <div class="p-scope">Multi-Channel Growth Engine</div>
+        <div class="p-price" data-pricing="growth" hidden><span class="gt">—</span></div>
         <p class="p-time">Typical delivery: 2–4 weeks · Milestone payments</p>
         <p class="p-desc">Our complete attraction + conversion bundle for ambitious SMEs ready to capture leads and reply 24/7 under one roof.</p>
         <ul class="p-list">
@@ -1886,14 +1952,15 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
           <li><svg class="ic"><use href="#i-check"/></svg><span>Social Media Management &amp; ROI-tracked Meta/Google ad campaigns</span></li>
           <li><svg class="ic"><use href="#i-check"/></svg><span>Monthly performance reporting + 30-day priority support</span></li>
         </ul>
-        <a href="#contact" class="btn btn-primary btn-block" data-magnetic data-interest="Full Growth Package (All Services)">Start With Growth Bundle <svg class="ic"><use href="#i-arrow"/></svg></a>
+        <a href="#contact" class="btn btn-primary btn-block" data-magnetic data-interest="Full Growth Package (All Services)" data-booking-tier="growth">Start With Growth Bundle <svg class="ic"><use href="#i-arrow"/></svg></a>
       </article>
 
       <!-- Tier 3: Custom / Enterprise -->
-      <article class="p-tier reveal" style="--d:.2s">
+      <article class="p-tier reveal" style="--d:.2s" data-tier="enterprise">
         <span class="p-badge">Custom Architecture</span>
         <h3>Custom / Enterprise</h3>
         <div class="p-scope">Full Digital + POS Stack</div>
+        <div class="p-price" data-pricing="enterprise" hidden><span class="gt">—</span></div>
         <p class="p-time">Typical delivery: 4–6+ weeks · Custom milestones</p>
         <p class="p-desc">End-to-end marketing and operational transformation for multi-branch retail, clinics, hospitality, and scaling teams.</p>
         <ul class="p-list">
@@ -1903,8 +1970,12 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
           <li><svg class="ic"><use href="#i-check"/></svg><span>Hands-on staff training, SOP documentation &amp; change management</span></li>
           <li><svg class="ic"><use href="#i-check"/></svg><span>Dedicated account partner &amp; ongoing optimization SLA</span></li>
         </ul>
-        <a href="#contact" class="btn btn-glass btn-block" data-interest="Custom / Enterprise Architecture">Scope Custom Architecture <svg class="ic"><use href="#i-arrow"/></svg></a>
+        <a href="#contact" class="btn btn-glass btn-block" data-interest="Custom / Enterprise Architecture" data-booking-tier="enterprise">Scope Custom Architecture <svg class="ic"><use href="#i-arrow"/></svg></a>
       </article>
+    </div>
+
+    <div class="pricing-note reveal" id="pricingNote">
+      <b>How pricing works:</b> Every proposal is scoped after your free strategy call — no hidden fees. We work on clear milestone payments (40% / 40% / 20%) tied to verified deliverables. Starter covers a single-channel launch, Growth bundles web + WhatsApp + Google + social ads, and Custom / Enterprise includes full POS &amp; multi-branch rollout with staff training and SLA. <span id="pricingPublishNote">Optional price publishing is controlled via <code>SITE.pricing</code> — enable it when you want transparent starting prices on the site.</span>
     </div>
 
     <!-- Feature Comparison Table (.comp-table) -->
@@ -1981,6 +2052,49 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
         <div class="est-row"><span>Payment structure</span><b>40% / 40% / 20% Milestones</b></div>
         <p class="est-note" id="estNote">Includes 100% ownership, handover documentation, and 30 days of free post-launch support.</p>
         <a href="#contact" class="btn btn-primary btn-block" id="estApplyBtn">Send This Scope to OmniFlow <svg class="ic"><use href="#i-arrow"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ROI CALCULATOR (#roi) ============ -->
+<section class="sec bg1" id="roi">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="kicker">ROI Calculator</span>
+      <h2>Estimate Your <span class="gt">Return on Automation</span></h2>
+      <p>See how faster replies and automated bookings can translate into real revenue — adjust the numbers to match your business.</p>
+    </div>
+
+    <div class="roi-wrap reveal">
+      <div class="roi-inputs">
+        <div class="roi-field">
+          <label for="roiLeads">Monthly enquiries (leads)</label>
+          <input type="number" id="roiLeads" min="0" max="10000" value="120">
+        </div>
+        <div class="roi-field">
+          <label for="roiRate">Current close rate (%)</label>
+          <input type="number" id="roiRate" min="0" max="100" value="22">
+        </div>
+        <div class="roi-field">
+          <label for="roiValue">Average order value (LKR)</label>
+          <input type="number" id="roiValue" min="0" max="1000000" value="8500">
+        </div>
+        <div class="roi-field">
+          <label for="roiBoost">Expected uplift from automation (%)</label>
+          <input type="number" id="roiBoost" min="0" max="300" value="35">
+        </div>
+        <button type="button" class="btn btn-glass btn-sm" id="roiReset">Reset to defaults</button>
+      </div>
+
+      <div class="roi-result" aria-live="polite">
+        <h4>Your Estimated Impact</h4>
+        <div class="roi-kpi"><span>Current monthly revenue</span><b id="roiCurrent">LKR 224,400</b></div>
+        <div class="roi-kpi"><span>Projected with automation</span><b id="roiProjected" class="gt">LKR 302,940</b></div>
+        <div class="roi-kpi"><span>Extra revenue / month</span><b id="roiExtra">LKR 78,540</b></div>
+        <div class="roi-kpi"><span>Extra revenue / year</span><b id="roiYear">LKR 942,480</b></div>
+        <p class="roi-note">This is a simple illustrative calculator — actual results depend on your traffic, offer, and follow-up process. We confirm realistic targets on your strategy call.</p>
+        <a href="#contact" class="btn btn-primary btn-block" data-interest="ROI Calculator Enquiry">Discuss My ROI Numbers <svg class="ic"><use href="#i-arrow"/></svg></a>
       </div>
     </div>
   </div>
@@ -2107,7 +2221,7 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
         </a>
         <div class="c-card">
           <span class="c-ico"><svg class="ic"><use href="#i-pin"/></svg></span>
-          <span><small>Location</small><b>[City, Country]</b></span>
+          <span><small>Location</small><b data-location>Colombo, Sri Lanka</b></span>
         </div>
         <div class="c-card">
           <span class="c-ico"><svg class="ic"><use href="#i-clock"/></svg></span>
@@ -2132,7 +2246,7 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
               <span class="err">Please enter your name.</span>
             </div>
             <div class="field">
-              <label for="phone">WhatsApp / Phone <i>*</i></label>
+              <label for="phone" id="waLabel">WhatsApp number <i>*</i></label>
               <input id="phone" name="phone" type="tel" placeholder="+94 7X XXX XXXX" autocomplete="tel" required>
               <span class="err">Please enter a valid phone number.</span>
             </div>
@@ -2191,7 +2305,7 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
           <div class="form-foot">
             <div class="form-fail" id="formFail" role="alert" hidden>Something went wrong. Please try again, or message us directly on WhatsApp.</div>
             <button type="submit" class="btn btn-primary btn-block" id="sendBtn">Send My Request <svg class="ic"><use href="#i-arrow"/></svg></button>
-            <p class="secure"><svg class="ic"><use href="#i-lock"/></svg> 100% confidential · We reply within [1 business day]</p>
+            <p class="secure" id="replyPromise"><svg class="ic"><use href="#i-lock"/></svg> 100% confidential · We reply within 1 business day</p>
           </div>
         </form>
 
@@ -2205,6 +2319,39 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
       </div>
     </div>
 
+  </div>
+</section>
+
+<!-- ============ CALENDAR PANEL (#calendarPanel) ============ -->
+<section class="sec bg2" id="calendarPanel" aria-label="Book a discovery call">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="kicker">Direct Calendar</span>
+      <h2>Book Your <span class="gt">30-Min Strategy Call</span></h2>
+      <p>Pick a time that works for you — our calendar loads only when you need it, keeping the page fast. Supports Calendly and Cal.com.</p>
+    </div>
+
+    <div class="calendar-panel reveal" id="calendarEmbedWrap">
+      <div class="cal-head">
+        <h3>Choose Your Slot</h3>
+        <small id="calTierLabel">Growth / Professional · 30 minutes</small>
+      </div>
+      <div class="cal-body" id="calBody">
+        <div class="cal-placeholder" id="calPlaceholder">
+          <p>Click below to load the live calendar. No tracking until you interact.</p>
+          <div class="cal-actions">
+            <button type="button" class="btn btn-primary" id="loadCalendarBtn" data-magnetic>Load Calendar <svg class="ic"><use href="#i-arrow"/></svg></button>
+            <a href="https://wa.me/94000000000?text=Hi%20OmniFlow!%20I'd%20like%20to%20book%20a%20strategy%20call." target="_blank" rel="noopener" class="btn btn-glass">Or message on WhatsApp →</a>
+          </div>
+          <p class="roi-note" style="margin-top:.6rem">Calendar provider configured via <code>SITE.booking</code> — supports Calendly (<code>calendly.com</code>) and Cal.com (<code>cal.com</code>). Lazy-loaded for performance.</p>
+        </div>
+        <iframe class="cal-iframe" id="calIframe" title="Booking calendar" loading="lazy" hidden data-src=""></iframe>
+      </div>
+    </div>
+
+    <div class="center-cta reveal" style="margin-top:1.4rem">
+      <a href="#contact" class="btn btn-glass" data-interest="Free Digital Growth Audit">Prefer to send details first? Use the form →</a>
+    </div>
   </div>
 </section>
 </main>
@@ -2260,7 +2407,7 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
         <ul>
           <li><a href="mailto:hello@yourdomain.com" data-email-label>hello@yourdomain.com</a></li>
           <li><a href="https://wa.me/94000000000" target="_blank" rel="noopener" data-wa-label>+94 00 000 0000</a></li>
-          <li><a href="#contact">[City, Country]</a></li>
+          <li><a href="#contact" data-location>Colombo, Sri Lanka</a></li>
           <li><a href="#contact" data-interest="Free Digital Growth Audit">Free Growth Audit →</a></li>
         </ul>
       </div>
@@ -2306,7 +2453,43 @@ const SITE = {
   whatsapp     : '94000000000',        // country code + number, digits only, no + or spaces
   waLabel      : '+94 00 000 0000',    // how the number is displayed on the page
   email        : 'hello@yourdomain.com',
+  location     : 'Colombo, Sri Lanka',
   bookingUrl   : '',                   // optional: direct calendar link (e.g. 'https://calendly.com/your-handle/30min')
+  booking      : {                     // tiered booking integration by depth + estimator channel
+    default    : '',                   // fallback calendar URL (Calendly or Cal.com)
+    starter    : '',                   // Starter / MVP tier calendar
+    growth     : '',                   // Growth / Professional tier calendar
+    enterprise : '',                   // Custom / Enterprise tier calendar
+    estimator  : ''                    // Estimator-generated bundle channel
+  },
+  calendar     : {                     // Calendly / Cal.com widget embed config
+    provider   : '',                   // 'calendly' or 'cal' — auto-detected from URL if empty
+    url        : '',                   // alias for booking.default — kept for backwards compat
+    lazy       : true                  // lazy-load iframe via IntersectionObserver
+  },
+  proof        : {                     // trust layer: proof bar
+    enabled    : true,
+    items      : [
+      { value: '50+', label: 'Projects Delivered', sub: 'Across retail, clinics & hospitality' },
+      { value: '24/7', label: 'Lead Response', sub: 'Automated WhatsApp & booking flow' },
+      { value: '98%', label: 'Client Ownership', sub: 'Code, domains & docs yours day one' },
+      { value: '30-Day', label: 'Free Support', sub: 'Bug fixes & staff training included' }
+    ]
+  },
+  pricing      : {                     // optional price publishing + how pricing works note
+    enabled    : false,                // set true to publish starting prices
+    starter    : 'LKR 85,000',
+    growth     : 'LKR 195,000',
+    enterprise : 'Custom Quote',
+    note       : 'How pricing works: milestone-based, transparent scope, 40/40/20 payments. Enable SITE.pricing.enabled to show starting prices.'
+  },
+  form         : {                     // configurable form flags
+    whatsappLabel : 'WhatsApp number',
+    replyPromise  : 'We reply within 1 business day',
+    consentRequired: true,
+    showBudget    : true,
+    honeypot      : true
+  },
   testimonials : false,                // set to true once real client quotes are placed in #testimonials
   gaId         : '',                   // optional: Google Analytics 4 ID (e.g. 'G-XXXXXXXXXX')
   clarityId    : ''                    // optional: Microsoft Clarity project ID
@@ -2359,14 +2542,65 @@ function trackEvent(name, params){
     if(el.tagName === 'A') el.href = 'mailto:' + SITE.email;
     el.textContent = SITE.email;
   });
+  $$('[data-location]').forEach(el => el.textContent = SITE.location || el.textContent);
+
+  // Booking integration tiered by depth (Starter / Growth / Enterprise) + estimator channel
+  const bookingCfg = SITE.booking || {};
+  const defaultBooking = bookingCfg.default || SITE.bookingUrl || (SITE.calendar && SITE.calendar.url) || '';
+  function resolveBookingUrl(tier){
+    if(!tier) return defaultBooking;
+    return bookingCfg[tier] || defaultBooking;
+  }
   $$('[data-booking-link]').forEach(a => {
-    if(SITE.bookingUrl){
-      a.href = SITE.bookingUrl;
+    const tier = a.getAttribute('data-booking-tier');
+    const url = tier ? resolveBookingUrl(tier) : defaultBooking;
+    if(url){
+      a.href = url;
       a.target = '_blank';
       a.rel = 'noopener';
     }
-    a.addEventListener('click', () => trackEvent('calendar_click', {configured: Boolean(SITE.bookingUrl)}));
+    a.addEventListener('click', () => trackEvent('calendar_click', {configured: Boolean(url), tier: tier || 'default'}));
   });
+  // also support any element with data-booking-tier that is not already handled
+  $$('[data-booking-tier]').forEach(a => {
+    if(a.hasAttribute('data-booking-link')) return;
+    const url = resolveBookingUrl(a.getAttribute('data-booking-tier'));
+    if(url){
+      a.href = url;
+      a.target = '_blank';
+      a.rel = 'noopener';
+    }
+  });
+
+  // Form: WhatsApp number label + reply promise + configurable SITE.form flags
+  if(SITE.form){
+    const waLabelEl = $('#waLabel');
+    if(waLabelEl && SITE.form.whatsappLabel){
+      waLabelEl.childNodes[0].textContent = SITE.form.whatsappLabel + ' ';
+    }
+    const rpEl = $('#replyPromise');
+    if(rpEl && SITE.form.replyPromise){
+      rpEl.innerHTML = '<svg class="ic"><use href="#i-lock"/></svg> 100% confidential · ' + SITE.form.replyPromise;
+    }
+  }
+
+  // Optional price publishing (SITE.pricing)
+  if(SITE.pricing && SITE.pricing.enabled){
+    const map = {starter: SITE.pricing.starter, growth: SITE.pricing.growth, enterprise: SITE.pricing.enterprise};
+    $$('[data-pricing]').forEach(el => {
+      const k = el.getAttribute('data-pricing');
+      if(map[k]){
+        el.textContent = map[k];
+        el.hidden = false;
+      }
+    });
+  }
+
+  // Trust layer: proof bar visibility via SITE.proof
+  if(SITE.proof && SITE.proof.enabled === false){
+    const proofEl = $('#proof');
+    if(proofEl) proofEl.hidden = true;
+  }
 })();
 
 /* ---------- Logo loader: tries several file names, falls back to SVG icon ---------- */
@@ -2733,10 +2967,132 @@ faqs.forEach(d => d.addEventListener('toggle', () => {
       else if(applyBtn.dataset.tier.includes('Custom')) budgetSel.value = 'Custom / Enterprise Rollout';
     }
     if(msgBox && applyBtn.dataset.bundle){
-      msgBox.value = `Estimated Bundle (${applyBtn.dataset.tier} · ${applyBtn.dataset.time}): ${applyBtn.dataset.bundle}`;
+      const channel = SITE.booking && SITE.booking.estimator ? ' via Estimator Channel: ' + SITE.booking.estimator : '';
+      msgBox.value = `Estimated Bundle (${applyBtn.dataset.tier} · ${applyBtn.dataset.time}): ${applyBtn.dataset.bundle}${channel}`;
     }
     trackEvent('estimator_apply', {tier: applyBtn.dataset.tier, count: boxes.filter(b => b.checked).length});
+
+    // If estimator has its own booking channel, update calendar panel tier label and auto-scroll to calendar
+    try{
+      const calLabel = $('#calTierLabel');
+      if(calLabel && applyBtn.dataset.tier){
+        calLabel.textContent = applyBtn.dataset.tier + ' · ' + applyBtn.dataset.time;
+      }
+      const estUrl = SITE.booking && SITE.booking.estimator;
+      if(estUrl){
+        const iframe = $('#calIframe');
+        if(iframe) iframe.dataset.src = estUrl;
+      }
+    }catch(e){}
   });
+})();
+
+/* ---------- ROI Calculator (#roi) ---------- */
+(function(){
+  const leadsEl = $('#roiLeads'), rateEl = $('#roiRate'), valueEl = $('#roiValue'), boostEl = $('#roiBoost');
+  const curEl = $('#roiCurrent'), projEl = $('#roiProjected'), extraEl = $('#roiExtra'), yearEl = $('#roiYear'), resetBtn = $('#roiReset');
+  if(!leadsEl || !rateEl || !valueEl || !boostEl) return;
+  function fmt(n){
+    return 'LKR ' + Math.round(n).toLocaleString('en-LK');
+  }
+  function calc(){
+    const leads = Math.max(0, parseFloat(leadsEl.value) || 0);
+    const rate = Math.max(0, Math.min(100, parseFloat(rateEl.value) || 0)) / 100;
+    const val = Math.max(0, parseFloat(valueEl.value) || 0);
+    const boost = Math.max(0, parseFloat(boostEl.value) || 0) / 100;
+    const current = leads * rate * val;
+    const projected = current * (1 + boost);
+    const extra = projected - current;
+    curEl.textContent = fmt(current);
+    projEl.textContent = fmt(projected);
+    extraEl.textContent = fmt(extra);
+    yearEl.textContent = fmt(extra * 12);
+  }
+  [leadsEl, rateEl, valueEl, boostEl].forEach(el => el.addEventListener('input', calc));
+  if(resetBtn){
+    resetBtn.addEventListener('click', () => {
+      leadsEl.value = 120; rateEl.value = 22; valueEl.value = 8500; boostEl.value = 35; calc();
+      trackEvent('roi_reset');
+    });
+  }
+  calc();
+})();
+
+/* ---------- Calendly / Cal.com widget embed (#calendarPanel, lazy-loaded) + CSP frame-src ---------- */
+(function(){
+  const wrap = $('#calendarEmbedWrap'), placeholder = $('#calPlaceholder'), iframe = $('#calIframe'), loadBtn = $('#loadCalendarBtn'), tierLabel = $('#calTierLabel');
+  if(!wrap || !iframe) return;
+
+  function detectProvider(url){
+    if(!url) return '';
+    if(url.includes('calendly.com')) return 'calendly';
+    if(url.includes('cal.com') || url.includes('app.cal.com')) return 'cal';
+    return '';
+  }
+  function getBookingUrl(tier){
+    const cfg = SITE.booking || {};
+    const calCfg = SITE.calendar || {};
+    const url = (tier && cfg[tier]) || cfg.default || calCfg.url || calCfg.default || SITE.bookingUrl || '';
+    return url;
+  }
+  function loadCalendar(url, tier){
+    const finalUrl = url || getBookingUrl(tier) || getBookingUrl();
+    if(!finalUrl){
+      placeholder.innerHTML = '<p>No calendar URL configured. Set <code>SITE.booking.default</code> or <code>SITE.bookingUrl</code> to your Calendly / Cal.com link.</p>';
+      return;
+    }
+    const provider = (SITE.calendar && SITE.calendar.provider) || detectProvider(finalUrl) || 'calendly';
+    iframe.dataset.src = finalUrl;
+    iframe.src = finalUrl;
+    iframe.hidden = false;
+    placeholder.hidden = true;
+    if(tierLabel) tierLabel.textContent = (tier ? (tier.charAt(0).toUpperCase() + tier.slice(1) + ' · ') : '') + provider + ' · 30 minutes';
+    trackEvent('calendar_load', {provider, tier: tier || 'default', url: finalUrl});
+  }
+
+  // Tiered booking integration: buttons with data-booking-tier should update calendar
+  $$('[data-booking-tier]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tier = btn.getAttribute('data-booking-tier');
+      const url = getBookingUrl(tier);
+      if(url){
+        iframe.dataset.src = url;
+        // if already loaded, switch src immediately
+        if(!iframe.hidden) iframe.src = url;
+        if(tierLabel) tierLabel.textContent = tier.charAt(0).toUpperCase() + tier.slice(1) + ' · 30 minutes';
+        // scroll to calendar panel
+        const panel = $('#calendarPanel');
+        if(panel) panel.scrollIntoView({behavior: reduce ? 'auto' : 'smooth', block: 'start'});
+        trackEvent('calendar_tier_select', {tier, url});
+      }
+    });
+  });
+
+  if(loadBtn){
+    loadBtn.addEventListener('click', () => loadCalendar());
+  }
+
+  // Lazy-load via IntersectionObserver if SITE.calendar.lazy is true (default)
+  const shouldLazy = !(SITE.calendar && SITE.calendar.lazy === false);
+  if(shouldLazy && 'IntersectionObserver' in window){
+    const ioCal = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          // preload data-src but don't auto-show until user clicks, to respect privacy
+          const url = getBookingUrl();
+          if(url) iframe.dataset.src = url;
+          ioCal.unobserve(entry.target);
+        }
+      });
+    }, {rootMargin: '200px'});
+    ioCal.observe(wrap);
+  } else {
+    const url = getBookingUrl();
+    if(url) iframe.dataset.src = url;
+  }
+
+  // Estimator channel: when estimator applies, it may set iframe src to estimator channel
+  window.OmniFlowLoadCalendar = loadCalendar;
 })();
 
 /* =====================================================

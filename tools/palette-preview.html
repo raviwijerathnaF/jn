@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Palette Preview — OmniFlow Digital</title>
+<style>
+:root{
+  --blue:#0e6ba8; --cyan:#22c6e8; --green:#9bd44a; --green-d:#6ea82a; --navy:#083a63;
+  --bg:#04172a; --bg-2:#071f36;
+  --card:rgba(255,255,255,.045);
+  --line:rgba(255,255,255,.1);
+  --ink:#f1f7fb; --text:#a7bccc; --muted:#7f97aa;
+  --btn-bg:linear-gradient(110deg,#9bdc4a,#5fdca0 60%,#22d3ee);
+  --btn-fg:#04223a; --err:#ff8a8a;
+}
+[data-theme="light"]{
+  --blue:#0e6ba8; --cyan:#0a7296; --green:#3a7608; --green-d:#2d6105; --navy:#083a63;
+  --bg:#f3f8fc; --bg-2:#ffffff;
+  --card:#ffffff;
+  --line:#dbe7ef;
+  --ink:#06284a; --text:#4a5d6e; --muted:#52677a;
+  --btn-bg:linear-gradient(110deg,#083a63,#0c5c93 55%,#0b6e8c);
+  --btn-fg:#fff; --err:#b82929;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--text);padding:2rem;line-height:1.6}
+h1,h2{color:var(--ink);font-family:'Poppins',sans-serif;margin-bottom:.5rem}
+.container{max-width:1100px;margin:0 auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem;margin:1.5rem 0}
+.swatch{border-radius:16px;overflow:hidden;border:1px solid var(--line);background:var(--card)}
+.swatch .c{height:90px;display:grid;place-items:center;font-weight:700;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.5)}
+.swatch .meta{padding:.7rem .9rem}
+.swatch b{display:block;color:var(--ink);font-size:.9rem}
+.swatch small{font-size:.75rem;color:var(--muted)}
+.row{display:flex;gap:.8rem;flex-wrap:wrap;margin:1rem 0}
+.btn{padding:.6rem 1.1rem;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.btn.on{background:var(--btn-bg);color:var(--btn-fg);border-color:transparent}
+pre{background:var(--card);border:1px solid var(--line);padding:1rem;border-radius:12px;overflow:auto;font-size:.85rem;white-space:pre-wrap}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Palette Preview — OmniFlow Digital</h1>
+  <p>This tool visualizes the CSS custom properties from <code>index.html</code> and <code>assets/pages.css</code>. Use it to verify WCAG AA contrast and brand consistency. Toggle theme to see dark / light tokens.</p>
+
+  <div class="row">
+    <button class="btn on" id="darkBtn">Dark theme</button>
+    <button class="btn" id="lightBtn">Light theme</button>
+    <button class="btn" id="copyBtn">Copy tokens as JSON</button>
+  </div>
+
+  <h2>Core Tokens</h2>
+  <div class="grid" id="coreGrid"></div>
+
+  <h2>Semantic Tokens</h2>
+  <div class="grid" id="semanticGrid"></div>
+
+  <h2>How to use</h2>
+  <pre id="usage">--bg, --bg-2, --card, --line, --ink, --text, --muted, --cyan, --green, --blue, --navy, --btn-bg, --btn-fg, --err
+
+- Dark theme defined in :root
+- Light theme overrides in [data-theme="light"]
+- Contrast checked by tools/check-contrast.py (126 pairs)
+- This preview helps designers verify brand colors before publishing via SITE.pricing, SITE.proof, etc.
+
+For booking embed: add your Calendly / Cal.com URL to SITE.booking.default — CSP frame-src already allows calendly.com and cal.com.</pre>
+
+  <h2>Raw CSS Variables</h2>
+  <pre id="raw"></pre>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const core = ['--blue','--cyan','--green','--green-d','--navy'];
+const semantic = ['--bg','--bg-2','--card','--line','--ink','--text','--muted','--btn-bg','--btn-fg','--err'];
+
+function getVars(){
+  const styles = getComputedStyle(document.documentElement);
+  const out = {};
+  [...core, ...semantic].forEach(k => out[k] = styles.getPropertyValue(k).trim());
+  return out;
+}
+function render(){
+  const vars = getVars();
+  const cg = $('#coreGrid'), sg = $('#semanticGrid');
+  cg.innerHTML = ''; sg.innerHTML = '';
+  function makeSwatch(name, value){
+    const div = document.createElement('div');
+    div.className = 'swatch';
+    const isGrad = value.includes('gradient');
+    const bg = isGrad ? value : value;
+    div.innerHTML = `<div class="c" style="background:${bg}">${name}</div><div class="meta"><b>${name}</b><small>${value.slice(0,80)}</small></div>`;
+    return div;
+  }
+  core.forEach(k => cg.appendChild(makeSwatch(k, vars[k])));
+  semantic.forEach(k => sg.appendChild(makeSwatch(k, vars[k])));
+  $('#raw').textContent = JSON.stringify(vars, null, 2);
+}
+$('#darkBtn').addEventListener('click', () => {
+  document.documentElement.setAttribute('data-theme','dark');
+  $('#darkBtn').classList.add('on'); $('#lightBtn').classList.remove('on');
+  render();
+});
+$('#lightBtn').addEventListener('click', () => {
+  document.documentElement.setAttribute('data-theme','light');
+  $('#lightBtn').classList.add('on'); $('#darkBtn').classList.remove('on');
+  render();
+});
+$('#copyBtn').addEventListener('click', async () => {
+  const vars = getVars();
+  try{ await navigator.clipboard.writeText(JSON.stringify(vars, null, 2)); alert('Copied!'); }catch(e){ alert('Copy failed, see console'); console.log(vars); }
+});
+render();
+</script>
+</body>
+</html>
