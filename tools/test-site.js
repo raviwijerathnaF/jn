@@ -60,6 +60,58 @@ function collectIds(html) {
   return ids;
 }
 
+/* ------------------------------------------------------------------
+   CSS token helpers
+   ------------------------------------------------------------------ */
+
+/**
+ * Collect every bare `selector { --custom-prop: value; }` block in source
+ * order. A theme can be declared in more than one block (the Round 2
+ * LIGHT-THEME COLOUR layer appends a second `[data-theme="light"]` block
+ * at the end of the stylesheet), so callers must merge them in cascade
+ * order rather than trusting the first match.
+ */
+function cssVarBlocks(html, selector) {
+  const re = new RegExp(selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s*\\{([^}]*)\\}', 'g');
+  const out = [];
+  let m;
+  while ((m = re.exec(html)) !== null) out.push(m[1]);
+  return out;
+}
+
+/** Merge all var blocks for `selector`; later declarations win (CSS cascade). */
+function themeTokens(html, selector) {
+  const tokens = {};
+  for (const block of cssVarBlocks(html, selector)) {
+    for (const [, name, value] of block.matchAll(/--([\w-]+)\s*:\s*([^;}]+)/g)) {
+      tokens[name.trim()] = value.trim();
+    }
+  }
+  return tokens;
+}
+
+function hexToRgb(hex) {
+  let h = hex.trim().replace('#', '');
+  if (h.length === 3) h = h.split('').map(c => c + c).join('');
+  assert(/^[0-9a-fA-F]{6}$/.test(h), `"${hex}" is not a 3/6-digit hex colour`);
+  return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
+}
+
+/**
+ * WCAG 2.1 relative luminance (0 = black, 1 = white).
+ * Used to judge whether a surface really is "light" instead of sniffing
+ * for a particular hex prefix — a deep brand tint must pass, an inverted
+ * (dark) theme must fail.
+ */
+function relLuminance(hex) {
+  const chan = c => {
+    const s = c / 255;
+    return s <= 0.04045 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
+  };
+  const [r, g, b] = hexToRgb(hex);
+  return 0.2126 * chan(r) + 0.7152 * chan(g) + 0.0722 * chan(b);
+}
+
 const indexHtml = read('index.html');
 const legalHtml = read('legal.html');
 const err404Html = read('404.html');
@@ -180,11 +232,42 @@ check('Local SEO section #seo sits between #services and #work with 3 cards and 
   assert(!/#1 on Google|number one|guarantee(d)? (rank|top)|top of google/i.test(block), '#seo must not promise rankings');
   assert(!/\d+\s*%/.test(block), '#seo must not contain percentages');
   assert(/@media \(max-width:900px\)\{\.seo-grid\{grid-template-columns:1fr\}\}/.test(indexHtml), 'Missing 900px single-column rule for .seo-grid');
+  const icons = [...block.matchAll(/<div class="seo-ico"><svg class="ic"><use href="#([^"]+)"\/>/g)].map(m => m[1]);
+  assert(icons.join(',') === 'i-pin,i-chart,i-clock', `#seo card icons should be pin/chart/clock, got ${icons.join(',') || 'none'}`);
+  // The Services mega-menu must offer the section too, so it is reachable from
+  // the nav and not only by scrolling.
+  const mega = indexHtml.slice(indexHtml.indexOf('<div class="mega">'), indexHtml.indexOf('</div>', indexHtml.indexOf('<div class="mega">')));
+  assert(/<a href="#seo">[\s\S]*?<b>Local SEO<\/b><small>Get found on Google<\/small>/.test(mega),
+    'Services mega-menu needs a "Local SEO / Get found on Google" entry linking to #seo');
 });
 
 check('Light-theme depth tokens, brand bars and readable .fw-num stroke are present', () => {
-  assert(/:root\{[^}]*--wash:#0a2740;/.test(indexHtml), 'Dark --wash token missing');
-  assert(/\[data-theme="light"\]\{[^}]*--wash:#e9f3fb;/.test(indexHtml), 'Light --wash token missing');
+  const dark = themeTokens(indexHtml, ':root');
+  const light = themeTokens(indexHtml, '[data-theme="light"]');
+
+  // Both themes must declare the .sec.bg2 wash token, but the *value* is not
+  // pinned: it is judged on measured luminance, so a deeper brand tint passes
+  // and an inverted (dark) "light" theme fails.
+  for (const [name, tokens] of [['dark', dark], ['light', light]]) {
+    for (const tok of ['bg', 'bg-2', 'wash']) {
+      assert(tokens[tok], `${name} theme is missing a --${tok} token`);
+    }
+  }
+  assert(dark.wash !== light.wash, 'Dark and light --wash must differ');
+
+  const LIGHT_SURFACE_MIN = 0.6;
+  const lightBgLum = relLuminance(light.bg);
+  assert(lightBgLum >= LIGHT_SURFACE_MIN,
+    `Light --bg (${light.bg}) has luminance ${lightBgLum.toFixed(3)} — a light theme surface must measure >= ${LIGHT_SURFACE_MIN} (an inverted/dark value fails here)`);
+  const lightWashLum = relLuminance(light.wash);
+  assert(lightWashLum >= LIGHT_SURFACE_MIN,
+    `Light --wash (${light.wash}) has luminance ${lightWashLum.toFixed(3)} — must measure >= ${LIGHT_SURFACE_MIN}`);
+  assert(relLuminance(dark.bg) < LIGHT_SURFACE_MIN,
+    `Dark --bg (${dark.bg}) must stay below ${LIGHT_SURFACE_MIN} luminance`);
+  // The wash has to be a real tint, i.e. deeper than the band it fades into.
+  assert(lightWashLum < relLuminance(light['bg-2']),
+    `Light --wash (${light.wash}) must be deeper than --bg-2 (${light['bg-2']}) or .sec.bg2 has no band`);
+
   assert(indexHtml.includes('.sec.bg2{background:linear-gradient(180deg,var(--wash),var(--bg-2) 42%)}'), '.sec.bg2 wash gradient missing');
   assert(indexHtml.includes('.section-head h2::after{'), '.section-head h2::after accent missing');
   assert(/\.fw-card::before\{[^}]*height:4px[^}]*opacity:\.55/.test(indexHtml), '.fw-card::before 4px bar missing');
@@ -194,6 +277,80 @@ check('Light-theme depth tokens, brand bars and readable .fw-num stroke are pres
   assert(indexHtml.includes('.step .num{border-color:rgba(14,107,168,.32)}'), '.step .num border tint missing');
   for (let i = 1; i <= 4; i++) assert(indexHtml.includes(`.g-item:nth-child(${i}) .g-ico`), `.g-item:nth-child(${i}) .g-ico tint missing`);
 });
+
+check('Light-theme colour layer sits last in the stylesheet and never leaks into dark mode', () => {
+  const marker = 'LIGHT-THEME COLOUR';
+  const iMarker = indexHtml.indexOf(marker);
+  assert(iMarker > -1, 'Missing the LIGHT-THEME COLOUR block in the index.html <style>');
+  // Anchor on the comment opener so the block can be parsed as real CSS.
+  const iStart = indexHtml.lastIndexOf('/*', iMarker);
+  assert(iStart > -1, 'LIGHT-THEME COLOUR block must be introduced by a comment header');
+  const iStyleEnd = indexHtml.indexOf('</style>', iMarker);
+  assert(iStyleEnd > iMarker, 'LIGHT-THEME COLOUR block must live inside the main <style>');
+
+  // It has to be the last thing in the stylesheet so it wins the cascade.
+  const tail = indexHtml.slice(iStart, iStyleEnd);
+  assert(!/@media \(max-width/.test(tail), 'LIGHT-THEME COLOUR must be appended after the responsive @media blocks');
+
+  // Every selector in the block must be light-scoped — this is the guard that
+  // stops a new colour rule from reaching the dark theme. Comments are stripped
+  // first so they cannot hide (or break) a selector.
+  const bare = tail.replace(/\/\*[\s\S]*?\*\//g, '');
+  const rules = [...bare.matchAll(/(?:^|\})\s*([^{}@]+?)\s*\{/g)].map(m => m[1].trim()).filter(Boolean);
+  assert(rules.length >= 15, `Expected a substantial light colour layer, found ${rules.length} rule groups`);
+  for (const sel of rules) {
+    for (const part of sel.split(',')) {
+      const s = part.trim();
+      if (!s) continue;
+      assert(s.startsWith('[data-theme="light"]'),
+        `Light-theme colour rule "${s}" is not scoped to [data-theme="light"] and would leak into dark mode`);
+    }
+  }
+
+  // Deepened surface tokens.
+  const light = themeTokens(indexHtml, '[data-theme="light"]');
+  for (const tok of ['bg', 'bg-2', 'wash', 'line', 'aurora']) {
+    assert(light[tok], `Light colour layer must set --${tok}`);
+  }
+
+  // Card surfaces, feature bands, kicker pills, per-service accents and the
+  // table/pill tints all have to be present.
+  const required = [
+    ['.card', 'card surface tint'],
+    ['.p-tier:not(.featured)', 'non-featured pricing tier tint'],
+    ['#seo.sec.bg2', '#seo band tint'],
+    ['#pricing.sec.bg2', '#pricing band tint'],
+    ['.kicker', 'kicker pill'],
+    ['.kicker::before', 'kicker hairline removal'],
+    ['.card-icon', 'per-service icon chip'],
+    ['.card-num', 'per-service outlined numeral'],
+    ['.vis', 'per-service visual panel'],
+    ['.comp-table thead th', 'comparison table head tint'],
+    ['.cta-in', 'inner CTA panel tint'],
+    ['.pill:not(.on)', 'inactive filter pill tint'],
+  ];
+  for (const [sel, what] of required) {
+    assert(tail.includes(`[data-theme="light"] ${sel}`), `Light colour layer is missing ${what} (${sel})`);
+  }
+  assert(/linear-gradient\(180deg,#ffffff,#f1f8ff\)/.test(tail), 'Card surfaces must fade #ffffff -> #f1f8ff');
+  assert(/border-color:#d5e6f6/.test(tail), 'Card surfaces need the #d5e6f6 hairline');
+
+  // Per-service accent palette: #web blue · #social green · #whatsapp cyan ·
+  // #pos navy · #gbp green, each driving --a / --a-soft / --a-line.
+  for (const id of ['#web', '#social', '#whatsapp', '#pos', '#gbp']) {
+    const m = tail.match(new RegExp(`\\[data-theme="light"\\] ${id}\\{([^}]*)\\}`));
+    assert(m, `Light colour layer is missing the ${id} accent`);
+    for (const v of ['--a:', '--a-soft:', '--a-line:']) {
+      assert(m[1].includes(v), `${id} accent must define ${v.replace(':', '')}`);
+    }
+  }
+  assert(/-webkit-text-stroke:1\.6px var\(--a\)/.test(tail), '.card-num must stroke 1.6px with the per-card accent');
+
+  // Hover feedback must survive the new tint (declared after it, so it wins).
+  assert(/\[data-theme="light"\][^{}]*:hover[^{}]*\{border-color:/.test(tail),
+    'Light colour layer must re-declare hover borders after the card tint');
+});
+
 
 check('case-studies.html has a BreadcrumbList JSON-LD (Home → Solution Blueprints) before </body>', () => {
   const m = caseStudiesHtml.match(/<script type="application\/ld\+json">\s*([\s\S]*?)\s*<\/script>\s*<\/body>/);

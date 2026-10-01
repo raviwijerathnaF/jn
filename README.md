@@ -12,7 +12,8 @@ Single-page marketing site — HTML + CSS + JavaScript (build step එකක් 
 | `index.html` | ප්‍රධාන වෙබ් අඩවිය — HTML, CSS (`<style>`), JavaScript (`<script>`) එකම ගොනුවක |
 | `legal.html` | Privacy Policy (`#privacy`), Terms of Service (`#terms`), සහ Cookie Policy (`#cookies`) පිටුව |
 | `404.html` | Custom 404 "Page Not Found" පිටුව (`noindex`) |
-| `assets/pages.css` | `legal.html` සහ `404.html` සඳහා පොදු stylesheet එක (dark/light themes + WCAG AA) |
+| `case-studies.html` | "Solution Blueprints" — Problem → Solution Architecture → Outcome ආකෘතියේ case studies 3ක් (`BreadcrumbList` JSON-LD සහිතව) |
+| `assets/pages.css` | `legal.html`, `404.html` සහ `case-studies.html` සඳහා පොදු stylesheet එක (dark/light themes + WCAG AA) |
 | `_headers` | Netlify / Cloudflare Pages සඳහා HTTP security සහ cache headers |
 | `logo.svg` / `logo.png` | Header + Footer logo (auto-generated) |
 | `favicon.ico`, `favicon-16.png`, `favicon-32.png` | Browser tab icons |
@@ -24,6 +25,7 @@ Single-page marketing site — HTML + CSS + JavaScript (build step එකක් 
 | `tools/make-assets.py` | ඉහත images **හැම එකක්ම** එකම brand mark එකෙන් නැවත generate කරන script එක |
 | `tools/check-contrast.py` | Dark සහ Light themes දෙකේම WCAG 2.1 AA (4.5:1) contrast පරීක්ෂා කරන script එක |
 | `tools/test-site.js` | මුළු වෙබ් අඩවියේම links, SEO, JSON-LD, a11y සහ contrast පරීක්ෂා කරන test suite එක |
+| `tools/palette-preview.html` | Dark / Light theme tokens සහ ඒවායේ contrast අනුපාත බලන dev tool එක |
 
 > **වැදගත්:** `logo.png`, favicons, `og-banner.png` — මේ හැම එකක්ම එකම mark එකෙන් හදලා තියෙන්නේ. එකක් වෙනස් කරන්න ඕන නම් `tools/make-assets.py` එකේ වර්ණ/හැඩ හදලා නැවත run කරන්න:
 >
@@ -99,6 +101,7 @@ Form එකේ දැනටමත් client-side validation, honeypot spam prote
 * Dark / Light theme toggle — localStorage එකේ මතක තබාගන්නවා, flash එකක් නැහැ
 * පළමු බැලීමේදී පරිශීලකගේ OS theme එක (prefers-color-scheme) අනුගමනය කරනවා — හැම විටම dark වලින් පටන් ගන්න ඕන නම් `index.html` එකේ `<head>` ඇති script එකේ `matchMedia` පේළිය මකන්න
 * Theme එකට අනුව mobile browser UI colour එක (`theme-color`) මාරු වෙනවා
+* Light theme එකට වෙනම colour depth layer එකක් — `<style>` එකේ අන්තිම `LIGHT-THEME COLOUR` block එක. හැම rule එකක්ම `[data-theme="light"]` වලින් scope වෙලා තියෙන නිසා dark theme එකට කිසිදු වෙනසක් බලපාන්නේ නැහැ: page surface එක තරමක් ගැඹුරු (`--bg:#eaf3fb`), cards සුදු → `#f1f8ff` gradient එකක්, `#seo` / `#pricing` bands වලට වෙනම tint එකක්, kickers pill ආකාරයෙන්, සහ service card එකකට වෙනම accent එකක් (`#web` blue · `#social` green · `#whatsapp` cyan · `#pos` navy · `#gbp` green)
 * Responsive: 1100px / 1024px / 960px / 900px / 700px breakpoints
 * Glassmorphism header, mega menu, bento grid, 3D tilt, marquee, animated counters, live WhatsApp chat simulation
 
@@ -107,12 +110,16 @@ Form එකේ දැනටමත් client-side validation, honeypot spam prote
 * `#problem` "Before OmniFlow vs. With OmniFlow Digital" comparison (`.vs-grid`)
 * `#why` Free Lead Magnet (`#blueprint` — 25-Point SME Digital Growth & Automation Blueprint instant `.txt` checklist download)
 * `#work` ("Proof of Work") section: 3 Problem → Solution Architecture → Outcome case studies (Clinic & Service Booking, Retail & Multi-Branch POS, Restaurant & Local Brand) + interactive "Try Live WhatsApp Demo" bar (`.demo-bar`)
+* `#seo` ("Local Search") section — `#services` සහ `#work` අතර: Google Business Profile & Maps, Local keywords/plain structure, Fast mobile-first pages. Rank promise (`#1 on Google` වගේ) කිසිවක් නැහැ
+* `#nextSteps` ("What happens after you send") — පියවර 3ක පැහැදිලි next-step ලැයිස්තුව
 * `#pricing` section: `Starter / MVP` (Focused Scope), `Growth / Professional` (Most Popular - Best Value Bundle), `Custom / Enterprise` (Custom Architecture) + Feature Comparison Table (`.comp-table`) + Interactive Bundle & Timeline Estimator (`#estimator`)
 * Low-friction `#contact` form (3 required fields: `name`, `phone`, `service` + `consent`), Direct Calendar (`SITE.bookingUrl`) card, `SITE.clarityId` support, සහ Mobile Sticky Bottom CTA Bar (`.m-bar`)
 
 **SEO & Social**
 * Open Graph + X/Twitter card tags (WhatsApp/Facebook/LinkedIn share preview)
 * Schema.org JSON-LD: Organization / ProfessionalService, WebSite, WebPage, FAQPage (+ service catalog)
+* FAQPage schema එක DOM එකේ තියෙන ප්‍රශ්න 7 සමඟ එකිනෙක ගැලපෙනවා (ගණන සහ පිළිවෙල දෙකම) — 6වන ප්‍රශ්නය "Will my website show up on Google?" වන අතර ඊට `#1` position එකක් පොරොන්දු නොවී අවංක පිළිතුරක් දී තියෙනවා
+* Services mega menu එකේ `Local SEO / Get found on Google` item එකක් `#seo` එකට link වෙනවා
 * `canonical`, `robots`, `sitemap.xml`, `robots.txt`
 * SVG + PNG + `.ico` favicons, Apple touch icon, PWA manifest
 

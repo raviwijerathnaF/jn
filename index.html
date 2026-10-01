@@ -1151,6 +1151,118 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
   .reveal{opacity:1}
   .chart .ln{stroke-dashoffset:0}.chart .ar{opacity:1}
 }
+
+/* =====================================================
+   LIGHT-THEME COLOUR
+   -----------------------------------------------------
+   Round 2. The light theme used to sit on a near-white page
+   holding pure-white cards, so cards, section bands, kickers
+   and chips had no depth and everything merged into one flat
+   sheet. This block drops the page surface one step deeper and
+   gives the card surfaces, the two feature bands, the kicker
+   pills, the comparison table and each service card a cool
+   brand tint, so the hierarchy reads without any border
+   having to shout.
+
+   Every rule below is scoped to [data-theme="light"], so the
+   dark theme keeps exactly the colours it ships with today.
+===================================================== */
+
+/* --- 1. deeper, cooler page tokens ------------------- */
+[data-theme="light"]{
+  --bg:#eaf3fb;
+  --bg-2:#fbfdff;
+  --wash:#e3effa;
+  --line:#cfe0f0;
+  --aurora:.35;
+}
+
+/* --- 2. card surfaces lift off the deeper page ------- */
+[data-theme="light"] .card,
+[data-theme="light"] .case-card,
+[data-theme="light"] .vs-card,
+[data-theme="light"] .fw-card,
+[data-theme="light"] .seo-card,
+[data-theme="light"] .next-step,
+[data-theme="light"] .g-item,
+[data-theme="light"] .kpi,
+[data-theme="light"] .c-card,
+[data-theme="light"] .form-card,
+[data-theme="light"] .p-tier:not(.featured){
+  background:linear-gradient(180deg,#ffffff,#f1f8ff);
+  border-color:#d5e6f6;
+}
+/* Declared after the tint (and one specificity step above the base
+   :hover rules) so hover feedback still wins the cascade. Tuned to the
+   light-theme blue — the dark-theme cyan reads washed out down here. */
+[data-theme="light"] .card:hover,
+[data-theme="light"] .case-card:hover,
+[data-theme="light"] .vs-card:hover,
+[data-theme="light"] .fw-card:hover,
+[data-theme="light"] .seo-card:hover,
+[data-theme="light"] .g-item:hover,
+[data-theme="light"] .kpi:hover,
+[data-theme="light"] .c-card:hover,
+[data-theme="light"] .p-tier:not(.featured):hover{border-color:rgba(14,107,168,.45)}
+/* Keep the semantic before/after borders on the comparison cards */
+[data-theme="light"] .vs-card.before{border-color:rgba(184,41,41,.34)}
+[data-theme="light"] .vs-card.after{border-color:rgba(58,118,8,.38)}
+
+/* --- 3. the two feature bands get their own tint ----- */
+[data-theme="light"] #seo.sec.bg2{background:linear-gradient(180deg,#e3f4fb,var(--bg-2) 45%)}
+[data-theme="light"] #pricing.sec.bg2{background:linear-gradient(180deg,#e8f5e4,var(--bg-2) 45%)}
+
+/* --- 4. kickers become pills, not hairline rules ----- */
+[data-theme="light"] .kicker{
+  background:rgba(14,107,168,.09);
+  border:1px solid rgba(14,107,168,.18);
+  padding:.38rem .9rem;
+  border-radius:999px;
+  /* --cyan (#0a7296) only reaches 4.30:1 on this pill over --wash,
+     so the label steps down to the deeper brand blue. */
+  color:#0b5a9c;
+}
+[data-theme="light"] .kicker::before,
+[data-theme="light"] .kicker::after{display:none}
+
+/* --- 5. per-service accent palette -------------------
+   #web blue · #social green · #whatsapp cyan · #pos navy · #gbp green.
+   --a drives the icon and the outlined numeral, --a-soft the tint,
+   --a-line the hairline. The .card default covers any card added later. */
+[data-theme="light"] .card{--a:var(--blue);--a-soft:rgba(14,107,168,.10);--a-line:rgba(14,107,168,.30)}
+[data-theme="light"] #web{--a:#0e6ba8;--a-soft:rgba(14,107,168,.10);--a-line:rgba(14,107,168,.30)}
+[data-theme="light"] #social{--a:#3a7608;--a-soft:rgba(58,118,8,.10);--a-line:rgba(58,118,8,.30)}
+[data-theme="light"] #whatsapp{--a:#0a7296;--a-soft:rgba(10,114,150,.10);--a-line:rgba(10,114,150,.30)}
+[data-theme="light"] #pos{--a:#083a63;--a-soft:rgba(8,58,99,.09);--a-line:rgba(8,58,99,.28)}
+[data-theme="light"] #gbp{--a:#3a7608;--a-soft:rgba(58,118,8,.10);--a-line:rgba(58,118,8,.30)}
+
+[data-theme="light"] .card-icon{color:var(--a);background:var(--a-soft);border-color:var(--a-line)}
+[data-theme="light"] .card-num{-webkit-text-stroke:1.6px var(--a)}
+[data-theme="light"] .card:hover .card-num{-webkit-text-stroke-color:var(--a)}
+[data-theme="light"] .vis{
+  background:linear-gradient(160deg,var(--a-soft),rgba(255,255,255,.62));
+  border-color:var(--a-line);
+}
+
+/* --- 6. chips that sit on a tinted .vis --------------
+   They are tinted twice (vis wash + chip wash), so the label has to
+   step deeper than it does on a plain card to hold AA. */
+[data-theme="light"] .vchip,
+[data-theme="light"] .speed{color:var(--green-d);background:rgba(58,118,8,.10);border-color:rgba(58,118,8,.28)}
+/* --cyan on the navy-tinted #pos .vis measures 4.36:1 — below AA. */
+[data-theme="light"] .vchip.l{color:#0b5a9c;background:rgba(14,107,168,.10);border-color:rgba(14,107,168,.28)}
+
+/* The guarantee strip's cyan chip now lands on the tinted card gradient, where
+   --cyan (#0a7296) only reaches 4.45:1 — step the label a shade deeper. */
+[data-theme="light"] .g-item:nth-child(3) .g-ico{color:#096a8c}
+
+/* --- 7. comparison table head + inner CTA panel ------ */
+[data-theme="light"] .comp-table thead th{background:#dcebf8;color:var(--ink);border-bottom:1px solid var(--line)}
+[data-theme="light"] .cta-in{background:linear-gradient(135deg,#f6fbff,#e6f1fb)}
+
+/* --- 8. filter pills --------------------------------- */
+[data-theme="light"] .pill:not(.on){background:rgba(14,107,168,.07);border-color:rgba(14,107,168,.20)}
+[data-theme="light"] .pill:not(.on):hover{color:var(--ink);border-color:rgba(14,107,168,.45)}
 </style>
 
 <!-- =====================================================================
@@ -1366,6 +1478,7 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
             <a href="#whatsapp"><span class="mi"><svg class="ic"><use href="#i-chat"/></svg></span><span><b>WhatsApp Automation</b><small>Reply in seconds</small></span></a>
             <a href="#pos"><span class="mi"><svg class="ic"><use href="#i-pos"/></svg></span><span><b>POS &amp; Inventory</b><small>Real-time control</small></span></a>
             <a href="#gbp"><span class="mi"><svg class="ic"><use href="#i-pin"/></svg></span><span><b>Google Business Profile</b><small>Win local search</small></span></a>
+            <a href="#seo"><span class="mi"><svg class="ic"><use href="#i-chart"/></svg></span><span><b>Local SEO</b><small>Get found on Google</small></span></a>
           </div>
         </li>
         <li><a href="#work">Work</a></li>
@@ -1710,7 +1823,7 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
         <p>Complete profile, right categories, photos, opening hours and a simple review flow — so you appear on Maps when nearby customers search.</p>
       </article>
       <article class="seo-card reveal" style="--d:.1s">
-        <div class="seo-ico"><svg class="ic"><use href="#i-layers"/></svg></div>
+        <div class="seo-ico"><svg class="ic"><use href="#i-chart"/></svg></div>
         <h3>Local keywords, plain structure</h3>
         <p>Titles, headings and service copy written around how people actually search in your area, with clean markup Google can read easily.</p>
       </article>
