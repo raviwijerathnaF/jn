@@ -220,10 +220,35 @@ check('Testimonial section (#testimonials) exists and is OFF by default', () => 
   assert(/testimonials\s*:\s*false/.test(indexHtml), 'SITE.testimonials should default to false');
 });
 
-check('Analytics placeholder and trackEvent helper are present in index.html', () => {
+check('Analytics placeholder, Clarity & Booking config, and trackEvent helper are present in index.html', () => {
   assert(indexHtml.includes('googletagmanager.com/gtag/js'), 'Missing GA4 placeholder in index.html');
   assert(/gaId\s*:\s*['"]['"]/.test(indexHtml), 'Missing SITE.gaId config key');
+  assert(/clarityId\s*:\s*['"]['"]/.test(indexHtml), 'Missing SITE.clarityId config key');
+  assert(/bookingUrl\s*:\s*['"]['"]/.test(indexHtml), 'Missing SITE.bookingUrl config key');
   assert(indexHtml.includes('function trackEvent('), 'Missing trackEvent helper');
+});
+
+check('CRO sections (.guarantees, .vs-grid, #blueprint, #work, .demo-bar, #pricing, .comp-table, #estimator, .m-bar) exist', () => {
+  for (const g of ['100% Ownership &amp; Docs', 'Milestone Payments', 'Free 30-Day Support', 'Transparent Scope']) {
+    assert(indexHtml.includes(g), `Missing guarantee item: ${g}`);
+  }
+  assert(indexHtml.includes('class="guarantees'), 'Missing .guarantees strip');
+  assert(indexHtml.includes('class="vs-grid'), 'Missing .vs-grid comparison in #problem');
+  assert(indexHtml.includes('Before OmniFlow') && indexHtml.includes('With OmniFlow Digital'), 'Missing Before/With OmniFlow headings');
+  assert(indexIds.has('blueprint') && indexIds.has('downloadBlueprint'), 'Missing #blueprint lead magnet card or download button');
+  assert(indexIds.has('work') && indexHtml.includes('class="demo-bar'), 'Missing #work section or .demo-bar');
+  for (const c of ['Clinic &amp; Service Booking', 'Retail &amp; Multi-Branch POS', 'Restaurant &amp; Local Brand']) {
+    assert(indexHtml.includes(c), `Missing #work case study: ${c}`);
+  }
+  assert(indexIds.has('pricing'), 'Missing #pricing section');
+  for (const t of ['Starter / MVP', 'Focused Scope', 'Growth / Professional', 'Most Popular - Best Value Bundle', 'Custom / Enterprise', 'Custom Architecture']) {
+    assert(indexHtml.includes(t), `Missing #pricing tier label: ${t}`);
+  }
+  assert(!/currencySwitch|data-currency/i.test(indexHtml), '#pricing should not have an LKR/USD currency switcher');
+  assert(indexHtml.includes('class="comp-table"'), 'Missing .comp-table in #pricing');
+  assert(indexIds.has('estimator'), 'Missing #estimator in #pricing');
+  assert(indexIds.has('bookingCard') && indexHtml.includes('data-booking-link'), 'Missing Direct Calendar booking card in #contact');
+  assert(indexHtml.includes('class="m-bar"'), 'Missing mobile sticky bottom CTA bar (.m-bar)');
 });
 
 check('Accessibility landmarks, skip-links, form ARIA wiring and noscript fallback exist', () => {
