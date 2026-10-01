@@ -95,11 +95,11 @@
 :root{
   --blue:#0e6ba8; --cyan:#22c6e8; --green:#9bd44a; --green-d:#6ea82a; --navy:#083a63;
 
-  --bg:#04172a; --bg-2:#071f36;
+  --bg:#04172a; --bg-2:#071f36; --wash:#0a2740;
   --card:rgba(255,255,255,.045);
   --dash:linear-gradient(160deg,rgba(255,255,255,.10),rgba(255,255,255,.03));
   --line:rgba(255,255,255,.1);
-  --ink:#f1f7fb; --text:#a7bccc; --muted:#7f97aa;
+  --ink:#f1f7fb; --text:#a7bccc; --muted:#86a0b4;
   --glass:rgba(6,26,46,.62);
   --shadow:0 30px 70px rgba(0,0,0,.45);
   --grad:linear-gradient(110deg,#2aa5e8 0%,#22d3ee 45%,#9bdc4a 100%);
@@ -122,7 +122,7 @@
 [data-theme="light"]{
   --blue:#0e6ba8; --cyan:#0a7296; --green:#3a7608; --green-d:#2d6105; --navy:#083a63;
 
-  --bg:#f3f8fc; --bg-2:#ffffff;
+  --bg:#f3f8fc; --bg-2:#ffffff; --wash:#e9f3fb;
   --card:#ffffff;
   --dash:linear-gradient(#ffffff,#f1f7fb);
   --line:#dbe7ef;
@@ -442,6 +442,14 @@ main:focus,main:focus-visible{outline:0}
   width:36px;height:36px;flex:none;border-radius:10px;display:grid;place-items:center;
   font-size:1.1rem;color:var(--green);background:rgba(155,212,74,.12);border:1px solid rgba(155,212,74,.3);
 }
+.g-item:nth-child(1) .g-ico{color:#5eb3ea;background:rgba(14,107,168,.22);border-color:rgba(94,179,234,.38)}
+.g-item:nth-child(2) .g-ico{color:var(--green);background:rgba(155,212,74,.12);border-color:rgba(155,212,74,.3)}
+.g-item:nth-child(3) .g-ico{color:var(--cyan);background:rgba(34,198,232,.12);border-color:rgba(34,198,232,.3)}
+.g-item:nth-child(4) .g-ico{color:#8fb8dc;background:rgba(8,58,99,.45);border-color:rgba(143,184,220,.35)}
+[data-theme="light"] .g-item:nth-child(1) .g-ico{color:var(--blue);background:rgba(14,107,168,.10);border-color:rgba(14,107,168,.28)}
+[data-theme="light"] .g-item:nth-child(2) .g-ico{background:rgba(58,118,8,.10);border-color:rgba(58,118,8,.28)}
+[data-theme="light"] .g-item:nth-child(3) .g-ico{background:rgba(10,114,150,.10);border-color:rgba(10,114,150,.28)}
+[data-theme="light"] .g-item:nth-child(4) .g-ico{color:var(--navy);background:rgba(8,58,99,.09);border-color:rgba(8,58,99,.28)}
 .g-item b{display:block;font-family:'Poppins',sans-serif;font-size:.86rem;color:var(--ink);margin-bottom:.15rem}
 .g-item small{display:block;font-size:.77rem;color:var(--muted);line-height:1.4}
 
@@ -509,7 +517,7 @@ main:focus,main:focus-visible{outline:0}
 ===================================================== */
 .sec{position:relative;padding:clamp(4.5rem,8vw,7.5rem) 0;overflow:hidden}
 .sec.bg1{background:var(--bg)}
-.sec.bg2{background:var(--bg-2)}
+.sec.bg2{background:linear-gradient(180deg,var(--wash),var(--bg-2) 42%)}
 .sec.glow::before{
   content:"";position:absolute;inset:0;pointer-events:none;
   background:radial-gradient(700px 400px at 90% 0%,rgba(34,198,232,.1),transparent 60%),radial-gradient(600px 400px at 0% 100%,rgba(155,212,74,.09),transparent 60%);
@@ -519,6 +527,7 @@ main:focus,main:focus-visible{outline:0}
 .kicker{display:inline-flex;align-items:center;gap:.6rem;font-family:'Poppins',sans-serif;font-weight:600;font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;margin-bottom:1rem;color:var(--cyan)}
 .kicker::before,.kicker::after{content:"";width:28px;height:2px;background:var(--grad);border-radius:2px}
 .section-head h2{font-size:clamp(1.9rem,4.2vw,3.1rem);font-weight:700;letter-spacing:-.025em;margin-bottom:1rem}
+.section-head h2::after{content:"";display:block;width:64px;height:4px;margin:1.05rem auto 0;border-radius:999px;background:linear-gradient(90deg,var(--blue),var(--cyan),var(--green))}
 .section-head p{font-size:1.07rem}
 .center-cta{display:flex;justify-content:center;margin-top:2.6rem}
 
@@ -722,15 +731,16 @@ main:focus,main:focus-visible{outline:0}
 }
 .fw-card::before{
   content:"";position:absolute;top:-1px;left:-1px;right:-1px;height:4px;border-radius:var(--radius) var(--radius) 0 0;
-  background:var(--grad);scale:0 1;transform-origin:left;transition:scale .55s var(--ease);
+  background:linear-gradient(90deg,var(--blue),var(--cyan),var(--green));opacity:.55;transition:opacity .4s var(--ease);
 }
 .fw-card:hover{transform:translateY(-10px);border-color:rgba(34,198,232,.45);box-shadow:var(--shadow)}
-.fw-card:hover::before{scale:1 1}
+.fw-card:hover::before{opacity:1}
 .fw-card:not(:last-child)::after{
   content:"→";position:absolute;z-index:2;right:-1.15rem;top:2.3rem;width:30px;height:30px;border-radius:50%;
   display:grid;place-items:center;font-size:.9rem;font-weight:700;color:var(--btn-fg);background:var(--btn-bg);box-shadow:0 6px 16px var(--btn-glow);
 }
-.fw-num{font-family:'Poppins',sans-serif;font-weight:800;font-size:3.2rem;line-height:1;color:transparent;-webkit-text-stroke:1.5px var(--line);margin-bottom:.9rem;transition:-webkit-text-stroke-color .4s}
+.fw-num{font-family:'Poppins',sans-serif;font-weight:800;font-size:3.2rem;line-height:1;color:transparent;-webkit-text-stroke:1.6px var(--text);margin-bottom:.9rem;transition:-webkit-text-stroke-color .4s}
+@supports not (-webkit-text-stroke:1px #000){.fw-num{color:var(--muted)}}
 .fw-card:hover .fw-num{-webkit-text-stroke-color:var(--cyan)}
 .fw-card h3{font-size:1.35rem;margin-bottom:.6rem}
 .fw-card p{font-size:.93rem;margin-bottom:1.1rem}
@@ -747,6 +757,7 @@ main:focus,main:focus-visible{outline:0}
   font-family:'Poppins',sans-serif;font-weight:700;color:var(--ink);background:var(--bg-2);border:2px solid var(--line);
   transition:all .45s var(--ease);
 }
+.step .num{border-color:rgba(14,107,168,.32)}
 .step:hover .num{color:var(--btn-fg);background:var(--btn-bg);border-color:transparent;scale:1.12;box-shadow:0 12px 26px var(--btn-glow)}
 .step h3{font-size:1.1rem;margin-bottom:.4rem}
 .step p{font-size:.9rem}
@@ -830,6 +841,11 @@ main:focus,main:focus-visible{outline:0}
   border-radius:var(--radius);background:var(--card);border:1px solid var(--line);
   transition:transform .45s var(--ease),border-color .35s,box-shadow .45s;
 }
+.p-tier::before{
+  content:"";position:absolute;top:-1px;left:-1px;right:-1px;height:4px;border-radius:var(--radius) var(--radius) 0 0;
+  background:linear-gradient(90deg,var(--blue),var(--cyan),var(--green));opacity:.55;transition:opacity .4s var(--ease);
+}
+.p-tier:hover::before,.p-tier.featured::before{opacity:1}
 .p-tier:hover{transform:translateY(-8px);border-color:rgba(34,198,232,.45);box-shadow:var(--shadow)}
 .p-tier.featured{
   border-color:var(--cyan);background:linear-gradient(170deg,rgba(34,198,232,.09),rgba(155,212,74,.06));
@@ -895,6 +911,24 @@ main:focus,main:focus-visible{outline:0}
   backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
 }
 .m-bar .btn{width:100%;padding:.72rem 1rem;font-size:.84rem}
+
+/* =====================================================
+   LOCAL SEO (#seo)
+===================================================== */
+.seo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem}
+.seo-card{
+  position:relative;padding:2rem 1.6rem 1.7rem;border-radius:var(--radius);background:var(--card);border:1px solid var(--line);
+  transition:transform .45s var(--ease),border-color .35s,box-shadow .45s;
+}
+.seo-card::before{
+  content:"";position:absolute;top:-1px;left:-1px;right:-1px;height:4px;border-radius:var(--radius) var(--radius) 0 0;
+  background:linear-gradient(90deg,var(--blue),var(--cyan),var(--green));opacity:.55;transition:opacity .4s var(--ease);
+}
+.seo-card:hover{transform:translateY(-8px);border-color:rgba(34,198,232,.45);box-shadow:var(--shadow)}
+.seo-card:hover::before{opacity:1}
+.seo-ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;margin-bottom:1.1rem;font-size:1.3rem;color:var(--cyan);background:rgba(34,198,232,.1);border:1px solid rgba(34,198,232,.28)}
+.seo-card h3{font-size:1.2rem;margin-bottom:.55rem}
+.seo-card p{font-size:.94rem}
 
 /* =====================================================
    FAQ
@@ -1063,6 +1097,7 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
   .contact-info > p{max-width:none}
   .f-grid{grid-template-columns:1fr 1fr}
 }
+@media (max-width:900px){.seo-grid{grid-template-columns:1fr}}
 @media (max-width:960px){
   .menu-toggle{display:flex}
   .nav-links{
@@ -1233,7 +1268,12 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
         {
           "@type": "Question",
           "name": "How do you measure success?",
-          "acceptedAnswer": { "@type": "Answer", "text": "We agree on key metrics upfront, such as enquiries, response times, sales and cost savings, and report on them regularly so you always see what your investment is delivering." }
+          "acceptedAnswer": { "@type": "Answer", "text": "We agree on key metrics upfront, such as enquiries, response times, sales, and cost savings, and report on them regularly so you always see what your investment is delivering." }
+        },
+        {
+          "@type": "Question",
+          "name": "Will my website show up on Google?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Search visibility is a process, not a switch. We set the fundamentals up properly — Google Business Profile, on-page structure, speed and content — and report on rankings and enquiries as they build. Nobody honest can promise a #1 position, but you will always know what is being worked on and what it is producing." }
         },
         {
           "@type": "Question",
@@ -1651,6 +1691,39 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
       </div>
     </div>
 
+  </div>
+</section>
+
+<!-- ============ LOCAL SEO ============ -->
+<section class="sec bg2 glow" id="seo">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="kicker">Local Search</span>
+      <h2>Get Found by the Customers <span class="gt">Who Are Already Searching.</span></h2>
+      <p>Most buyers search Google before they message anyone. We make sure your business shows up — and that the page they land on turns that search into an enquiry.</p>
+    </div>
+
+    <div class="seo-grid">
+      <article class="seo-card reveal">
+        <div class="seo-ico"><svg class="ic"><use href="#i-pin"/></svg></div>
+        <h3>Google Business Profile &amp; Maps</h3>
+        <p>Complete profile, right categories, photos, opening hours and a simple review flow — so you appear on Maps when nearby customers search.</p>
+      </article>
+      <article class="seo-card reveal" style="--d:.1s">
+        <div class="seo-ico"><svg class="ic"><use href="#i-layers"/></svg></div>
+        <h3>Local keywords, plain structure</h3>
+        <p>Titles, headings and service copy written around how people actually search in your area, with clean markup Google can read easily.</p>
+      </article>
+      <article class="seo-card reveal" style="--d:.2s">
+        <div class="seo-ico"><svg class="ic"><use href="#i-clock"/></svg></div>
+        <h3>Fast, mobile-first pages</h3>
+        <p>Speed, mobile layout and one clear next step per page — because a slow page loses the visitor before they ever contact you.</p>
+      </article>
+    </div>
+
+    <div class="center-cta reveal">
+      <a href="#contact" class="btn btn-primary" data-magnetic data-interest="Google Business Profile Optimization">Check My Google Visibility <svg class="ic"><use href="#i-arrow"/></svg></a>
+    </div>
   </div>
 </section>
 
@@ -2079,6 +2152,10 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
       <details>
         <summary>How do you measure success? <span class="pm"><svg class="ic"><use href="#i-plus"/></svg></span></summary>
         <div class="ans">We agree on key metrics upfront, such as enquiries, response times, sales, and cost savings, and report on them regularly so you always see what your investment is delivering.</div>
+      </details>
+      <details>
+        <summary>Will my website show up on Google? <span class="pm"><svg class="ic"><use href="#i-plus"/></svg></span></summary>
+        <div class="ans">Search visibility is a process, not a switch. We set the fundamentals up properly — Google Business Profile, on-page structure, speed and content — and report on rankings and enquiries as they build. Nobody honest can promise a #1 position, but you will always know what is being worked on and what it is producing.</div>
       </details>
       <details>
         <summary>Are there long-term contracts? <span class="pm"><svg class="ic"><use href="#i-plus"/></svg></span></summary>
