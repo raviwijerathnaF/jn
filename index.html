@@ -65,6 +65,19 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
 
+<!-- ============ Analytics placeholder (optional) ============
+     Option A: Set `gaId: 'G-XXXXXXXXXX'` in the SITE config at the bottom
+               of this file to auto-load Google Analytics 4.
+     Option B: Or uncomment one of the snippets below and add your ID/domain:
+
+     Google Analytics 4:
+     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+     <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script>
+
+     Plausible Analytics (cookie-free):
+     <script defer data-domain="yourdomain.com" src="https://plausible.io/js/script.js"></script>
+     ========================================================== -->
+
 <script>
 /* Apply the saved theme before paint (prevents a flash of the wrong theme).
    First-time visitors get the theme their operating system prefers — delete
@@ -108,19 +121,21 @@ try{
   color-scheme:dark;
 }
 [data-theme="light"]{
+  --blue:#0e6ba8; --cyan:#0a7296; --green:#3a7608; --green-d:#2d6105; --navy:#083a63;
+
   --bg:#f3f8fc; --bg-2:#ffffff;
   --card:#ffffff;
   --dash:linear-gradient(#ffffff,#f1f7fb);
   --line:#dbe7ef;
-  --ink:#06284a; --text:#4a5d6e; --muted:#74889a;
+  --ink:#06284a; --text:#4a5d6e; --muted:#52677a;
   --glass:rgba(255,255,255,.78);
   --shadow:0 30px 60px rgba(8,58,99,.16);
-  --grad:linear-gradient(110deg,#0b5a9c 0%,#139fca 50%,#7fbc2e 100%);
-  --btn-bg:linear-gradient(110deg,#083a63,#0e6ba8 60%,#16a2c9);
+  --grad:linear-gradient(110deg,#0b5a9c 0%,#0a7296 50%,#3a7608 100%);
+  --btn-bg:linear-gradient(110deg,#083a63,#0c5c93 55%,#0b6e8c);
   --btn-fg:#fff;
   --btn-glow:rgba(14,107,168,.35);
   --aurora:.3;
-  --err:#d64545;
+  --err:#b82929;
   color-scheme:light;
 }
 
@@ -372,8 +387,8 @@ main:focus,main:focus-visible{outline:0}
   padding:.55rem .3rem;border-radius:12px;border:1px solid var(--line);background:var(--card);
   transition:all .5s var(--ease);
 }
-.flow-row span.active{color:#04223a;background:var(--grad);border-color:transparent;box-shadow:0 8px 22px rgba(34,198,232,.35);translate:0 -3px}
-.note{font-size:.7rem;color:var(--muted);text-align:center;margin-top:.8rem;opacity:.85}
+.flow-row span.active{color:var(--btn-fg);background:var(--btn-bg);border-color:transparent;box-shadow:0 8px 22px var(--btn-glow);translate:0 -3px}
+.note{font-size:.7rem;color:var(--muted);text-align:center;margin-top:.8rem}
 
 .float{
   position:absolute;transform:translateZ(80px);border-radius:18px;background:var(--bg-2);border:1px solid var(--line);
@@ -381,15 +396,15 @@ main:focus,main:focus-visible{outline:0}
 }
 @keyframes bob{50%{translate:0 -10px}}
 .chat{right:-22px;bottom:-4px;width:262px;overflow:hidden}
-.chat-head{display:flex;align-items:center;gap:.6rem;padding:.65rem .85rem;background:linear-gradient(110deg,#0a6b5a,#12896f);color:#fff}
+.chat-head{display:flex;align-items:center;gap:.6rem;padding:.65rem .85rem;background:linear-gradient(110deg,#095c4d,#0d6e5a);color:#fff}
 .chat-head .av{width:28px;height:28px;border-radius:50%;background:#fff;display:grid;place-items:center}
 .chat-head .av svg{width:20px;height:20px}
 .chat-head b{display:block;font-family:'Poppins',sans-serif;font-size:.78rem;line-height:1.1}
-.chat-head small{font-size:.65rem;opacity:.85}
+.chat-head small{font-size:.65rem;opacity:.92}
 .chat-body{height:172px;padding:.7rem;display:flex;flex-direction:column;justify-content:flex-end;gap:.4rem;overflow:hidden;background:var(--bg-2)}
 .msg{max-width:84%;padding:.5rem .7rem;border-radius:14px;font-size:.74rem;line-height:1.35;animation:pop .45s var(--ease) both}
 .msg.in{align-self:flex-start;background:var(--card);border:1px solid var(--line);color:var(--ink);border-bottom-left-radius:4px}
-.msg.out{align-self:flex-end;background:linear-gradient(110deg,#128c6a,#1aa57c);color:#fff;border-bottom-right-radius:4px}
+.msg.out{align-self:flex-end;background:linear-gradient(110deg,#0b6950,#0f785c);color:#fff;border-bottom-right-radius:4px}
 .msg.typing{display:flex;gap:4px;padding:.65rem .8rem}
 .msg.typing i{width:6px;height:6px;border-radius:50%;background:#fff;opacity:.5;animation:blink 1s infinite}
 .msg.typing i:nth-child(2){animation-delay:.15s}.msg.typing i:nth-child(3){animation-delay:.3s}
@@ -551,10 +566,10 @@ main:focus,main:focus-visible{outline:0}
 .wa .b{font-size:.7rem;line-height:1.35;padding:.5rem .75rem;border-radius:13px;max-width:82%}
 .wa .bi{background:var(--card);border:1px solid var(--line);color:var(--ink);border-bottom-left-radius:4px;animation:bIn 8s infinite}
 .slot{display:grid}.slot > *{grid-area:1/1}
-.wa .bt{justify-self:end;display:flex;gap:4px;padding:.65rem .8rem;border-radius:13px;background:linear-gradient(110deg,#128c6a,#1aa57c);border-bottom-right-radius:4px;animation:bType 8s infinite;align-self:center}
+.wa .bt{justify-self:end;display:flex;gap:4px;padding:.65rem .8rem;border-radius:13px;background:linear-gradient(110deg,#0b6950,#0f785c);border-bottom-right-radius:4px;animation:bType 8s infinite;align-self:center}
 .wa .bt i{width:6px;height:6px;border-radius:50%;background:#fff;opacity:.7;animation:blink 1s infinite}
 .wa .bt i:nth-child(2){animation-delay:.15s}.wa .bt i:nth-child(3){animation-delay:.3s}
-.wa .bo{justify-self:end;background:linear-gradient(110deg,#128c6a,#1aa57c);color:#fff;border-bottom-right-radius:4px;animation:bOut 8s infinite}
+.wa .bo{justify-self:end;background:linear-gradient(110deg,#0b6950,#0f785c);color:#fff;border-bottom-right-radius:4px;animation:bOut 8s infinite}
 @keyframes bIn{0%,2%{opacity:0;translate:0 8px}8%,92%{opacity:1;translate:0 0}100%{opacity:0}}
 @keyframes bType{0%,16%{opacity:0}20%,32%{opacity:1}36%,100%{opacity:0}}
 @keyframes bOut{0%,34%{opacity:0;translate:0 8px}42%,92%{opacity:1;translate:0 0}100%{opacity:0}}
@@ -569,6 +584,7 @@ main:focus,main:focus-visible{outline:0}
 .row b{font-family:'Poppins',sans-serif;font-size:.68rem;text-align:right}
 .row.low .bar i{background:linear-gradient(90deg,#ff8a5c,#ffc14d)}
 .row.low b{color:#ffa94d;animation:blink2 1.6s infinite}
+[data-theme="light"] .row.low b{color:#9a4d00}
 @keyframes blink2{50%{opacity:.4}}
 
 /* vis: gbp */
@@ -665,6 +681,29 @@ main:focus,main:focus-visible{outline:0}
 .wcard p{font-size:.92rem}
 
 /* =====================================================
+   TESTIMONIALS (OFF by default — remove `hidden` on #testimonials or set SITE.testimonials = true)
+===================================================== */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem}
+.tcard{
+  display:flex;flex-direction:column;justify-content:space-between;gap:1.2rem;
+  padding:1.75rem;border-radius:var(--radius);background:var(--card);border:1px solid var(--line);
+  transition:transform .45s var(--ease),border-color .35s,box-shadow .45s;
+}
+.tcard:hover{transform:translateY(-6px);border-color:rgba(34,198,232,.45);box-shadow:var(--shadow)}
+.stars{color:#f5a623;font-size:.98rem;letter-spacing:.12em;margin-bottom:.6rem}
+[data-theme="light"] .stars{color:#b86e00}
+.tquote{font-size:.97rem;color:var(--ink);line-height:1.65;font-style:italic}
+.tauthor{display:flex;align-items:center;gap:.8rem;padding-top:1rem;border-top:1px solid var(--line)}
+.tav{
+  width:42px;height:42px;flex:none;border-radius:50%;display:grid;place-items:center;
+  font-family:'Poppins',sans-serif;font-weight:700;font-size:.86rem;color:#fff;
+  background:linear-gradient(135deg,var(--blue),var(--cyan));
+}
+.tcard:nth-child(even) .tav{background:linear-gradient(135deg,var(--cyan),var(--green-d))}
+.tauthor b{display:block;font-family:'Poppins',sans-serif;font-size:.92rem;color:var(--ink)}
+.tauthor small{font-size:.78rem;color:var(--muted)}
+
+/* =====================================================
    FAQ
 ===================================================== */
 .faq{max-width:820px;margin:0 auto;display:grid;gap:.8rem}
@@ -723,7 +762,7 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
   transition:border-color .3s,box-shadow .3s,background .3s;
 }
 .field textarea{resize:vertical;min-height:120px}
-.field input::placeholder,.field textarea::placeholder{color:var(--muted);opacity:.8}
+.field input::placeholder,.field textarea::placeholder{color:var(--muted);opacity:1}
 .field input:hover,.field select:hover,.field textarea:hover{border-color:rgba(34,198,232,.5)}
 .field input:focus,.field select:focus,.field textarea:focus{outline:0;border-color:var(--cyan);box-shadow:0 0 0 4px rgba(34,198,232,.16)}
 .field select{
@@ -1444,6 +1483,58 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
   </div>
 </section>
 
+<!-- ============ TESTIMONIALS (OFF by default) ============
+     This section is hidden until you have real client quotes ready.
+     To turn it ON:
+       1. Replace the three sample quotes/names below with real client feedback
+       2. Either remove the `hidden` attribute on <section id="testimonials">
+          OR set `testimonials: true` in the SITE config at the bottom of this file.
+     ======================================================= -->
+<section class="sec bg2" id="testimonials" aria-labelledby="testimonials-heading" hidden>
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="kicker">Client Results</span>
+      <h2 id="testimonials-heading">Trusted by <span class="gt">Growing Businesses</span></h2>
+      <p>What business owners say after moving their web, marketing, and operations under one roof.</p>
+    </div>
+
+    <div class="tgrid">
+      <blockquote class="tcard reveal">
+        <div>
+          <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+          <p class="tquote">"[Replace with real client quote — e.g. how the new website and WhatsApp automation cut response time and increased bookings.]"</p>
+        </div>
+        <footer class="tauthor">
+          <span class="tav" aria-hidden="true">01</span>
+          <span><b>[Client Name]</b><small>[Role, Business Name · City]</small></span>
+        </footer>
+      </blockquote>
+
+      <blockquote class="tcard reveal" style="--d:.1s">
+        <div>
+          <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+          <p class="tquote">"[Replace with real client quote — e.g. how POS &amp; inventory rollout eliminated stockouts and manual spreadsheet errors.]"</p>
+        </div>
+        <footer class="tauthor">
+          <span class="tav" aria-hidden="true">02</span>
+          <span><b>[Client Name]</b><small>[Role, Business Name · City]</small></span>
+        </footer>
+      </blockquote>
+
+      <blockquote class="tcard reveal" style="--d:.2s">
+        <div>
+          <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+          <p class="tquote">"[Replace with real client quote — e.g. how Google Business Profile and social ads brought steady local enquiries every week.]"</p>
+        </div>
+        <footer class="tauthor">
+          <span class="tav" aria-hidden="true">03</span>
+          <span><b>[Client Name]</b><small>[Role, Business Name · City]</small></span>
+        </footer>
+      </blockquote>
+    </div>
+  </div>
+</section>
+
 <!-- ============ FAQ ============ -->
 <section class="sec bg2 glow" id="faq">
   <div class="container">
@@ -1671,8 +1762,7 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
 
     <div class="f-bottom">
       <span>© <span id="copyYear">2025</span> OmniFlow Digital. All rights reserved.</span>
-      <!-- Link these to real pages once you create them -->
-      <nav aria-label="Legal"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Cookie Policy</a></nav>
+      <nav aria-label="Legal"><a href="legal.html#privacy">Privacy Policy</a><a href="legal.html#terms">Terms of Service</a><a href="legal.html#cookies">Cookie Policy</a></nav>
     </div>
   </div>
 </footer>
@@ -1697,10 +1787,37 @@ const $ = (s,r=document)=>r.querySelector(s), $$ = (s,r=document)=>[...r.querySe
    simply keeps the two in sync.)
 ===================================================== */
 const SITE = {
-  whatsapp : '94000000000',            // country code + number, digits only, no + or spaces
-  waLabel  : '+94 00 000 0000',        // how the number is displayed on the page
-  email    : 'hello@yourdomain.com'
+  whatsapp     : '94000000000',        // country code + number, digits only, no + or spaces
+  waLabel      : '+94 00 000 0000',    // how the number is displayed on the page
+  email        : 'hello@yourdomain.com',
+  testimonials : false,                // set to true once real client quotes are placed in #testimonials
+  gaId         : ''                    // optional: Google Analytics 4 ID (e.g. 'G-XXXXXXXXXX')
 };
+
+/* ---------- Testimonials visibility (OFF by default) ---------- */
+(function(){
+  const tSec = $('#testimonials');
+  if(tSec && SITE.testimonials) tSec.hidden = false;
+})();
+
+/* ---------- Optional analytics loader + event helper ---------- */
+function trackEvent(name, params){
+  try{
+    if(typeof window.gtag === 'function') window.gtag('event', name, params || {});
+    if(typeof window.plausible === 'function') window.plausible(name, {props: params || {}});
+  }catch(e){}
+}
+(function initAnalytics(){
+  if(!SITE.gaId || /^G-X+$/i.test(SITE.gaId)) return;
+  const s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(SITE.gaId);
+  document.head.appendChild(s);
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function(){ window.dataLayer.push(arguments); };
+  window.gtag('js', new Date());
+  window.gtag('config', SITE.gaId);
+})();
 
 /* Keep every contact link + visible label in sync with SITE */
 (function syncContacts(){
@@ -1708,6 +1825,7 @@ const SITE = {
   $$('a[href^="https://wa.me/"]').forEach(a => {
     const q = a.getAttribute('href').split('?')[1];
     a.href = waHref + (q ? '?' + q : '');
+    a.addEventListener('click', () => trackEvent('whatsapp_click', {location: a.className || 'link'}));
   });
   $$('[data-wa-label]').forEach(el => el.textContent = SITE.waLabel);
   $$('a[href^="mailto:"], [data-email-label]').forEach(el => {
@@ -1982,6 +2100,7 @@ faqs.forEach(d => d.addEventListener('toggle', () => {
     form.hidden = true; ok.hidden = false;
     ok.scrollIntoView({behavior: reduce ? 'auto' : 'smooth', block:'center'});
     ok.focus({preventScroll:true});
+    trackEvent('generate_lead', {service: service.value || 'unspecified'});
   }
 
   form.addEventListener('submit', async e => {
