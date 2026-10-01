@@ -77,7 +77,8 @@ const REQUIRED_FILES = [
   'README.md', 'robots.txt', 'sitemap.xml', 'site.webmanifest',
   'logo.svg', 'logo.png', 'favicon.ico', 'favicon-16.png', 'favicon-32.png',
   'apple-touch-icon.png', 'icon-192.png', 'icon-512.png', 'icon-maskable-512.png',
-  'og-banner.png', 'tools/make-assets.py', 'tools/check-contrast.py', 'tools/test-site.js'
+  'og-banner.png', 'tools/make-assets.py', 'tools/check-contrast.py', 'tools/test-site.js',
+  'tools/palette-preview.html'
 ];
 
 check('All required repository files exist and are non-empty', () => {
@@ -225,6 +226,7 @@ check('Analytics placeholder, Clarity & Booking config, and trackEvent helper ar
   assert(/gaId\s*:\s*['"]['"]/.test(indexHtml), 'Missing SITE.gaId config key');
   assert(/clarityId\s*:\s*['"]['"]/.test(indexHtml), 'Missing SITE.clarityId config key');
   assert(/bookingUrl\s*:\s*['"]['"]/.test(indexHtml), 'Missing SITE.bookingUrl config key');
+  assert(/booking\s*:\s*\{/.test(indexHtml) && indexHtml.includes('starter') && indexHtml.includes('growth') && indexHtml.includes('enterprise') && indexHtml.includes('estimator'), 'Missing tiered SITE.booking config (starter/growth/enterprise/estimator)');
   assert(indexHtml.includes('function trackEvent('), 'Missing trackEvent helper');
 });
 
@@ -249,6 +251,45 @@ check('CRO sections (.guarantees, .vs-grid, #blueprint, #work, .demo-bar, #prici
   assert(indexIds.has('estimator'), 'Missing #estimator in #pricing');
   assert(indexIds.has('bookingCard') && indexHtml.includes('data-booking-link'), 'Missing Direct Calendar booking card in #contact');
   assert(indexHtml.includes('class="m-bar"'), 'Missing mobile sticky bottom CTA bar (.m-bar)');
+});
+
+check('Calendly / Cal.com widget embed (#calendarPanel, lazy-loaded) + CSP frame-src', () => {
+  assert(indexIds.has('calendarPanel'), 'Missing #calendarPanel section');
+  assert(indexHtml.includes('id="calIframe"') && indexHtml.includes('data-src'), 'Missing lazy-loaded iframe with data-src in #calendarPanel');
+  assert(indexHtml.includes('id="loadCalendarBtn"'), 'Missing Load Calendar button for lazy-load');
+  assert(indexHtml.includes('calendly.com') && indexHtml.includes('cal.com'), 'Missing Calendly / Cal.com references in #calendarPanel');
+  assert(headersTxt.includes('frame-src') && headersTxt.includes('calendly.com') && headersTxt.includes('cal.com'), '_headers CSP must include frame-src with calendly.com and cal.com');
+  assert(indexHtml.includes('IntersectionObserver'), 'Missing IntersectionObserver for lazy-loading calendar');
+});
+
+check('Trust layer: proof bar (#proof, SITE.proof), ROI calculator (#roi), placeholder cleanup', () => {
+  assert(indexIds.has('proof'), 'Missing #proof bar section');
+  assert(indexHtml.includes('class="proof-bar"') || indexHtml.includes('proof-bar'), 'Missing .proof-bar styling');
+  assert(/SITE\.proof/.test(indexHtml) || /proof\s*:\s*\{/.test(indexHtml), 'Missing SITE.proof config');
+  assert(indexIds.has('roi'), 'Missing #roi ROI calculator section');
+  assert(indexHtml.includes('id="roiLeads"') && indexHtml.includes('id="roiRate"') && indexHtml.includes('id="roiValue"'), 'Missing ROI calculator inputs');
+  assert(indexHtml.includes('id="roiCurrent"') && indexHtml.includes('id="roiProjected"'), 'Missing ROI result outputs');
+  // placeholder cleanup: no [City, Country] or [1 business day] in visible text (except hidden testimonials which may contain brackets, and launch checklist comment)
+  let visibleHtml = indexHtml.replace(/<section[^>]+id="testimonials"[\s\S]*?<\/section>/i, '');
+  // strip HTML comments to ignore launch checklist
+  visibleHtml = visibleHtml.replace(/<!--[\s\S]*?-->/g, '');
+  assert(!visibleHtml.includes('[City, Country]'), 'Placeholder [City, Country] should be cleaned up from visible HTML');
+  assert(!visibleHtml.includes('[1 business day]'), 'Placeholder [1 business day] should be cleaned up');
+  assert(visibleHtml.includes('Colombo, Sri Lanka') || visibleHtml.includes('data-location'), 'Missing cleaned location (Colombo, Sri Lanka) or data-location');
+});
+
+check('Optional price publishing (SITE.pricing) + How pricing works note, Form WhatsApp number label + reply promise + SITE.form flags, Booking tiered + estimator channel, palette-preview tool', () => {
+  assert(/SITE\.pricing/.test(indexHtml) || /pricing\s*:\s*\{/.test(indexHtml), 'Missing SITE.pricing config for optional price publishing');
+  assert(indexIds.has('pricingNote') || indexHtml.includes('How pricing works'), 'Missing How pricing works note in #pricing');
+  assert(indexHtml.includes('data-pricing'), 'Missing data-pricing attributes for optional price publishing');
+  assert(indexHtml.includes('WhatsApp number') && indexHtml.includes('id="waLabel"'), 'Missing WhatsApp number label in form (should be WhatsApp number)');
+  assert(indexHtml.includes('id="replyPromise"') && indexHtml.includes('We reply within'), 'Missing reply promise with id="replyPromise"');
+  assert(/SITE\.form/.test(indexHtml) || /form\s*:\s*\{/.test(indexHtml), 'Missing SITE.form configurable flags');
+  assert(indexHtml.includes('data-booking-tier'), 'Missing data-booking-tier for tiered booking integration');
+  assert(indexHtml.includes('estimator') && indexHtml.includes('channel'), 'Missing estimator channel integration');
+  assert(fs.existsSync(path.join(ROOT, 'tools', 'palette-preview.html')), 'Missing tools/palette-preview.html');
+  const paletteHtml = read('tools/palette-preview.html');
+  assert(paletteHtml.includes('Palette Preview') && paletteHtml.includes('--bg'), 'tools/palette-preview.html should contain palette preview and CSS variables');
 });
 
 check('Accessibility landmarks, skip-links, form ARIA wiring and noscript fallback exist', () => {
