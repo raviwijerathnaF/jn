@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light" data-default-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,11 +26,13 @@
 <link rel="stylesheet" href="assets/pages.css">
 
 <script>
-try{
-  var t = localStorage.getItem('omni-theme');
-  if(!t) t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', t);
-}catch(e){}
+(function(){try{
+  var h=document.documentElement;
+  var def=h.getAttribute('data-default-theme')||'system';
+  var t=localStorage.getItem('omni-theme');
+  if(!t){t=(def==='system'&&window.matchMedia)?(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'):def;}
+  h.setAttribute('data-theme',t);
+}catch(e){}})();
 </script>
 </head>
 

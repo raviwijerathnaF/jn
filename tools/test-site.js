@@ -63,6 +63,7 @@ function collectIds(html) {
 const indexHtml = read('index.html');
 const legalHtml = read('legal.html');
 const err404Html = read('404.html');
+const caseStudiesHtml = read('case-studies.html');
 const pagesCss = read('assets/pages.css');
 const headersTxt = read('_headers');
 const sitemapXml = read('sitemap.xml');
@@ -73,7 +74,7 @@ console.log('OmniFlow Digital — running verification checks...\n');
 
 /* 1. Files & image dimensions */
 const REQUIRED_FILES = [
-  'index.html', 'legal.html', '404.html', 'assets/pages.css', '_headers',
+  'index.html', 'legal.html', '404.html', 'case-studies.html', 'assets/pages.css', '_headers',
   'README.md', 'robots.txt', 'sitemap.xml', 'site.webmanifest',
   'logo.svg', 'logo.png', 'favicon.ico', 'favicon-16.png', 'favicon-32.png',
   'apple-touch-icon.png', 'icon-192.png', 'icon-512.png', 'icon-maskable-512.png',
@@ -132,6 +133,8 @@ check('robots.txt and sitemap.xml are properly configured', () => {
   assert(/Sitemap:\s*https:\/\/yourdomain\.com\/sitemap\.xml/.test(robotsTxt), 'robots.txt missing Sitemap');
   assert(sitemapXml.includes('<loc>https://yourdomain.com/</loc>'), 'sitemap.xml missing root URL');
   assert(sitemapXml.includes('<loc>https://yourdomain.com/legal.html</loc>'), 'sitemap.xml missing legal.html');
+  assert(sitemapXml.includes('<loc>https://yourdomain.com/case-studies.html</loc>'), 'sitemap.xml missing case-studies.html');
+  assert(/<loc>https:\/\/yourdomain\.com\/case-studies\.html<\/loc>[\s\S]*?<priority>0\.8<\/priority>/.test(sitemapXml), 'case-studies.html should have sitemap priority 0.8');
   assert(!sitemapXml.includes('404.html'), 'sitemap.xml should not list 404.html');
 });
 
@@ -154,12 +157,14 @@ check('index.html JSON-LD parses cleanly and FAQPage matches the 6 DOM FAQs', ()
 const indexIds = collectIds(indexHtml);
 const legalIds = collectIds(legalHtml);
 const errIds = collectIds(err404Html);
+const caseStudiesIds = collectIds(caseStudiesHtml);
 
 check('All in-page #anchor links and cross-page links resolve to real targets', () => {
   const pages = [
     { name: 'index.html', html: indexHtml, ids: indexIds },
     { name: 'legal.html', html: legalHtml, ids: legalIds },
-    { name: '404.html', html: err404Html, ids: errIds }
+    { name: '404.html', html: err404Html, ids: errIds },
+    { name: 'case-studies.html', html: caseStudiesHtml, ids: caseStudiesIds }
   ];
   for (const p of pages) {
     const hrefs = [...p.html.matchAll(/\bhref="([^"]+)"/g)].map(x => x[1]);
@@ -214,11 +219,10 @@ check('_headers defines security headers and static cache rules', () => {
   }
 });
 
-/* 6. Testimonials (OFF by default), Analytics placeholder, Accessibility & Form */
-check('Testimonial section (#testimonials) exists and is OFF by default', () => {
-  assert(indexIds.has('testimonials'), 'Missing #testimonials section');
-  assert(/<section[^>]+id="testimonials"[^>]*\bhidden\b/i.test(indexHtml), '#testimonials must have the `hidden` attribute by default');
-  assert(/testimonials\s*:\s*false/.test(indexHtml), 'SITE.testimonials should default to false');
+/* 6. No fabricated social proof, Analytics placeholder, Accessibility & Form */
+check('No fabricated testimonials, ratings, or client-result claims are shipped', () => {
+  assert(!indexIds.has('testimonials'), 'Remove the placeholder testimonial section until verified quotes exist');
+  assert(!/class="stars"|★★★★★|\b5 out of 5 stars\b|\[Client Name\]|Replace with real client quote/i.test(indexHtml + caseStudiesHtml), 'Found placeholder ratings or client quotes');
 });
 
 check('Analytics placeholder, Clarity & Booking config, and trackEvent helper are present in index.html', () => {
@@ -242,6 +246,9 @@ check('CRO sections (.guarantees, .vs-grid, #blueprint, #work, .demo-bar, #prici
   for (const c of ['Clinic &amp; Service Booking', 'Retail &amp; Multi-Branch POS', 'Restaurant &amp; Local Brand']) {
     assert(indexHtml.includes(c), `Missing #work case study: ${c}`);
   }
+  for (const href of ['case-studies.html#clinic', 'case-studies.html#retail', 'case-studies.html#hospitality']) {
+    assert(indexHtml.includes(`href="${href}"`), `Missing case-study link ${href}`);
+  }
   assert(indexIds.has('pricing'), 'Missing #pricing section');
   for (const t of ['Starter / MVP', 'Focused Scope', 'Growth / Professional', 'Most Popular - Best Value Bundle', 'Custom / Enterprise', 'Custom Architecture']) {
     assert(indexHtml.includes(t), `Missing #pricing tier label: ${t}`);
@@ -262,20 +269,18 @@ check('Calendly / Cal.com widget embed (#calendarPanel, lazy-loaded) + CSP frame
   assert(indexHtml.includes('IntersectionObserver'), 'Missing IntersectionObserver for lazy-loading calendar');
 });
 
-check('Trust layer: proof bar (#proof, SITE.proof), ROI calculator (#roi), placeholder cleanup', () => {
-  assert(indexIds.has('proof'), 'Missing #proof bar section');
-  assert(indexHtml.includes('class="proof-bar"') || indexHtml.includes('proof-bar'), 'Missing .proof-bar styling');
-  assert(/SITE\.proof/.test(indexHtml) || /proof\s*:\s*\{/.test(indexHtml), 'Missing SITE.proof config');
-  assert(indexIds.has('roi'), 'Missing #roi ROI calculator section');
-  assert(indexHtml.includes('id="roiLeads"') && indexHtml.includes('id="roiRate"') && indexHtml.includes('id="roiValue"'), 'Missing ROI calculator inputs');
-  assert(indexHtml.includes('id="roiCurrent"') && indexHtml.includes('id="roiProjected"'), 'Missing ROI result outputs');
-  // placeholder cleanup: no [City, Country] or [1 business day] in visible text (except hidden testimonials which may contain brackets, and launch checklist comment)
-  let visibleHtml = indexHtml.replace(/<section[^>]+id="testimonials"[\s\S]*?<\/section>/i, '');
-  // strip HTML comments to ignore launch checklist
-  visibleHtml = visibleHtml.replace(/<!--[\s\S]*?-->/g, '');
+check('Trust layer: empty config-driven proof bar, ROI removal, #nextSteps and placeholder cleanup', () => {
+  assert(indexIds.has('proof') && indexIds.has('proofList'), 'Missing #proof / #proofList');
+  assert(/class="proof-bar"[^>]*hidden[^>]*>[\s\S]*?<ul id="proofList"><\/ul>/.test(indexHtml), 'Empty proof bar should ship hidden with an empty list');
+  assert(/proof\s*:\s*\{\s*enabled:\s*true,\s*items:\s*\[\s*\]/.test(indexHtml), 'SITE.proof must ship with an empty items array');
+  assert(indexHtml.includes('function renderProofBar()') && indexHtml.includes('renderProofBar();'), 'Proof should render only from SITE.proof');
+  assert(!/roiCalc|data-roi|id=["']roi["']|\.roi-|#roi/i.test(indexHtml), 'ROI calculator markup, styles, or script must be removed');
+  assert(indexIds.has('nextSteps') && (indexHtml.match(/id="nextSteps"/g) || []).length === 1, 'Missing unique #nextSteps block');
+  assert(indexHtml.includes('data-reply-promise2'), 'Missing reply promise on the first #nextSteps item');
+  let visibleHtml = indexHtml.replace(/<!--[\s\S]*?-->/g, '');
   assert(!visibleHtml.includes('[City, Country]'), 'Placeholder [City, Country] should be cleaned up from visible HTML');
   assert(!visibleHtml.includes('[1 business day]'), 'Placeholder [1 business day] should be cleaned up');
-  assert(visibleHtml.includes('Colombo, Sri Lanka') || visibleHtml.includes('data-location'), 'Missing cleaned location (Colombo, Sri Lanka) or data-location');
+  assert(visibleHtml.includes('Colombo, Sri Lanka') || visibleHtml.includes('data-location'), 'Missing cleaned location or data-location');
 });
 
 check('Optional price publishing (SITE.pricing) + How pricing works note, Form WhatsApp number label + reply promise + SITE.form flags, Booking tiered + estimator channel, palette-preview tool', () => {
@@ -283,8 +288,10 @@ check('Optional price publishing (SITE.pricing) + How pricing works note, Form W
   assert(indexIds.has('pricingNote') || indexHtml.includes('How pricing works'), 'Missing How pricing works note in #pricing');
   assert(indexHtml.includes('data-pricing'), 'Missing data-pricing attributes for optional price publishing');
   assert(indexHtml.includes('WhatsApp number') && indexHtml.includes('id="waLabel"'), 'Missing WhatsApp number label in form (should be WhatsApp number)');
-  assert(indexHtml.includes('id="replyPromise"') && indexHtml.includes('We reply within'), 'Missing reply promise with id="replyPromise"');
-  assert(/SITE\.form/.test(indexHtml) || /form\s*:\s*\{/.test(indexHtml), 'Missing SITE.form configurable flags');
+  assert(indexHtml.includes('id="replyPromise"') && indexHtml.includes('data-response-time'), 'Missing configurable response-time promise');
+  assert(/form\s*:\s*\{[\s\S]*?showPhone:\s*true,[\s\S]*?phoneRequired:\s*true,[\s\S]*?showEmail:\s*true,[\s\S]*?emailRequired:\s*false,[\s\S]*?replyChannel:\s*'WhatsApp',[\s\S]*?replyTime:\s*'1 business day'/.test(indexHtml), 'SITE.form policy defaults do not match requirements');
+  assert((indexHtml.match(/formPolicy/g) || []).length >= 2, 'formPolicy must be defined and called');
+  assert(indexHtml.includes('data-reply-promise2') && indexHtml.includes('WhatsApp number'), 'Missing dynamic reply promise or WhatsApp label');
   assert(indexHtml.includes('data-booking-tier'), 'Missing data-booking-tier for tiered booking integration');
   assert(indexHtml.includes('estimator') && indexHtml.includes('channel'), 'Missing estimator channel integration');
   assert(fs.existsSync(path.join(ROOT, 'tools', 'palette-preview.html')), 'Missing tools/palette-preview.html');
@@ -305,9 +312,56 @@ check('Accessibility landmarks, skip-links, form ARIA wiring and noscript fallba
   }
 });
 
+check('Light theme default and no-JavaScript fallback are explicit on every page', () => {
+  for (const [name, html] of [['index.html', indexHtml], ['legal.html', legalHtml], ['404.html', err404Html], ['case-studies.html', caseStudiesHtml]]) {
+    const root = html.match(/<html[^>]*>/i);
+    assert(root && /data-theme="light"/.test(root[0]) && /data-default-theme="light"/.test(root[0]), `${name} should default to light without JavaScript`);
+    const boot = html.indexOf("var def=h.getAttribute('data-default-theme')||'system'");
+    assert(boot >= 0 && boot < html.indexOf('</head>'), `${name} missing the early theme bootstrap`);
+    assert(html.includes("localStorage.getItem('omni-theme')"), `${name} theme bootstrap must respect the saved preference`);
+  }
+});
+
+check('Solution Blueprints page has three honest, scoped blueprints and sitemap entry', () => {
+  for (const [id, timeline, tier] of [
+    ['clinic', '2–4 weeks', 'Growth or Professional'],
+    ['retail', '3–6 weeks', 'Growth or Custom/Enterprise'],
+    ['hospitality', '2–4 weeks', 'Starter/MVP or Growth']
+  ]) {
+    assert(caseStudiesIds.has(id), `Missing case-studies.html#${id}`);
+    const card = caseStudiesHtml.match(new RegExp(`<article[^>]+id="${id}"[\\s\\S]*?<\\/article>`));
+    assert(card, `Missing ${id} blueprint article`);
+    for (const section of ['Problem', 'Solution Architecture', 'Outcome', 'What gets built', timeline, tier, 'Ownership']) {
+      assert(card[0].includes(section), `${id} blueprint missing ${section}`);
+    }
+    assert((card[0].match(/<li>/g) || []).length === 6, `${id} blueprint must list exactly six build items`);
+    assert(card[0].includes('we will publish this once live'), `${id} blueprint missing honest publication note`);
+  }
+  assert(sitemapXml.includes('<priority>0.8</priority>'), 'Case-studies sitemap priority should be 0.8');
+});
+
+check('Hero honesty guard blocks unsupported percentages/client counts and caps trust strips', () => {
+  const hero = indexHtml.match(/<section[^>]*class="hero"[^>]*id="home"[\s\S]*?<\/section>/i);
+  assert(hero, 'Missing #home hero block');
+  const gStart = hero[0].indexOf('<div class="guarantees');
+  const proofStart = hero[0].indexOf('<div class="proof-bar', gStart);
+  assert(gStart >= 0 && proofStart > gStart, 'Could not isolate the guarantees block for the honesty guard');
+  let outsideGuarantees = hero[0].slice(0, gStart) + hero[0].slice(proofStart);
+  outsideGuarantees = outsideGuarantees
+    .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<!--[\s\S]*?-->/g, ' ')
+    .replace(/<[^>]+>/g, ' ');
+  assert(!/\b\d{2,}\s*%/.test(outsideGuarantees), 'Unsupported percentage claim found outside .guarantees in the hero');
+  assert(!/\b\d{2,}\+?\s+(?:projects?|clients?|customers?|businesses|reviews?|ratings?)\b/i.test(outsideGuarantees), 'Unsupported client count found outside .guarantees in the hero');
+  const visibleStrips = (hero[0].match(/class="(?:[^"]*\s)?(?:trust|stats|guarantees)(?:\s[^"]*)?"/g) || []).length;
+  assert(visibleStrips <= 3, `Expected no more than 3 hero trust strips, found ${visibleStrips}`);
+  assert(/<div class="proof-bar"[^>]*hidden/.test(indexHtml), 'Empty proof bar must not display as a trust strip');
+});
+
 /* 7. JavaScript syntax check across all HTML files */
-check('All inline <script> blocks in index.html, legal.html and 404.html compile without syntax errors', () => {
-  for (const [name, html] of [['index.html', indexHtml], ['legal.html', legalHtml], ['404.html', err404Html]]) {
+check('All inline <script> blocks in index.html, legal.html, 404.html, and case-studies.html compile without syntax errors', () => {
+  for (const [name, html] of [['index.html', indexHtml], ['legal.html', legalHtml], ['404.html', err404Html], ['case-studies.html', caseStudiesHtml]]) {
     const scripts = [...html.matchAll(/<script(?![^>]*type="application\/ld\+json")[^>]*>([\s\S]*?)<\/script>/gi)];
     assert(scripts.length >= 2, `${name} expected at least 2 script blocks`);
     scripts.forEach((s, idx) => {
