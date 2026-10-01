@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="2 2 96 96" width="96" height="96" role="img" aria-labelledby="omniflowLogoTitle">
+  <title id="omniflowLogoTitle">OmniFlow Digital</title>
+  <defs>
+    <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b4f8a"/><stop offset=".5" stop-color="#19b4d8"/><stop offset="1" stop-color="#8cc63f"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="50" cy="50" r="45" stroke="url(#lg)" stroke-width="5"/>
+    <path d="M22 70C10 50 22 22 50 20" stroke="#1b87c9" stroke-width="5"/>
+    <path d="M32 78C48 86 70 76 74 54" stroke="#19b4d8" stroke-width="5"/>
+    <path d="M32 62C26 46 36 30 54 30" stroke="#19b4d8" stroke-width="5"/>
+    <path d="M52 38C68 36 82 46 80 64C79 72 74 80 66 84" stroke="#8cc63f" stroke-width="6"/>
+  </g>
+  <polygon points="52,20 64,30 50,38" fill="#19b4d8"/>
+</svg>

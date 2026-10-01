@@ -3,18 +3,77 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark light">
+
+<!-- =====================================================================
+     🔧 LAUNCH CHECKLIST — replace every placeholder before going live
+     (use Find & Replace across the whole file):
+       · https://yourdomain.com  ->  your real domain (canonical/OG/JSON-LD)
+       · hello@yourdomain.com    ->  your real email
+       · 94000000000 and "+94 00 000 0000"  ->  your WhatsApp number
+       · [City, Country]         ->  your business location
+       · [1 business day]        ->  your real reply time
+       · href="#" (social + legal links at the bottom) ->  real URLs
+       · YOUR_FACEBOOK_APP_ID    ->  optional; uncomment the fb:app_id tag above
+     ===================================================================== -->
+
 <title>OmniFlow Digital | Innovating. Integrating. Accelerating.</title>
 <meta name="description" content="OmniFlow Digital handles your website, social media, WhatsApp automation, POS and Google presence under one roof, so you attract more customers and run your business smoothly.">
-<meta name="theme-color" content="#04172a">
-<link rel="icon" href="logo.png">
+<meta name="author" content="OmniFlow Digital">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<link rel="canonical" href="https://yourdomain.com/">
+
+<!-- Browser UI colour (updates automatically when the theme is switched) -->
+<meta name="theme-color" content="#04172a" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f3f8fc" media="(prefers-color-scheme: light)">
+
+<!-- ============ Open Graph (Facebook, WhatsApp, LinkedIn, Viber) ============ -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="OmniFlow Digital">
+<meta property="og:title" content="OmniFlow Digital | Innovating. Integrating. Accelerating.">
+<meta property="og:description" content="One partner for your website, social media &amp; ads, WhatsApp automation, POS and Google Business Profile — so you win more customers and run your business smoothly.">
+<meta property="og:url" content="https://yourdomain.com/">
+<meta property="og:image" content="https://yourdomain.com/og-banner.png">
+<meta property="og:image:secure_url" content="https://yourdomain.com/og-banner.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="OmniFlow Digital — Web, Social &amp; Ads, WhatsApp Automation, POS and Google Business Profile">
+<meta property="og:locale" content="en_US">
+<!-- Optional: uncomment and add your Facebook App ID for FB Insights / domain verification
+<meta property="fb:app_id" content="YOUR_FACEBOOK_APP_ID"> -->
+
+<!-- ============ X / Twitter card ============ -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="OmniFlow Digital | Innovating. Integrating. Accelerating.">
+<meta name="twitter:description" content="Website, social media &amp; ads, WhatsApp automation, POS and Google Business Profile — handled by one accountable partner.">
+<meta name="twitter:image" content="https://yourdomain.com/og-banner.png">
+<meta name="twitter:image:alt" content="OmniFlow Digital social share card">
+
+<!-- ============ Icons & PWA (regenerate with: python3 tools/make-assets.py) ============ -->
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="logo.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="mask-icon" href="logo.svg" color="#22c6e8">
+<link rel="manifest" href="site.webmanifest">
+<meta name="apple-mobile-web-app-title" content="OmniFlow">
+<meta name="application-name" content="OmniFlow Digital">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
 
 <script>
-/* Apply saved theme before paint (prevents flash) */
-try{var t=localStorage.getItem('omni-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}
+/* Apply the saved theme before paint (prevents a flash of the wrong theme).
+   First-time visitors get the theme their operating system prefers — delete
+   the matchMedia line if you always want the site to open in dark mode. */
+try{
+  var t = localStorage.getItem('omni-theme');
+  if(!t) t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', t);
+}catch(e){}
 </script>
 
 <style>
@@ -38,9 +97,11 @@ try{var t=localStorage.getItem('omni-theme');if(t)document.documentElement.setAt
   --aurora:.55;
   --err:#ff8a8a;
 
-  /* Your logo has white margins. 1.65 crops them so the swirl fills the round badge.
-     If your logo is tightly cropped / transparent, set this to 1 */
-  --logo-zoom:1.65;
+  /* Scale of the logo inside the round badge.
+     logo.png generated by tools/make-assets.py is tightly cropped and
+     transparent, so .92 gives a hair of breathing room.
+     If you swap in your own logo with white margins, raise this (e.g. 1.65). */
+  --logo-zoom:.92;
 
   --ease:cubic-bezier(.22,.8,.3,1);
   --radius:24px;
@@ -83,6 +144,22 @@ ul{list-style:none}
 :focus-visible{outline:3px solid var(--cyan);outline-offset:3px;border-radius:10px}
 ::selection{background:var(--cyan);color:#04223a}
 @keyframes spin{to{rotate:360deg}}
+
+/* ---------- Accessibility helpers ---------- */
+.skip-link{
+  position:fixed;top:10px;left:50%;translate:-50% -180%;z-index:320;
+  padding:.85rem 1.5rem;border-radius:999px;
+  font-family:'Poppins',sans-serif;font-weight:600;font-size:.9rem;
+  color:var(--btn-fg);background:var(--btn-bg);box-shadow:0 14px 34px var(--btn-glow);
+  transition:translate .35s var(--ease);
+}
+.skip-link:focus-visible{translate:-50% 0;outline-offset:4px}
+/* the skip target should not show a focus ring, but must stay focusable */
+main:focus,main:focus-visible{outline:0}
+.sr-only{
+  position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;
+  overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0;
+}
 
 .gt{
   background:var(--grad);background-size:200% 100%;background-position:0 0;
@@ -164,6 +241,9 @@ ul{list-style:none}
 }
 .nav-links > li > a:not(.btn):hover{color:var(--cyan)}
 .nav-links > li > a:not(.btn):hover::after{scale:1 1;transform-origin:left}
+/* section currently in view (set by the scroll-spy script) */
+.nav-links > li > a:not(.btn).current{color:var(--cyan)}
+.nav-links > li > a:not(.btn).current::after{scale:1 1;transform-origin:left}
 .nav-links .chev{font-size:.8rem;transition:rotate .3s}
 .has-mega:hover .chev,.has-mega:focus-within .chev{rotate:180deg}
 
@@ -794,9 +874,145 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
   .chart .ln{stroke-dashoffset:0}.chart .ar{opacity:1}
 }
 </style>
+
+<!-- =====================================================================
+     STRUCTURED DATA (schema.org / JSON-LD)
+     Helps Google understand who you are, what you sell and where you are,
+     and can unlock FAQ rich results in search. Replace every
+     https://yourdomain.com, phone, email and address value at launch.
+     Validate with: https://search.google.com/test/rich-results
+     ===================================================================== -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": ["Organization", "ProfessionalService"],
+      "@id": "https://yourdomain.com/#organization",
+      "name": "OmniFlow Digital",
+      "slogan": "Innovating. Integrating. Accelerating.",
+      "url": "https://yourdomain.com/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://yourdomain.com/icon-512.png",
+        "width": 512,
+        "height": 512
+      },
+      "image": "https://yourdomain.com/og-banner.png",
+      "description": "OmniFlow Digital brings websites, social media and ads, WhatsApp automation, POS and inventory systems, and Google Business Profile management together under one accountable partner.",
+      "email": "hello@yourdomain.com",
+      "telephone": "+94-00-000-0000",
+      "priceRange": "$$",
+      "currenciesAccepted": "LKR, USD",
+      "paymentAccepted": "Bank transfer, Credit card, Cash",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "YOUR_STREET_ADDRESS",
+        "addressLocality": "YOUR_CITY",
+        "addressCountry": "LK"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "Sri Lanka"
+      },
+      "contactPoint": [{
+        "@type": "ContactPoint",
+        "contactType": "sales",
+        "telephone": "+94-00-000-0000",
+        "email": "hello@yourdomain.com",
+        "availableLanguage": ["en", "si"]
+      }],
+      "openingHoursSpecification": [{
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+        "opens": "09:00",
+        "closes": "18:00"
+      }],
+      "sameAs": [
+        "https://www.linkedin.com/company/YOUR_PAGE",
+        "https://www.facebook.com/YOUR_PAGE",
+        "https://www.instagram.com/YOUR_PAGE"
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Digital growth services",
+        "itemListElement": [
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Web Design & Development", "description": "Fast, conversion-focused websites that turn visitors into qualified enquiries.", "serviceType": "Web design" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Social Media Management & Ads", "description": "Strategy, content and paid campaigns measured against real business results.", "serviceType": "Social media marketing" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "WhatsApp Automation", "description": "Automated enquiries, bookings, follow-ups and order updates on WhatsApp.", "serviceType": "Conversational automation" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "POS & Inventory Systems", "description": "Real-time point of sale and inventory control that cuts errors and stockouts.", "serviceType": "Business systems" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Google Business Profile Optimization", "description": "Local search and Google Maps optimization that turns searches into visits.", "serviceType": "Local SEO" } }
+        ]
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://yourdomain.com/#website",
+      "url": "https://yourdomain.com/",
+      "name": "OmniFlow Digital",
+      "description": "One accountable partner for web, social, WhatsApp automation, POS and Google presence.",
+      "publisher": { "@id": "https://yourdomain.com/#organization" },
+      "inLanguage": "en"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://yourdomain.com/#webpage",
+      "url": "https://yourdomain.com/",
+      "name": "OmniFlow Digital | Innovating. Integrating. Accelerating.",
+      "isPartOf": { "@id": "https://yourdomain.com/#website" },
+      "about": { "@id": "https://yourdomain.com/#organization" },
+      "description": "Websites, social media & ads, WhatsApp automation, POS and Google Business Profile under one roof."
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://yourdomain.com/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How long does a typical project take?",
+          "acceptedAnswer": { "@type": "Answer", "text": "It depends on the scope. A Google Business Profile setup is much quicker than a full website or POS rollout. We'll give you a clear timeline during your strategy call." }
+        },
+        {
+          "@type": "Question",
+          "name": "Can you work with the tools we already use?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. We work with your existing tools wherever possible and only recommend changes when they make a real difference to your business." }
+        },
+        {
+          "@type": "Question",
+          "name": "What does an engagement cost?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Every business is different, so we tailor each proposal. After your strategy call, you'll receive a clear, transparent quote with no hidden surprises." }
+        },
+        {
+          "@type": "Question",
+          "name": "Do you offer ongoing support?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. We offer ongoing plans for social media, ads, optimization, reporting, and technical support, so your results keep improving after launch." }
+        },
+        {
+          "@type": "Question",
+          "name": "How do you measure success?",
+          "acceptedAnswer": { "@type": "Answer", "text": "We agree on key metrics upfront, such as enquiries, response times, sales and cost savings, and report on them regularly so you always see what your investment is delivering." }
+        },
+        {
+          "@type": "Question",
+          "name": "Are there long-term contracts?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Projects have clearly defined deliverables. Terms for ongoing plans are confirmed in your proposal before you commit to anything." }
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+<noscript>
+  <!-- Without JavaScript the scroll-reveal animations must start visible -->
+  <style>.reveal{opacity:1!important}.hero h1 .line>span{animation:none!important}</style>
+</noscript>
 </head>
 
 <body>
+
+<!-- Keyboard / screen-reader users can jump straight past the navigation -->
+<a class="skip-link" href="#main-content">Skip to main content</a>
 
 <!-- ============ SVG SPRITE ============ -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -882,7 +1098,7 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
   </div>
 </header>
 
-<main>
+<main id="main-content" tabindex="-1">
 <!-- ============ HERO ============ -->
 <section class="hero" id="home">
   <div class="aurora"><i></i><i></i><i></i></div>
@@ -1285,11 +1501,11 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
         <!-- ⚠ Replace the placeholder details below with your real ones -->
         <a class="c-card" href="https://wa.me/94000000000" target="_blank" rel="noopener">
           <span class="c-ico"><svg class="ic"><use href="#i-chat"/></svg></span>
-          <span><small>WhatsApp</small><b>+94 00 000 0000</b></span>
+          <span><small>WhatsApp</small><b data-wa-label>+94 00 000 0000</b></span>
         </a>
         <a class="c-card" href="mailto:hello@yourdomain.com">
           <span class="c-ico"><svg class="ic"><use href="#i-mail"/></svg></span>
-          <span><small>Email</small><b>hello@yourdomain.com</b></span>
+          <span><small>Email</small><b data-email-label>hello@yourdomain.com</b></span>
         </a>
         <div class="c-card">
           <span class="c-ico"><svg class="ic"><use href="#i-pin"/></svg></span>
@@ -1374,17 +1590,17 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
           </div>
 
           <!-- Honeypot (spam protection) -->
-          <input type="text" name="_gotcha" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <input type="text" name="_gotcha" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" aria-label="Leave this field empty">
 
           <div class="form-foot">
-            <div class="form-fail" id="formFail" hidden>Something went wrong. Please try again, or message us directly on WhatsApp.</div>
+            <div class="form-fail" id="formFail" role="alert" hidden>Something went wrong. Please try again, or message us directly on WhatsApp.</div>
             <button type="submit" class="btn btn-primary btn-block" id="sendBtn">Send My Request <svg class="ic"><use href="#i-arrow"/></svg></button>
             <p class="secure"><svg class="ic"><use href="#i-lock"/></svg> 100% confidential · We reply within [1 business day]</p>
           </div>
         </form>
 
-        <div class="form-ok" id="formOk" hidden>
-          <span class="tick"><svg class="ic"><use href="#i-tick"/></svg></span>
+        <div class="form-ok" id="formOk" role="status" aria-live="polite" tabindex="-1" hidden>
+          <span class="tick" aria-hidden="true"><svg class="ic"><use href="#i-tick"/></svg></span>
           <h3>Thank you! 🎉</h3>
           <p>Your request has been received. We'll review it personally and get back to you very soon.</p>
           <button type="button" class="btn btn-glass btn-sm" id="againBtn">Send another enquiry</button>
@@ -1445,8 +1661,8 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
       <div class="f-col">
         <h4>Get in touch</h4>
         <ul>
-          <li><a href="mailto:hello@yourdomain.com">hello@yourdomain.com</a></li>
-          <li><a href="https://wa.me/94000000000" target="_blank" rel="noopener">+94 00 000 0000</a></li>
+          <li><a href="mailto:hello@yourdomain.com" data-email-label>hello@yourdomain.com</a></li>
+          <li><a href="https://wa.me/94000000000" target="_blank" rel="noopener" data-wa-label>+94 00 000 0000</a></li>
           <li><a href="#contact">[City, Country]</a></li>
           <li><a href="#contact" data-interest="Free Digital Growth Audit">Free Growth Audit →</a></li>
         </ul>
@@ -1454,7 +1670,7 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
     </div>
 
     <div class="f-bottom">
-      <span>© 2025 OmniFlow Digital. All rights reserved.</span>
+      <span>© <span id="copyYear">2025</span> OmniFlow Digital. All rights reserved.</span>
       <!-- Link these to real pages once you create them -->
       <nav aria-label="Legal"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Cookie Policy</a></nav>
     </div>
@@ -1464,8 +1680,8 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
 <!-- Floating buttons -->
 <div class="fab">
   <button class="top" id="toTop" aria-label="Back to top"><svg class="ic"><use href="#i-up"/></svg></button>
-  <!-- Replace 94000000000 with your WhatsApp number (country code + number, no + or spaces) -->
-  <a class="wa-fab" href="https://wa.me/94000000000" target="_blank" rel="noopener" aria-label="Chat on WhatsApp"><svg viewBox="0 0 32 32" width="30" height="30"><use href="#i-wa"/></svg></a>
+  <!-- The WhatsApp number is configured once, in the SITE config at the bottom of this file -->
+  <a class="wa-fab" href="https://wa.me/94000000000" target="_blank" rel="noopener" data-wa-link aria-label="Chat on WhatsApp"><svg viewBox="0 0 32 32" width="30" height="30"><use href="#i-wa"/></svg></a>
 </div>
 
 <script>
@@ -1473,9 +1689,36 @@ const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const fine   = matchMedia('(hover:hover) and (pointer:fine)').matches;
 const $ = (s,r=document)=>r.querySelector(s), $$ = (s,r=document)=>[...r.querySelectorAll(s)];
 
+/* =====================================================
+   ⚙️ SITE CONFIG — change these once and they update everywhere.
+   Every WhatsApp / email link on the page is re-written from these
+   values, so you can never end up with a stale number in one corner
+   of the page. (You may also edit the HTML directly — the script
+   simply keeps the two in sync.)
+===================================================== */
+const SITE = {
+  whatsapp : '94000000000',            // country code + number, digits only, no + or spaces
+  waLabel  : '+94 00 000 0000',        // how the number is displayed on the page
+  email    : 'hello@yourdomain.com'
+};
+
+/* Keep every contact link + visible label in sync with SITE */
+(function syncContacts(){
+  const waHref = 'https://wa.me/' + SITE.whatsapp;
+  $$('a[href^="https://wa.me/"]').forEach(a => {
+    const q = a.getAttribute('href').split('?')[1];
+    a.href = waHref + (q ? '?' + q : '');
+  });
+  $$('[data-wa-label]').forEach(el => el.textContent = SITE.waLabel);
+  $$('a[href^="mailto:"], [data-email-label]').forEach(el => {
+    if(el.tagName === 'A') el.href = 'mailto:' + SITE.email;
+    el.textContent = SITE.email;
+  });
+})();
+
 /* ---------- Logo loader: tries several file names, falls back to SVG icon ---------- */
 (function(){
-  const FILES = ['logo.png','logo.jpg','logo.jpeg','logo.webp','logo.svg'];
+  const FILES = ['logo.svg','logo.png','logo.webp','logo.jpg','logo.jpeg'];
   $$('.logo-mark img').forEach(img => {
     let i = 0;
     img.addEventListener('error', () => {
@@ -1498,20 +1741,85 @@ function onScroll(){
 addEventListener('scroll', onScroll, {passive:true}); onScroll();
 toTop.addEventListener('click', () => scrollTo({top:0, behavior:'smooth'}));
 
-/* ---------- Mobile menu ---------- */
+/* ---------- Mobile menu (keyboard + screen-reader friendly) ---------- */
 const mt = $('#menuToggle'), nl = $('#navLinks');
-function closeMenu(){ nl.classList.remove('open'); mt.classList.remove('open'); mt.setAttribute('aria-expanded', false); }
-mt.addEventListener('click', () => {
-  const o = nl.classList.toggle('open'); mt.classList.toggle('open', o); mt.setAttribute('aria-expanded', o);
-});
-$$('a', nl).forEach(a => a.addEventListener('click', closeMenu));
+const isNarrow = matchMedia('(max-width:960px)');
 
-/* ---------- Theme toggle ---------- */
-$('#themeBtn').addEventListener('click', () => {
+function setMenu(open){
+  nl.classList.toggle('open', open);
+  mt.classList.toggle('open', open);
+  mt.setAttribute('aria-expanded', open);
+  mt.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+}
+function closeMenu(returnFocus){
+  const wasOpen = nl.classList.contains('open');
+  setMenu(false);
+  if(wasOpen && returnFocus && isNarrow.matches) mt.focus();
+}
+mt.addEventListener('click', () => setMenu(!nl.classList.contains('open')));
+$$('a', nl).forEach(a => a.addEventListener('click', () => closeMenu(false)));
+
+/* Escape closes the menu, clicking outside closes it, rotating to desktop resets it */
+addEventListener('keydown', e => {
+  if(e.key === 'Escape' && nl.classList.contains('open')) closeMenu(true);
+});
+document.addEventListener('click', e => {
+  if(!nl.classList.contains('open')) return;
+  if(nl.contains(e.target) || mt.contains(e.target)) return;
+  closeMenu(false);
+});
+isNarrow.addEventListener('change', () => closeMenu(false));
+
+/* ---------- Theme toggle (+ mobile browser UI colour) ---------- */
+const themeBtn = $('#themeBtn');
+const THEME_COLORS = { dark:'#04172a', light:'#f3f8fc' };
+
+function paintTheme(theme){
+  const dark = theme !== 'light';
+  document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+  /* every theme-color meta gets the same value, so the browser bar always
+     follows the theme the visitor actually chose */
+  $$('meta[name="theme-color"]').forEach(m => m.setAttribute('content', THEME_COLORS[dark ? 'dark' : 'light']));
+  themeBtn.setAttribute('aria-pressed', String(!dark));
+  const label = dark ? 'Switch to light mode' : 'Switch to dark mode';
+  themeBtn.setAttribute('aria-label', label);
+  themeBtn.setAttribute('title', label);
+}
+
+themeBtn.addEventListener('click', () => {
   const next = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
-  document.documentElement.dataset.theme = next;
+  paintTheme(next);
   try{ localStorage.setItem('omni-theme', next) }catch(e){}
 });
+paintTheme(document.documentElement.dataset.theme);
+
+/* ---------- Scroll-spy: highlight the section you are reading ---------- */
+(function(){
+  const links = $$('.nav-links > li > a[href^="#"]').filter(a => !a.classList.contains('btn'));
+  const pairs = links.map(a => ({a, el: document.getElementById(a.getAttribute('href').slice(1))})).filter(p => p.el);
+  if(!pairs.length) return;
+  let ticking = false;
+
+  function spy(){
+    ticking = false;
+    const line = scrollY + 140;
+    let active = null;
+    pairs.forEach(p => { if(p.el.offsetTop <= line) active = p; });
+    /* bottom of the page always lights up the last section */
+    if(innerHeight + scrollY >= document.documentElement.scrollHeight - 2) active = pairs[pairs.length - 1];
+    pairs.forEach(p => {
+      const on = p === active;
+      p.a.classList.toggle('current', on);
+      if(on) p.a.setAttribute('aria-current', 'true'); else p.a.removeAttribute('aria-current');
+    });
+  }
+  addEventListener('scroll', () => { if(!ticking){ ticking = true; requestAnimationFrame(spy); } }, {passive:true});
+  addEventListener('resize', spy);
+  spy();
+})();
+
+/* ---------- Footer year ---------- */
+$('#copyYear').textContent = new Date().getFullYear();
 
 /* ---------- Scroll reveal ---------- */
 const io = new IntersectionObserver(es => es.forEach(e => {
@@ -1618,9 +1926,16 @@ faqs.forEach(d => d.addEventListener('toggle', () => {
    CONTACT FORM
 ===================================================== */
 (function(){
-  /* ---- SETTINGS ---- */
-  const FORM_ENDPOINT = '';            // e.g. 'https://formspree.io/f/xxxxxxx'  (leave empty to use the WhatsApp fallback)
-  const WA_NUMBER     = '94000000000'; // your WhatsApp number: country code + number, no + or spaces
+  /* ---- SETTINGS ----
+     Point FORM_ENDPOINT at your form service to receive submissions by email:
+       Formspree  : https://formspree.io/f/xxxxxxx
+       Web3Forms  : https://api.web3forms.com/submit   (then add your access_key input)
+       EmailJS    : call emailjs.sendForm() instead of fetch() below
+     Leave it empty to keep the built-in WhatsApp fallback, which opens a
+     pre-filled chat with every answer. The WhatsApp number comes from the
+     SITE config at the top of this script. */
+  const FORM_ENDPOINT = '';
+  const WA_NUMBER     = SITE.whatsapp;
 
   const form = $('#contactForm'), btn = $('#sendBtn'), ok = $('#formOk'), fail = $('#formFail');
   const service = $('#service');
@@ -1635,10 +1950,18 @@ faqs.forEach(d => d.addEventListener('toggle', () => {
     consent:  (v, el) => el.checked
   };
 
+  /* Give every field a programmatic link to its own error message, so screen
+     readers announce the reason instead of just "invalid". */
+  Object.keys(rules).forEach(n => {
+    const el = form.elements[n], err = el.closest('.field').querySelector('.err');
+    if(err && !err.id){ err.id = (el.id || n) + '-err'; el.setAttribute('aria-describedby', err.id); }
+  });
+
   function check(name){
     const el = form.elements[name], field = el.closest('.field');
     const valid = rules[name](el.value, el);
     field.classList.toggle('bad', !valid);
+    el.setAttribute('aria-invalid', String(!valid));
     return valid;
   }
   Object.keys(rules).forEach(n => {
@@ -1655,7 +1978,11 @@ faqs.forEach(d => d.addEventListener('toggle', () => {
     if([...service.options].some(o => o.value === val)){ service.value = val; service.closest('.field').classList.remove('bad'); }
   }));
 
-  function showOk(){ form.hidden = true; ok.hidden = false; ok.scrollIntoView({behavior:'smooth', block:'center'}); }
+  function showOk(){
+    form.hidden = true; ok.hidden = false;
+    ok.scrollIntoView({behavior: reduce ? 'auto' : 'smooth', block:'center'});
+    ok.focus({preventScroll:true});
+  }
 
   form.addEventListener('submit', async e => {
     e.preventDefault();
@@ -1695,8 +2022,12 @@ I'd like to book a strategy call.
   });
 
   $('#againBtn').addEventListener('click', () => {
-    form.reset(); $$('.field.bad', form).forEach(f => f.classList.remove('bad'));
+    form.reset();
+    $$('.field.bad', form).forEach(f => f.classList.remove('bad'));
+    $$('[aria-invalid]', form).forEach(el => el.removeAttribute('aria-invalid'));
+    $$('[aria-describedby]', form).forEach(el => el.removeAttribute('aria-describedby'));
     ok.hidden = true; form.hidden = false;
+    form.elements['name'].focus();
   });
 })();
 </script>
