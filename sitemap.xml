@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  OmniFlow Digital sitemap.
+  Replace https://yourdomain.com with your real domain before launch.
+  Submit it in Google Search Console -> Sitemaps.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://yourdomain.com/</loc>
+    <!-- update this date whenever you change the site -->
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>

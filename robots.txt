@@ -1,0 +1,10 @@
+# OmniFlow Digital — robots.txt
+# Replace https://yourdomain.com with your real domain before launch.
+
+User-agent: *
+Allow: /
+
+# Block nothing for now. If you later add private pages, disallow them here, e.g.
+# Disallow: /thank-you
+
+Sitemap: https://yourdomain.com/sitemap.xml
