@@ -59,15 +59,34 @@ def blend_rgba_on_hex(rgba, bg_hex):
 
 
 def parse_css_vars(text, selector):
+    """Collect --tokens from every `selector { ... }` block; later blocks override
+    earlier ones, exactly like the cascade (index.html re-declares the light
+    tokens in its LIGHT-THEME COLOUR block at the end of <style>)."""
     pattern = re.escape(selector) + r"\s*\{([^}]+)\}"
+    blocks = re.findall(pattern, text, re.S)
+    if not blocks:
+        raise ValueError(f"Selector {selector!r} not found")
+    out = {}
+    for block in blocks:
+        for k, v in re.findall(r"--([\w-]+)\s*:\s*([^;]+);", block):
+            out[k.strip()] = v.strip()
+    return out
+
+
+def css_pick(text, pattern, what):
+    """Return the first capture group of `pattern` in the CSS, or fail loudly so
+    the verifier can never silently drift away from the stylesheet."""
     m = re.search(pattern, text, re.S)
     if not m:
-        raise ValueError(f"Selector {selector!r} not found")
-    block = m.group(1)
-    out = {}
-    for k, v in re.findall(r"--([\w-]+)\s*:\s*([^;]+);", block):
-        out[k.strip()] = v.strip()
-    return out
+        raise ValueError(f"index.html is missing the CSS for {what}")
+    return m.groups() if len(m.groups()) > 1 else m.group(1)
+
+
+def rgba_of(val):
+    m = re.match(r"rgba\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*([0-9.]+)\s*\)", val.strip())
+    if not m:
+        raise ValueError(f"not an rgba() value: {val!r}")
+    return (int(m.group(1)), int(m.group(2)), int(m.group(3)), float(m.group(4)))
 
 
 def extract_hex_colors(val):
@@ -82,7 +101,79 @@ def resolve_card_bg(card_val, base_bg):
     return card_val
 
 
-def check_theme_vars(file_label, theme_name, v):
+def light_tint_pairs(v, css):
+    """Contrast pairs for the light-theme colour layer in index.html."""
+    pairs = []
+    ink, text, muted = v["ink"], v["text"], v["muted"]
+    cyan, green, blue, navy = v["cyan"], v["green"], v["blue"], v["navy"]
+    cyan_ink = v["cyan-ink"]   # light-only darker cyan for text on tinted pills / chips
+    body = (("ink", ink), ("text", text), ("muted", muted))
+    stops = extract_hex_colors(v["grad"])
+
+    # card tint: linear-gradient(180deg,#ffffff,#f1f8ff)
+    card_top, card_bot = css_pick(
+        css, r'\[data-theme="light"\] \.p-tier:not\(\.featured\)\{background:linear-gradient\(180deg,(#[0-9a-fA-F]{6}),(#[0-9a-fA-F]{6})\)\}', "light card gradient")
+    for surf in (card_top, card_bot):
+        for name, fg in body + (("cyan", cyan), ("green", green), ("err", v["err"])):
+            pairs.append((f"light card tint: --{name} on {surf}", fg, surf))
+        for idx, stop in enumerate(stops, 1):
+            pairs.append((f"light card tint: .gt stop #{idx} ({stop}) on {surf}", stop, surf))
+        pairs.append((f"light card tint: .tag (--cyan on chip over {surf})", cyan, blend_rgba_on_hex((34, 198, 232, .10), surf)))
+        pairs.append((f"light card tint: .tag.g (--green on chip over {surf})", green, blend_rgba_on_hex((155, 212, 74, .10), surf)))
+
+    # section washes (#seo, #pricing): linear-gradient(180deg,<tint>,var(--bg-2) 45%)
+    for sec in ("seo", "pricing"):
+        tint = css_pick(css, r'\[data-theme="light"\] #%s\.sec\.bg2\{background:linear-gradient\(180deg,(#[0-9a-fA-F]{6})' % sec, f"#{sec} band")
+        for name, fg in body + (("cyan", cyan), ("green", green)):
+            pairs.append((f"#{sec} wash {tint}: --{name} on band start", fg, tint))
+        for idx, stop in enumerate(stops, 1):
+            pairs.append((f"#{sec} wash {tint}: .gt stop #{idx} ({stop})", stop, tint))
+        # white-ish card sitting on the band, and the kicker pill on the band
+        pairs.append((f"#{sec} wash {tint}: .kicker pill (--cyan-ink)", cyan_ink, blend_rgba_on_hex(rgba_of("rgba(14,107,168,.09)"), tint)))
+
+    # kicker pill: rgba(14,107,168,.09) on every surface a .section-head can sit on
+    pill = rgba_of(css_pick(css, r'\[data-theme="light"\] \.kicker\{color:var\(--cyan-ink\);background:(rgba\([^)]*\))', ".kicker pill"))
+    for sname in ("bg", "bg-2", "wash"):
+        surf = v[sname]
+        pairs.append((f".kicker pill (--cyan-ink on pill over --{sname})", cyan_ink, blend_rgba_on_hex(pill, surf)))
+    pairs.append((".kicker pill (--cyan-ink on pill over card tint)", cyan_ink, blend_rgba_on_hex(pill, card_bot)))
+
+    # .cta-in band: linear-gradient(135deg,#eaf3fb,#e8f5e4)
+    cta = css_pick(css, r'\[data-theme="light"\] \.cta-in\{background:linear-gradient\(135deg,(#[0-9a-fA-F]{6}),(#[0-9a-fA-F]{6})\)', ".cta-in tint")
+    for surf in cta:
+        for name, fg in body + (("cyan", cyan), ("green", green)):
+            pairs.append((f".cta-in tint: --{name} on {surf}", fg, surf))
+        for idx, stop in enumerate(stops, 1):
+            pairs.append((f".cta-in tint: .gt stop #{idx} ({stop}) on {surf}", stop, surf))
+
+    # comp-table header + idle pill
+    th = css_pick(css, r'\[data-theme="light"\] \.comp-table thead th\{background:(#[0-9a-fA-F]{6})', ".comp-table thead th")
+    pairs.append((".comp-table thead th (--ink on tint)", ink, th))
+    pill_bg = css_pick(css, r'\[data-theme="light"\] \.pill:not\(\.on\)\{background:(#[0-9a-fA-F]{6})', ".pill:not(.on)")
+    pairs.append((".pill:not(.on) (--text on tint)", text, pill_bg))
+    pairs.append((".pill:not(.on) (--ink on tint, hover)", ink, pill_bg))
+
+    # per-service palette -> .card-icon chip and .vis panel, over the card tint
+    palette = {"web": blue, "social": green, "whatsapp": cyan_ink, "pos": navy, "gbp": green}
+    for svc, fg in palette.items():
+        a_fg, a_soft = css_pick(
+            css, r'\[data-theme="light"\] #%s\{--a:var\(--([\w-]+)\);--a-soft:(rgba\([^)]*\))' % svc, f"#{svc} palette")
+        assert v[a_fg] == fg, f"#{svc} palette drifted from the expected --{a_fg} token"
+        chip = blend_rgba_on_hex(rgba_of(a_soft), card_bot)
+        pairs.append((f".card-icon #{svc} (--{a_fg} on chip over card tint)", v[a_fg], chip))
+        for name, tok in body:
+            pairs.append((f".vis #{svc} tint: --{name} on panel", tok, chip))
+        pairs.append((f".card-num stroke #{svc} (--{a_fg} on card tint, 3:1 large-graphic)", v[a_fg], card_bot))
+
+    # guarantee-strip icon chips and the SEO icon chip over the lower card tint
+    for i, (fg_tok, rgba) in enumerate(((blue, (14, 107, 168, .10)), (green, (58, 118, 8, .10)),
+                                        (cyan_ink, (10, 114, 150, .10)), (navy, (8, 58, 99, .09))), 1):
+        pairs.append((f".g-ico {i} chip ({fg_tok} on chip over card tint)", fg_tok, blend_rgba_on_hex(rgba, card_bot)))
+    pairs.append((".seo-ico (--cyan-ink on chip over card tint)", cyan_ink, blend_rgba_on_hex((34, 198, 232, .10), card_bot)))
+    return pairs
+
+
+def check_theme_vars(file_label, theme_name, v, css=""):
     bg = v["bg"]
     bg2 = v["bg-2"]
     card_on_bg = resolve_card_bg(v["card"], bg)
@@ -120,6 +211,15 @@ def check_theme_vars(file_label, theme_name, v):
             pairs.append((f"--{tok} on --card(--wash)", v[tok], card_on_wash))
         pairs.append((".tag (--cyan on chip over --wash)", v["cyan"], blend_rgba_on_hex((34, 198, 232, 0.10), card_on_wash)))
         pairs.append((".tag.g / .vchip (--green on chip over --wash)", v["green"], blend_rgba_on_hex((155, 212, 74, 0.10), card_on_wash)))
+
+        # Every .gt gradient stop must also clear AA on the --wash band (.sec.bg2 start).
+        for idx, stop in enumerate(extract_hex_colors(v["grad"]), 1):
+            pairs.append((f".gt gradient stop #{idx} ({stop}) on --wash", stop, wash))
+
+    # Round 2 LIGHT-THEME COLOUR layer (index.html only): every tint introduced by the
+    # [data-theme="light"] block is read back out of the CSS and checked here.
+    if file_label == "index.html" and theme_name == "light":
+        pairs.extend(light_tint_pairs(v, css))
 
     # .fw-num outlined numerals: stroke is var(--text) (was var(--line) = 1.26:1 in light theme),
     # with a var(--muted) solid-colour fallback under @supports not (-webkit-text-stroke).
@@ -163,8 +263,8 @@ def main():
         light_vars = dict(dark_vars)
         light_vars.update(parse_css_vars(content, '[data-theme="light"]'))
 
-        all_results.extend(check_theme_vars(rel, "dark", dark_vars))
-        all_results.extend(check_theme_vars(rel, "light", light_vars))
+        all_results.extend(check_theme_vars(rel, "dark", dark_vars, content))
+        all_results.extend(check_theme_vars(rel, "light", light_vars, content))
 
     # Component-specific fixed stops in index.html
     component_pairs = [

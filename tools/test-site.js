@@ -52,6 +52,29 @@ function pngSize(rel) {
   return { w: buf.readUInt32BE(16), h: buf.readUInt32BE(20) };
 }
 
+/** Merge every `selector{...}` token block, later blocks override earlier ones (cascade order). */
+function cssTokens(html, selector) {
+  const re = new RegExp(selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s*\\{([^}]*)\\}', 'g');
+  const out = {};
+  let m;
+  while ((m = re.exec(html)) !== null) {
+    for (const t of m[1].matchAll(/--([\w-]+)\s*:\s*([^;}]+)/g)) out[t[1]] = t[2].trim();
+  }
+  return out;
+}
+
+/** WCAG relative luminance (0 = black, 1 = white) of a #rgb / #rrggbb colour. */
+function luminance(hex) {
+  let h = hex.trim().replace('#', '');
+  if (h.length === 3) h = h.split('').map(c => c + c).join('');
+  assert(/^[0-9a-f]{6}$/i.test(h), `"${hex}" is not a hex colour`);
+  const [r, g, b] = [0, 2, 4].map(i => {
+    const c = parseInt(h.slice(i, i + 2), 16) / 255;
+    return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+  });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
 function collectIds(html) {
   const ids = new Set();
   const re = /\bid\s*=\s*["']([^"']+)["']/gi;
@@ -177,6 +200,8 @@ check('Local SEO section #seo sits between #services and #work with 3 cards and 
   assert((block.match(/<article class="seo-card/g) || []).length === 3, '#seo needs exactly 3 .seo-card articles');
   assert(block.includes('class="seo-grid"'), '#seo needs a .seo-grid');
   assert(/<a href="#contact"[^>]*data-interest="Google Business Profile Optimization"[^>]*>Check My Google Visibility/.test(block), '#seo CTA must point to #contact with the GBP data-interest');
+  const mega = indexHtml.slice(indexHtml.indexOf('class="mega"'), indexHtml.indexOf('</div>', indexHtml.indexOf('class="mega"')));
+  assert(/<a href="#seo">[\s\S]*Local SEO[\s\S]*Get found on Google/.test(mega), 'Services dropdown needs a Local SEO / "Get found on Google" link to #seo');
   assert(!/#1 on Google|number one|guarantee(d)? (rank|top)|top of google/i.test(block), '#seo must not promise rankings');
   assert(!/\d+\s*%/.test(block), '#seo must not contain percentages');
   assert(/@media \(max-width:900px\)\{\.seo-grid\{grid-template-columns:1fr\}\}/.test(indexHtml), 'Missing 900px single-column rule for .seo-grid');
@@ -184,7 +209,7 @@ check('Local SEO section #seo sits between #services and #work with 3 cards and 
 
 check('Light-theme depth tokens, brand bars and readable .fw-num stroke are present', () => {
   assert(/:root\{[^}]*--wash:#0a2740;/.test(indexHtml), 'Dark --wash token missing');
-  assert(/\[data-theme="light"\]\{[^}]*--wash:#e9f3fb;/.test(indexHtml), 'Light --wash token missing');
+  assert(/\[data-theme="light"\]\{[^}]*--wash:#[0-9a-f]{6};/i.test(indexHtml), 'Light --wash token missing');
   assert(indexHtml.includes('.sec.bg2{background:linear-gradient(180deg,var(--wash),var(--bg-2) 42%)}'), '.sec.bg2 wash gradient missing');
   assert(indexHtml.includes('.section-head h2::after{'), '.section-head h2::after accent missing');
   assert(/\.fw-card::before\{[^}]*height:4px[^}]*opacity:\.55/.test(indexHtml), '.fw-card::before 4px bar missing');
@@ -193,6 +218,55 @@ check('Light-theme depth tokens, brand bars and readable .fw-num stroke are pres
   assert(indexHtml.includes('@supports not (-webkit-text-stroke:1px #000){.fw-num{color:var(--muted)}}'), '.fw-num @supports fallback missing');
   assert(indexHtml.includes('.step .num{border-color:rgba(14,107,168,.32)}'), '.step .num border tint missing');
   for (let i = 1; i <= 4; i++) assert(indexHtml.includes(`.g-item:nth-child(${i}) .g-ico`), `.g-item:nth-child(${i}) .g-ico tint missing`);
+});
+
+check('Light-theme colour layer: luminance-checked tokens, light-only rules, tinted cards, bands, pills and per-service palette', () => {
+  const light = cssTokens(indexHtml, '[data-theme="light"]');
+  const dark = cssTokens(indexHtml, ':root');
+  // Tokens are judged by measured luminance, not by their hex prefix: any deep tint passes, an inverted (dark) theme fails.
+  for (const tok of ['bg', 'bg-2', 'wash']) {
+    assert(light[tok], `Light --${tok} token missing`);
+    const L = luminance(light[tok]);
+    assert(L >= 0.6, `Light --${tok} (${light[tok]}) has luminance ${L.toFixed(2)} — a light theme needs >= 0.6`);
+  }
+  assert(luminance(dark.bg) < 0.1, `Dark --bg (${dark.bg}) must stay dark`);
+  assert(light.line && light.aurora !== undefined, 'Light --line / --aurora tokens missing');
+
+  // The block itself: present, last in <style>, and every selector is [data-theme="light"]-prefixed.
+  const marker = indexHtml.indexOf('LIGHT-THEME COLOUR');
+  assert(marker > -1, 'LIGHT-THEME COLOUR block is missing');
+  const start = indexHtml.lastIndexOf('/*', marker);
+  const end = indexHtml.indexOf('</style>', start);
+  assert(end > -1 && !indexHtml.slice(start, end).includes('@media'), 'LIGHT-THEME COLOUR must be the last block in <style>');
+  const css = indexHtml.slice(start, end).replace(/\/\*[\s\S]*?\*\//g, '');
+  const body = css;
+  let rules = 0;
+  for (const rule of body.split('}')) {
+    if (!rule.includes('{')) continue;
+    for (const sel of rule.slice(0, rule.indexOf('{')).split(',')) {
+      assert(sel.trim().startsWith('[data-theme="light"]'), `Unscoped rule in the light colour block (would leak into dark): "${sel.trim()}"`);
+    }
+    rules++;
+  }
+  assert(rules >= 20, `Light colour block looks truncated (${rules} rules)`);
+
+  for (const sel of ['.card', '.case-card', '.vs-card', '.fw-card', '.seo-card', '.next-step', '.g-item', '.kpi', '.c-card', '.form-card', '.p-tier:not(.featured)']) {
+    assert(css.includes(`[data-theme="light"] ${sel}`), `Light card tint missing for ${sel}`);
+  }
+  assert(css.includes('background:linear-gradient(180deg,#ffffff,#f1f8ff)') && css.includes('border-color:#d5e6f6'), 'Card tint gradient / border-color missing');
+  assert(css.includes('#seo.sec.bg2{background:linear-gradient(180deg,#e3f4fb,var(--bg-2) 45%)}'), '#seo band missing');
+  assert(css.includes('#pricing.sec.bg2{background:linear-gradient(180deg,#e8f5e4,var(--bg-2) 45%)}'), '#pricing band missing');
+  assert(/\.kicker\{[^}]*background:rgba\(14,107,168,\.09\);border:1px solid rgba\(14,107,168,\.18\);padding:\.38rem \.9rem;border-radius:999px/.test(css), 'Kicker pill missing');
+  assert(/\.kicker::before,\s*\[data-theme="light"\] \.kicker::after\{display:none\}/.test(css), 'Kicker ::before/::after must be hidden in light');
+  const palette = { web: 'blue', social: 'green', whatsapp: 'cyan-ink', pos: 'navy', gbp: 'green' };
+  for (const [id, tok] of Object.entries(palette)) {
+    assert(new RegExp(`\\[data-theme="light"\\] #${id}\\{--a:var\\(--${tok}\\);--a-soft:[^;]+;--a-line:[^}]+\\}`).test(css), `#${id} palette (--a/--a-soft/--a-line → ${tok}) missing`);
+  }
+  assert(/\.card-icon\{[^}]*var\(--a/.test(css) && /\.card-num\{-webkit-text-stroke:1\.6px var\(--a/.test(css) && /\.vis\{[^}]*var\(--a-soft/.test(css), '.card-icon/.card-num/.vis must consume the --a palette');
+  assert(/\.comp-table thead th\{background:#/.test(css) && /\.cta-in\{background:/.test(css) && /\.pill:not\(\.on\)\{background:/.test(css), 'comp-table head, .cta-in and .pill:not(.on) tints missing');
+  // Dark theme must not have picked up any of the new light tokens.
+  assert(!dark['cyan-ink'] && !dark.a, 'Dark :root must not receive the light-only colour tokens');
+  assert(dark.bg.toLowerCase() === '#04172a' && dark['bg-2'].toLowerCase() === '#071f36' && dark.wash.toLowerCase() === '#0a2740', 'Dark tokens must be unchanged');
 });
 
 check('case-studies.html has a BreadcrumbList JSON-LD (Home → Solution Blueprints) before </body>', () => {
