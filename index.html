@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light" data-default-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -65,15 +65,27 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
 
+<!-- ============ Analytics placeholder (optional) ============
+     Option A: Set `gaId: 'G-XXXXXXXXXX'` in the SITE config at the bottom
+               of this file to auto-load Google Analytics 4.
+     Option B: Or uncomment one of the snippets below and add your ID/domain:
+
+     Google Analytics 4:
+     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+     <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script>
+
+     Plausible Analytics (cookie-free):
+     <script defer data-domain="yourdomain.com" src="https://plausible.io/js/script.js"></script>
+     ========================================================== -->
+
 <script>
-/* Apply the saved theme before paint (prevents a flash of the wrong theme).
-   First-time visitors get the theme their operating system prefers — delete
-   the matchMedia line if you always want the site to open in dark mode. */
-try{
-  var t = localStorage.getItem('omni-theme');
-  if(!t) t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', t);
-}catch(e){}
+(function(){try{
+  var h=document.documentElement;
+  var def=h.getAttribute('data-default-theme')||'system';
+  var t=localStorage.getItem('omni-theme');
+  if(!t){t=(def==='system'&&window.matchMedia)?(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'):def;}
+  h.setAttribute('data-theme',t);
+}catch(e){}})();
 </script>
 
 <style>
@@ -83,11 +95,11 @@ try{
 :root{
   --blue:#0e6ba8; --cyan:#22c6e8; --green:#9bd44a; --green-d:#6ea82a; --navy:#083a63;
 
-  --bg:#04172a; --bg-2:#071f36;
+  --bg:#04172a; --bg-2:#071f36; --wash:#0a2740;
   --card:rgba(255,255,255,.045);
   --dash:linear-gradient(160deg,rgba(255,255,255,.10),rgba(255,255,255,.03));
   --line:rgba(255,255,255,.1);
-  --ink:#f1f7fb; --text:#a7bccc; --muted:#7f97aa;
+  --ink:#f1f7fb; --text:#a7bccc; --muted:#86a0b4;
   --glass:rgba(6,26,46,.62);
   --shadow:0 30px 70px rgba(0,0,0,.45);
   --grad:linear-gradient(110deg,#2aa5e8 0%,#22d3ee 45%,#9bdc4a 100%);
@@ -108,19 +120,21 @@ try{
   color-scheme:dark;
 }
 [data-theme="light"]{
-  --bg:#f3f8fc; --bg-2:#ffffff;
+  --blue:#0e6ba8; --cyan:#0a7296; --green:#3a7608; --green-d:#2d6105; --navy:#083a63;
+
+  --bg:#f3f8fc; --bg-2:#ffffff; --wash:#e9f3fb;
   --card:#ffffff;
   --dash:linear-gradient(#ffffff,#f1f7fb);
   --line:#dbe7ef;
-  --ink:#06284a; --text:#4a5d6e; --muted:#74889a;
+  --ink:#06284a; --text:#4a5d6e; --muted:#52677a;
   --glass:rgba(255,255,255,.78);
   --shadow:0 30px 60px rgba(8,58,99,.16);
-  --grad:linear-gradient(110deg,#0b5a9c 0%,#139fca 50%,#7fbc2e 100%);
-  --btn-bg:linear-gradient(110deg,#083a63,#0e6ba8 60%,#16a2c9);
+  --grad:linear-gradient(110deg,#0b5a9c 0%,#0a7296 50%,#3a7608 100%);
+  --btn-bg:linear-gradient(110deg,#083a63,#0c5c93 55%,#0b6e8c);
   --btn-fg:#fff;
   --btn-glow:rgba(14,107,168,.35);
   --aurora:.3;
-  --err:#d64545;
+  --err:#b82929;
   color-scheme:light;
 }
 
@@ -372,8 +386,8 @@ main:focus,main:focus-visible{outline:0}
   padding:.55rem .3rem;border-radius:12px;border:1px solid var(--line);background:var(--card);
   transition:all .5s var(--ease);
 }
-.flow-row span.active{color:#04223a;background:var(--grad);border-color:transparent;box-shadow:0 8px 22px rgba(34,198,232,.35);translate:0 -3px}
-.note{font-size:.7rem;color:var(--muted);text-align:center;margin-top:.8rem;opacity:.85}
+.flow-row span.active{color:var(--btn-fg);background:var(--btn-bg);border-color:transparent;box-shadow:0 8px 22px var(--btn-glow);translate:0 -3px}
+.note{font-size:.7rem;color:var(--muted);text-align:center;margin-top:.8rem}
 
 .float{
   position:absolute;transform:translateZ(80px);border-radius:18px;background:var(--bg-2);border:1px solid var(--line);
@@ -381,15 +395,15 @@ main:focus,main:focus-visible{outline:0}
 }
 @keyframes bob{50%{translate:0 -10px}}
 .chat{right:-22px;bottom:-4px;width:262px;overflow:hidden}
-.chat-head{display:flex;align-items:center;gap:.6rem;padding:.65rem .85rem;background:linear-gradient(110deg,#0a6b5a,#12896f);color:#fff}
+.chat-head{display:flex;align-items:center;gap:.6rem;padding:.65rem .85rem;background:linear-gradient(110deg,#095c4d,#0d6e5a);color:#fff}
 .chat-head .av{width:28px;height:28px;border-radius:50%;background:#fff;display:grid;place-items:center}
 .chat-head .av svg{width:20px;height:20px}
 .chat-head b{display:block;font-family:'Poppins',sans-serif;font-size:.78rem;line-height:1.1}
-.chat-head small{font-size:.65rem;opacity:.85}
+.chat-head small{font-size:.65rem;opacity:.92}
 .chat-body{height:172px;padding:.7rem;display:flex;flex-direction:column;justify-content:flex-end;gap:.4rem;overflow:hidden;background:var(--bg-2)}
 .msg{max-width:84%;padding:.5rem .7rem;border-radius:14px;font-size:.74rem;line-height:1.35;animation:pop .45s var(--ease) both}
 .msg.in{align-self:flex-start;background:var(--card);border:1px solid var(--line);color:var(--ink);border-bottom-left-radius:4px}
-.msg.out{align-self:flex-end;background:linear-gradient(110deg,#128c6a,#1aa57c);color:#fff;border-bottom-right-radius:4px}
+.msg.out{align-self:flex-end;background:linear-gradient(110deg,#0b6950,#0f785c);color:#fff;border-bottom-right-radius:4px}
 .msg.typing{display:flex;gap:4px;padding:.65rem .8rem}
 .msg.typing i{width:6px;height:6px;border-radius:50%;background:#fff;opacity:.5;animation:blink 1s infinite}
 .msg.typing i:nth-child(2){animation-delay:.15s}.msg.typing i:nth-child(3){animation-delay:.3s}
@@ -413,6 +427,79 @@ main:focus,main:focus-visible{outline:0}
 .stat b{display:block;font-family:'Poppins',sans-serif;font-weight:700;font-size:clamp(1.8rem,3vw,2.5rem);line-height:1.1}
 .stat span{font-size:.86rem;color:var(--muted)}
 
+/* ---------- Risk-Reversal Guarantee strip ---------- */
+.guarantees{
+  position:relative;z-index:2;margin-top:1.1rem;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:.85rem;
+}
+.g-item{
+  display:flex;align-items:flex-start;gap:.75rem;padding:1rem 1.1rem;
+  border-radius:18px;background:var(--card);border:1px solid var(--line);
+  backdrop-filter:blur(10px);transition:transform .35s var(--ease),border-color .3s,box-shadow .35s;
+}
+.g-item:hover{transform:translateY(-3px);border-color:var(--cyan);box-shadow:0 12px 28px rgba(34,198,232,.15)}
+.g-ico{
+  width:36px;height:36px;flex:none;border-radius:10px;display:grid;place-items:center;
+  font-size:1.1rem;color:var(--green);background:rgba(155,212,74,.12);border:1px solid rgba(155,212,74,.3);
+}
+.g-item:nth-child(1) .g-ico{color:#5eb3ea;background:rgba(14,107,168,.22);border-color:rgba(94,179,234,.38)}
+.g-item:nth-child(2) .g-ico{color:var(--green);background:rgba(155,212,74,.12);border-color:rgba(155,212,74,.3)}
+.g-item:nth-child(3) .g-ico{color:var(--cyan);background:rgba(34,198,232,.12);border-color:rgba(34,198,232,.3)}
+.g-item:nth-child(4) .g-ico{color:#8fb8dc;background:rgba(8,58,99,.45);border-color:rgba(143,184,220,.35)}
+[data-theme="light"] .g-item:nth-child(1) .g-ico{color:var(--blue);background:rgba(14,107,168,.10);border-color:rgba(14,107,168,.28)}
+[data-theme="light"] .g-item:nth-child(2) .g-ico{background:rgba(58,118,8,.10);border-color:rgba(58,118,8,.28)}
+[data-theme="light"] .g-item:nth-child(3) .g-ico{background:rgba(10,114,150,.10);border-color:rgba(10,114,150,.28)}
+[data-theme="light"] .g-item:nth-child(4) .g-ico{color:var(--navy);background:rgba(8,58,99,.09);border-color:rgba(8,58,99,.28)}
+.g-item b{display:block;font-family:'Poppins',sans-serif;font-size:.86rem;color:var(--ink);margin-bottom:.15rem}
+.g-item small{display:block;font-size:.77rem;color:var(--muted);line-height:1.4}
+
+/* ---------- Trust Proof Bar (#proof) ---------- */
+.proof-bar{
+  position:relative;z-index:2;margin-top:1.1rem;
+  padding:1rem 1.1rem;border-radius:18px;background:var(--card);border:1px solid var(--line);
+  backdrop-filter:blur(10px);
+}
+.proof-bar ul{list-style:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.85rem}
+.proof-item{display:flex;flex-direction:column;align-items:center;text-align:center;gap:.25rem;padding:.5rem}
+.proof-item b{font-family:'Poppins',sans-serif;font-size:1.6rem;font-weight:800;color:var(--ink);line-height:1}
+.proof-item span{font-size:.78rem;color:var(--muted)}
+.proof-item small{display:block;font-size:.7rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;font-weight:600}
+#proof .proof-item{border-right:1px solid var(--line)}
+#proof .proof-item:last-child{border-right:0}
+.calendar-note{font-size:.78rem;color:var(--muted);line-height:1.5}
+
+/* ---------- Next steps ---------- */
+.next-steps{list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}
+.next-step{padding:1.35rem;border:1px solid var(--line);border-radius:18px;background:var(--card)}
+.next-step .num{display:grid;place-items:center;width:2.2rem;height:2.2rem;margin-bottom:.9rem;border-radius:50%;font-family:'Poppins',sans-serif;font-weight:700;color:var(--btn-fg);background:var(--btn-bg)}
+.next-step h3{font-size:1.05rem;margin-bottom:.4rem}
+.next-step p{font-size:.9rem;color:var(--muted)}
+
+/* ---------- Calendar Panel (#calendarPanel) ---------- */
+#calendarPanel{scroll-margin-top:110px}
+.calendar-panel{
+  margin-top:2rem;border-radius:var(--radius);background:var(--card);border:1px solid var(--line);
+  overflow:hidden;position:relative;min-height:420px;
+}
+.cal-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem 1.2rem;border-bottom:1px solid var(--line);background:var(--bg)}
+.cal-head h3{font-size:1.1rem}
+.cal-head small{font-size:.8rem;color:var(--muted)}
+.cal-body{position:relative;display:grid;place-items:center;min-height:380px;background:var(--bg-2)}
+.cal-placeholder{display:grid;place-items:center;gap:1rem;padding:2rem;text-align:center}
+.cal-placeholder p{max-width:420px;font-size:.92rem}
+.cal-iframe{width:100%;height:700px;border:0;display:block;background:var(--bg-2)}
+.cal-iframe[hidden]{display:none!important}
+.cal-actions{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center}
+
+/* ---------- Pricing optional publish ---------- */
+.p-price{font-family:'Poppins',sans-serif;font-weight:800;font-size:1.9rem;color:var(--ink);margin:.3rem 0 .2rem;line-height:1.1}
+.p-price small{font-size:.85rem;font-weight:600;color:var(--muted)}
+.pricing-note{
+  margin-top:1.8rem;padding:1.2rem 1.4rem;border-radius:18px;background:var(--card);border:1px dashed var(--line);
+  font-size:.9rem;color:var(--text);line-height:1.6;
+}
+.pricing-note b{color:var(--ink)}
+
 /* =====================================================
    MARQUEE
 ===================================================== */
@@ -430,7 +517,7 @@ main:focus,main:focus-visible{outline:0}
 ===================================================== */
 .sec{position:relative;padding:clamp(4.5rem,8vw,7.5rem) 0;overflow:hidden}
 .sec.bg1{background:var(--bg)}
-.sec.bg2{background:var(--bg-2)}
+.sec.bg2{background:linear-gradient(180deg,var(--wash),var(--bg-2) 42%)}
 .sec.glow::before{
   content:"";position:absolute;inset:0;pointer-events:none;
   background:radial-gradient(700px 400px at 90% 0%,rgba(34,198,232,.1),transparent 60%),radial-gradient(600px 400px at 0% 100%,rgba(155,212,74,.09),transparent 60%);
@@ -440,6 +527,7 @@ main:focus,main:focus-visible{outline:0}
 .kicker{display:inline-flex;align-items:center;gap:.6rem;font-family:'Poppins',sans-serif;font-weight:600;font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;margin-bottom:1rem;color:var(--cyan)}
 .kicker::before,.kicker::after{content:"";width:28px;height:2px;background:var(--grad);border-radius:2px}
 .section-head h2{font-size:clamp(1.9rem,4.2vw,3.1rem);font-weight:700;letter-spacing:-.025em;margin-bottom:1rem}
+.section-head h2::after{content:"";display:block;width:64px;height:4px;margin:1.05rem auto 0;border-radius:999px;background:linear-gradient(90deg,var(--blue),var(--cyan),var(--green))}
 .section-head p{font-size:1.07rem}
 .center-cta{display:flex;justify-content:center;margin-top:2.6rem}
 
@@ -459,8 +547,31 @@ main:focus,main:focus-visible{outline:0}
 .pcard:hover .pico{rotate:-8deg;scale:1.1}
 .pcard h3{font-size:1.02rem;margin-bottom:.5rem;line-height:1.3}
 .pcard p{font-size:.9rem}
+.vs-grid{
+  margin-top:2.2rem;display:grid;grid-template-columns:1fr 1fr;gap:1.3rem;
+}
+.vs-card{
+  padding:1.8rem 1.6rem;border-radius:var(--radius);background:var(--card);border:1px solid var(--line);
+  transition:transform .4s var(--ease),border-color .35s,box-shadow .4s;
+}
+.vs-card.before{border-color:rgba(255,138,138,.28)}
+.vs-card.after{border-color:rgba(155,212,74,.38);box-shadow:0 18px 44px rgba(34,198,232,.1)}
+.vs-head{display:flex;align-items:center;justify-content:space-between;gap:.8rem;margin-bottom:1.1rem;padding-bottom:.9rem;border-bottom:1px solid var(--line)}
+.vs-head h3{font-size:1.18rem}
+.vs-badge{
+  font-family:'Poppins',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  padding:.3rem .75rem;border-radius:999px;
+}
+.vs-card.before .vs-badge{color:var(--err);background:rgba(255,107,107,.1);border:1px solid rgba(255,107,107,.3)}
+.vs-card.after .vs-badge{color:var(--green);background:rgba(155,212,74,.1);border:1px solid rgba(155,212,74,.3)}
+.vs-list{display:grid;gap:.7rem}
+.vs-list li{display:flex;align-items:flex-start;gap:.65rem;font-size:.92rem;color:var(--text)}
+.vs-card.after .vs-list li{color:var(--ink)}
+.vs-list .ic{flex:none;font-size:1.1rem;margin-top:3px}
+.vs-card.before .vs-list .ic{color:var(--err)}
+.vs-card.after .vs-list .ic{color:var(--green)}
 .bridge{
-  margin:2.6rem auto 0;max-width:720px;text-align:center;padding:1.3rem 1.6rem;border-radius:18px;
+  margin:2.2rem auto 0;max-width:720px;text-align:center;padding:1.3rem 1.6rem;border-radius:18px;
   background:var(--card);border:1px dashed var(--line);font-family:'Poppins',sans-serif;font-weight:600;color:var(--ink);font-size:1.05rem;
 }
 
@@ -551,10 +662,10 @@ main:focus,main:focus-visible{outline:0}
 .wa .b{font-size:.7rem;line-height:1.35;padding:.5rem .75rem;border-radius:13px;max-width:82%}
 .wa .bi{background:var(--card);border:1px solid var(--line);color:var(--ink);border-bottom-left-radius:4px;animation:bIn 8s infinite}
 .slot{display:grid}.slot > *{grid-area:1/1}
-.wa .bt{justify-self:end;display:flex;gap:4px;padding:.65rem .8rem;border-radius:13px;background:linear-gradient(110deg,#128c6a,#1aa57c);border-bottom-right-radius:4px;animation:bType 8s infinite;align-self:center}
+.wa .bt{justify-self:end;display:flex;gap:4px;padding:.65rem .8rem;border-radius:13px;background:linear-gradient(110deg,#0b6950,#0f785c);border-bottom-right-radius:4px;animation:bType 8s infinite;align-self:center}
 .wa .bt i{width:6px;height:6px;border-radius:50%;background:#fff;opacity:.7;animation:blink 1s infinite}
 .wa .bt i:nth-child(2){animation-delay:.15s}.wa .bt i:nth-child(3){animation-delay:.3s}
-.wa .bo{justify-self:end;background:linear-gradient(110deg,#128c6a,#1aa57c);color:#fff;border-bottom-right-radius:4px;animation:bOut 8s infinite}
+.wa .bo{justify-self:end;background:linear-gradient(110deg,#0b6950,#0f785c);color:#fff;border-bottom-right-radius:4px;animation:bOut 8s infinite}
 @keyframes bIn{0%,2%{opacity:0;translate:0 8px}8%,92%{opacity:1;translate:0 0}100%{opacity:0}}
 @keyframes bType{0%,16%{opacity:0}20%,32%{opacity:1}36%,100%{opacity:0}}
 @keyframes bOut{0%,34%{opacity:0;translate:0 8px}42%,92%{opacity:1;translate:0 0}100%{opacity:0}}
@@ -569,6 +680,7 @@ main:focus,main:focus-visible{outline:0}
 .row b{font-family:'Poppins',sans-serif;font-size:.68rem;text-align:right}
 .row.low .bar i{background:linear-gradient(90deg,#ff8a5c,#ffc14d)}
 .row.low b{color:#ffa94d;animation:blink2 1.6s infinite}
+[data-theme="light"] .row.low b{color:#9a4d00}
 @keyframes blink2{50%{opacity:.4}}
 
 /* vis: gbp */
@@ -619,15 +731,16 @@ main:focus,main:focus-visible{outline:0}
 }
 .fw-card::before{
   content:"";position:absolute;top:-1px;left:-1px;right:-1px;height:4px;border-radius:var(--radius) var(--radius) 0 0;
-  background:var(--grad);scale:0 1;transform-origin:left;transition:scale .55s var(--ease);
+  background:linear-gradient(90deg,var(--blue),var(--cyan),var(--green));opacity:.55;transition:opacity .4s var(--ease);
 }
 .fw-card:hover{transform:translateY(-10px);border-color:rgba(34,198,232,.45);box-shadow:var(--shadow)}
-.fw-card:hover::before{scale:1 1}
+.fw-card:hover::before{opacity:1}
 .fw-card:not(:last-child)::after{
   content:"→";position:absolute;z-index:2;right:-1.15rem;top:2.3rem;width:30px;height:30px;border-radius:50%;
   display:grid;place-items:center;font-size:.9rem;font-weight:700;color:var(--btn-fg);background:var(--btn-bg);box-shadow:0 6px 16px var(--btn-glow);
 }
-.fw-num{font-family:'Poppins',sans-serif;font-weight:800;font-size:3.2rem;line-height:1;color:transparent;-webkit-text-stroke:1.5px var(--line);margin-bottom:.9rem;transition:-webkit-text-stroke-color .4s}
+.fw-num{font-family:'Poppins',sans-serif;font-weight:800;font-size:3.2rem;line-height:1;color:transparent;-webkit-text-stroke:1.6px var(--text);margin-bottom:.9rem;transition:-webkit-text-stroke-color .4s}
+@supports not (-webkit-text-stroke:1px #000){.fw-num{color:var(--muted)}}
 .fw-card:hover .fw-num{-webkit-text-stroke-color:var(--cyan)}
 .fw-card h3{font-size:1.35rem;margin-bottom:.6rem}
 .fw-card p{font-size:.93rem;margin-bottom:1.1rem}
@@ -644,6 +757,7 @@ main:focus,main:focus-visible{outline:0}
   font-family:'Poppins',sans-serif;font-weight:700;color:var(--ink);background:var(--bg-2);border:2px solid var(--line);
   transition:all .45s var(--ease);
 }
+.step .num{border-color:rgba(14,107,168,.32)}
 .step:hover .num{color:var(--btn-fg);background:var(--btn-bg);border-color:transparent;scale:1.12;box-shadow:0 12px 26px var(--btn-glow)}
 .step h3{font-size:1.1rem;margin-bottom:.4rem}
 .step p{font-size:.9rem}
@@ -663,6 +777,158 @@ main:focus,main:focus-visible{outline:0}
 .wcard:hover .wico{rotate:-10deg}
 .wcard h3{font-size:1.1rem;margin-bottom:.4rem}
 .wcard p{font-size:.92rem}
+
+/* ---------- Lead Magnet (#blueprint) ---------- */
+.bp-meta{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.85rem}
+.bp-actions{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center}
+
+/* =====================================================
+   PROOF OF WORK (#work) & LIVE WHATSAPP DEMO (.demo-bar)
+===================================================== */
+.work-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem}
+.case-card{
+  display:flex;flex-direction:column;gap:1rem;padding:1.75rem 1.55rem;
+  border-radius:var(--radius);background:var(--card);border:1px solid var(--line);
+  transition:transform .45s var(--ease),border-color .35s,box-shadow .45s;
+}
+.case-card:hover{transform:translateY(-8px);border-color:rgba(34,198,232,.45);box-shadow:var(--shadow)}
+.case-top{display:flex;align-items:center;justify-content:space-between;gap:.6rem}
+.case-card h3{font-size:1.25rem}
+.case-steps{display:grid;gap:.8rem}
+.case-step{
+  padding:.85rem 1rem;border-radius:14px;background:var(--bg);border:1px solid var(--line);
+}
+.case-step small{
+  display:block;font-family:'Poppins',sans-serif;font-size:.68rem;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);margin-bottom:.25rem;
+}
+.case-step.out small{color:var(--green)}
+.case-step p{font-size:.88rem;color:var(--text);line-height:1.5}
+.case-step.out p{color:var(--ink);font-weight:500}
+
+.demo-bar{
+  margin-top:1.8rem;padding:1.6rem clamp(1.3rem,3vw,2.2rem);
+  border-radius:var(--radius);background:var(--card);border:1px solid var(--line);
+  display:grid;grid-template-columns:1.1fr .9fr;gap:1.5rem;align-items:center;
+}
+.demo-info h3{font-size:1.25rem;margin-bottom:.35rem}
+.demo-info p{font-size:.92rem;margin-bottom:1rem}
+.demo-btns{display:flex;flex-wrap:wrap;gap:.5rem}
+.demo-chip{
+  font-family:'Poppins',sans-serif;font-weight:600;font-size:.78rem;color:var(--ink);
+  padding:.5rem .95rem;border-radius:999px;background:var(--bg);border:1px solid var(--line);
+  cursor:pointer;transition:all .3s var(--ease);
+}
+.demo-chip:hover,.demo-chip.on{color:var(--btn-fg);background:var(--btn-bg);border-color:transparent;box-shadow:0 8px 20px var(--btn-glow)}
+.demo-preview{
+  padding:1rem 1.15rem;border-radius:18px;background:var(--bg);border:1px solid var(--line);
+  display:grid;gap:.55rem;
+}
+.demo-preview .dp-in,.demo-preview .dp-out{
+  font-size:.82rem;line-height:1.45;padding:.55rem .85rem;border-radius:13px;max-width:92%;
+}
+.demo-preview .dp-in{justify-self:start;background:var(--card);border:1px solid var(--line);color:var(--ink);border-bottom-left-radius:4px}
+.demo-preview .dp-out{justify-self:end;background:linear-gradient(110deg,#0b6950,#0f785c);color:#fff;border-bottom-right-radius:4px}
+.demo-preview .dp-foot{display:flex;justify-content:space-between;align-items:center;gap:.6rem;padding-top:.4rem;border-top:1px solid var(--line);font-size:.75rem;color:var(--muted)}
+.demo-preview .dp-foot a{font-family:'Poppins',sans-serif;font-weight:600;color:var(--green)}
+
+/* =====================================================
+   PRICING & ESTIMATOR (#pricing)
+===================================================== */
+.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem;align-items:stretch}
+.p-tier{
+  position:relative;display:flex;flex-direction:column;padding:2rem 1.65rem;
+  border-radius:var(--radius);background:var(--card);border:1px solid var(--line);
+  transition:transform .45s var(--ease),border-color .35s,box-shadow .45s;
+}
+.p-tier::before{
+  content:"";position:absolute;top:-1px;left:-1px;right:-1px;height:4px;border-radius:var(--radius) var(--radius) 0 0;
+  background:linear-gradient(90deg,var(--blue),var(--cyan),var(--green));opacity:.55;transition:opacity .4s var(--ease);
+}
+.p-tier:hover::before,.p-tier.featured::before{opacity:1}
+.p-tier:hover{transform:translateY(-8px);border-color:rgba(34,198,232,.45);box-shadow:var(--shadow)}
+.p-tier.featured{
+  border-color:var(--cyan);background:linear-gradient(170deg,rgba(34,198,232,.09),rgba(155,212,74,.06));
+  box-shadow:var(--shadow);
+}
+.p-badge{
+  align-self:flex-start;font-family:'Poppins',sans-serif;font-size:.68rem;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;padding:.32rem .8rem;border-radius:999px;
+  color:var(--cyan);background:rgba(34,198,232,.1);border:1px solid rgba(34,198,232,.28);margin-bottom:.9rem;
+}
+.p-tier.featured .p-badge{color:var(--btn-fg);background:var(--btn-bg);border-color:transparent;box-shadow:0 8px 20px var(--btn-glow)}
+.p-tier h3{font-size:1.35rem;margin-bottom:.35rem}
+.p-scope{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.55rem;color:var(--ink);margin:.4rem 0 .2rem}
+.p-time{font-size:.82rem;color:var(--muted);margin-bottom:1rem}
+.p-desc{font-size:.92rem;margin-bottom:1.25rem}
+.p-list{display:grid;gap:.6rem;margin-bottom:1.6rem;flex:1}
+.p-list li{display:flex;align-items:flex-start;gap:.6rem;font-size:.9rem;color:var(--ink)}
+.p-list .ic{flex:none;font-size:1.1rem;margin-top:3px;color:var(--green)}
+
+.comp-wrap{
+  margin-top:2.4rem;border-radius:var(--radius);background:var(--card);border:1px solid var(--line);
+  overflow-x:auto;
+}
+.comp-table{width:100%;border-collapse:collapse;min-width:640px;text-align:left;font-size:.9rem}
+.comp-table th,.comp-table td{padding:1rem 1.25rem;border-bottom:1px solid var(--line)}
+.comp-table thead th{font-family:'Poppins',sans-serif;font-size:.86rem;font-weight:700;color:var(--ink);background:var(--bg)}
+.comp-table tbody tr:last-child td,.comp-table tbody tr:last-child th{border-bottom:0}
+.comp-table tbody th{font-weight:600;color:var(--ink)}
+.comp-table td{color:var(--text)}
+.comp-table .yes{color:var(--green);font-weight:700}
+
+.estimator{
+  margin-top:2.4rem;padding:2rem clamp(1.4rem,3.5vw,2.4rem);
+  border-radius:var(--radius);background:var(--bg);border:1px solid var(--line);
+  display:grid;grid-template-columns:1.2fr .8fr;gap:2rem;align-items:center;
+}
+.est-left h3{font-size:1.35rem;margin-bottom:.35rem}
+.est-left > p{font-size:.93rem;margin-bottom:1.2rem}
+.est-checks{display:grid;grid-template-columns:1fr 1fr;gap:.65rem}
+.est-opt{
+  display:flex;align-items:center;gap:.65rem;padding:.75rem .95rem;
+  border-radius:14px;background:var(--card);border:1.5px solid var(--line);
+  cursor:pointer;font-family:'Poppins',sans-serif;font-size:.84rem;font-weight:600;color:var(--ink);
+  transition:border-color .3s,background .3s,transform .25s var(--ease);
+}
+.est-opt:hover{border-color:var(--cyan);transform:translateY(-2px)}
+.est-opt input{accent-color:var(--cyan);width:17px;height:17px;cursor:pointer}
+.est-summary{
+  padding:1.5rem;border-radius:20px;background:var(--card);border:1px solid var(--line);
+  display:grid;gap:.85rem;
+}
+.est-row{display:flex;justify-content:space-between;align-items:baseline;gap:.6rem;padding-bottom:.65rem;border-bottom:1px solid var(--line);font-size:.86rem}
+.est-row span{color:var(--muted)}
+.est-row b{font-family:'Poppins',sans-serif;font-size:1rem;color:var(--ink);text-align:right}
+.est-note{font-size:.78rem;color:var(--muted);line-height:1.45}
+
+/* ---------- Mobile Sticky Bottom CTA Bar (.m-bar) ---------- */
+.m-bar{
+  display:none;position:fixed;left:0;right:0;bottom:0;z-index:160;
+  grid-template-columns:1fr 1fr;gap:.6rem;
+  padding:.65rem .9rem calc(.65rem + env(safe-area-inset-bottom));
+  background:var(--glass);border-top:1px solid var(--line);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+}
+.m-bar .btn{width:100%;padding:.72rem 1rem;font-size:.84rem}
+
+/* =====================================================
+   LOCAL SEO (#seo)
+===================================================== */
+.seo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem}
+.seo-card{
+  position:relative;padding:2rem 1.6rem 1.7rem;border-radius:var(--radius);background:var(--card);border:1px solid var(--line);
+  transition:transform .45s var(--ease),border-color .35s,box-shadow .45s;
+}
+.seo-card::before{
+  content:"";position:absolute;top:-1px;left:-1px;right:-1px;height:4px;border-radius:var(--radius) var(--radius) 0 0;
+  background:linear-gradient(90deg,var(--blue),var(--cyan),var(--green));opacity:.55;transition:opacity .4s var(--ease);
+}
+.seo-card:hover{transform:translateY(-8px);border-color:rgba(34,198,232,.45);box-shadow:var(--shadow)}
+.seo-card:hover::before{opacity:1}
+.seo-ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;margin-bottom:1.1rem;font-size:1.3rem;color:var(--cyan);background:rgba(34,198,232,.1);border:1px solid rgba(34,198,232,.28)}
+.seo-card h3{font-size:1.2rem;margin-bottom:.55rem}
+.seo-card p{font-size:.94rem}
 
 /* =====================================================
    FAQ
@@ -723,7 +989,7 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
   transition:border-color .3s,box-shadow .3s,background .3s;
 }
 .field textarea{resize:vertical;min-height:120px}
-.field input::placeholder,.field textarea::placeholder{color:var(--muted);opacity:.8}
+.field input::placeholder,.field textarea::placeholder{color:var(--muted);opacity:1}
 .field input:hover,.field select:hover,.field textarea:hover{border-color:rgba(34,198,232,.5)}
 .field input:focus,.field select:focus,.field textarea:focus{outline:0;border-color:var(--cyan);box-shadow:0 0 0 4px rgba(34,198,232,.16)}
 .field select{
@@ -821,12 +1087,17 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
   .stats{grid-template-columns:repeat(2,1fr)}
   .stat:nth-child(2){border-right:0}
   .stat:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  .guarantees{grid-template-columns:repeat(2,1fr)}
+  .proof-bar ul{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .work-grid,.price-grid{grid-template-columns:1fr}
+  .demo-bar,.estimator{grid-template-columns:1fr}
   .fw{grid-template-columns:repeat(2,1fr)}
   .fw-card:not(:last-child)::after{display:none}
   .contact-grid{grid-template-columns:1fr}
   .contact-info > p{max-width:none}
   .f-grid{grid-template-columns:1fr 1fr}
 }
+@media (max-width:900px){.seo-grid{grid-template-columns:1fr}}
 @media (max-width:960px){
   .menu-toggle{display:flex}
   .nav-links{
@@ -842,7 +1113,9 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
   .nav-links .btn{width:100%}
 }
 @media (max-width:900px){
+  .vs-grid{grid-template-columns:1fr}
   .steps{grid-template-columns:1fr;gap:1.6rem}
+  .next-steps{grid-template-columns:1fr}
   .steps::before{top:28px;bottom:28px;left:27px;right:auto;width:2px;height:auto}
   .step{display:grid;grid-template-columns:56px 1fr;gap:1.1rem;text-align:left;align-items:start;padding:0}
   .step .num{margin:0}
@@ -856,11 +1129,16 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
   .chat-body{height:150px}
   .stage{padding-bottom:3.5rem}
   .stat{padding:1.1rem}
+  .guarantees,.est-checks,.proof-bar ul,.next-steps{grid-template-columns:1fr}
+  #proof .proof-item{border-right:0;border-bottom:1px solid var(--line)}
+  #proof .proof-item:last-child{border-bottom:0}
   .fw{grid-template-columns:1fr}
   .cta-in{text-align:center;justify-content:center}
-  .cta-in .btn{width:100%}
+  .cta-in .btn,.bp-actions .btn{width:100%}
   .logo-text strong{font-size:1.05rem}.logo-text span{font-size:.82rem}
-  .fab{right:14px;bottom:14px}
+  .m-bar{display:grid}
+  .fab{right:14px;bottom:78px}
+  .footer{padding-bottom:5.2rem}
   .fgrid{grid-template-columns:1fr}
   .f-grid{grid-template-columns:1fr;gap:2rem}
   .f-bottom{flex-direction:column;text-align:center}
@@ -873,6 +1151,86 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
   .reveal{opacity:1}
   .chart .ln{stroke-dashoffset:0}.chart .ar{opacity:1}
 }
+
+/* vis: local search (search bar + result rows) */
+.srch{width:78%;display:grid;gap:9px}
+.sbar{position:relative;height:26px;border-radius:999px;background:var(--bg-2);border:1px solid var(--line);overflow:hidden}
+.sbar::before{content:"";position:absolute;left:11px;top:7px;width:8px;height:8px;border-radius:50%;border:2px solid var(--cyan)}
+.sbar::after{content:"";position:absolute;left:32px;top:9px;width:54%;height:8px;border-radius:8px;background:var(--line)}
+.sres{display:flex;align-items:center;gap:8px;padding:.42rem .6rem;border-radius:10px;background:var(--bg-2);border:1px solid var(--line)}
+.sres .ic{color:var(--cyan);font-size:.95rem;flex:none}
+.sres::after{content:"";flex:1;height:7px;border-radius:7px;background:var(--line)}
+.sres.on{border-color:var(--a-line,var(--cyan));box-shadow:0 8px 20px rgba(14,107,168,.16)}
+
+/* Services grid: one uniform card size, 3 + 3 on desktop (<=1100px keeps 2-up, <=700px 1-up) */
+@media (min-width:1101px){
+  .bento .card,.bento .card.w7,.bento .card.w5{grid-column:span 4}
+}
+
+/* =====================================================
+   LIGHT-THEME COLOUR (Round 2)
+   Every rule is prefixed [data-theme="light"] so the dark theme is untouched.
+   Contrast for these tints is verified by tools/check-contrast.py.
+===================================================== */
+[data-theme="light"]{--bg:#eaf3fb; --bg-2:#fbfdff; --wash:#e3effa; --line:#cfe0f0; --aurora:.35;
+  /* darker cyan for text/icons sitting on tinted pills & chips (>= 4.5:1 on every light tint) */
+  --cyan-ink:#07607d;}
+
+/* Cards: soft white → ice-blue gradient with a visible blue-tinted edge */
+[data-theme="light"] .card,
+[data-theme="light"] .case-card,
+[data-theme="light"] .vs-card,
+[data-theme="light"] .fw-card,
+[data-theme="light"] .seo-card,
+[data-theme="light"] .next-step,
+[data-theme="light"] .g-item,
+[data-theme="light"] .kpi,
+[data-theme="light"] .c-card,
+[data-theme="light"] .form-card,
+[data-theme="light"] .p-tier:not(.featured){background:linear-gradient(180deg,#ffffff,#f1f8ff)}
+/* border tint only at rest so each component's own :hover border colour still wins */
+[data-theme="light"] .card:not(:hover),
+[data-theme="light"] .case-card:not(:hover),
+[data-theme="light"] .vs-card:not(.before):not(.after):not(:hover),
+[data-theme="light"] .fw-card:not(:hover),
+[data-theme="light"] .seo-card:not(:hover),
+[data-theme="light"] .next-step,
+[data-theme="light"] .g-item:not(:hover),
+[data-theme="light"] .kpi,
+[data-theme="light"] .c-card:not(:hover),
+[data-theme="light"] .form-card,
+[data-theme="light"] .p-tier:not(.featured):not(:hover){border-color:#d5e6f6}
+
+/* Section bands */
+[data-theme="light"] #seo.sec.bg2{background:linear-gradient(180deg,#e3f4fb,var(--bg-2) 45%)}
+[data-theme="light"] #pricing.sec.bg2{background:linear-gradient(180deg,#e8f5e4,var(--bg-2) 45%)}
+
+/* Kicker pills */
+[data-theme="light"] .kicker{color:var(--cyan-ink);background:rgba(14,107,168,.09);border:1px solid rgba(14,107,168,.18);padding:.38rem .9rem;border-radius:999px}
+[data-theme="light"] .kicker::before,
+[data-theme="light"] .kicker::after{display:none}
+
+/* Per-service palette: web blue · social green · whatsapp cyan · pos navy · gbp green */
+[data-theme="light"] #web{--a:var(--blue);--a-soft:rgba(14,107,168,.10);--a-line:rgba(14,107,168,.28)}
+[data-theme="light"] #social{--a:var(--green);--a-soft:rgba(58,118,8,.10);--a-line:rgba(58,118,8,.28)}
+[data-theme="light"] #whatsapp{--a:var(--cyan-ink);--a-soft:rgba(10,114,150,.10);--a-line:rgba(10,114,150,.28)}
+[data-theme="light"] #pos{--a:var(--navy);--a-soft:rgba(8,58,99,.09);--a-line:rgba(8,58,99,.28)}
+[data-theme="light"] #gbp{--a:var(--green);--a-soft:rgba(58,118,8,.10);--a-line:rgba(58,118,8,.28)}
+[data-theme="light"] #localseo{--a:#8a4b00;--a-soft:rgba(138,75,0,.20);--a-line:rgba(138,75,0,.5)}
+[data-theme="light"] .g-item:nth-child(3) .g-ico,
+[data-theme="light"] .seo-ico{color:var(--cyan-ink)}
+[data-theme="light"] .card-icon{color:var(--a,var(--cyan));background:var(--a-soft,rgba(10,114,150,.10));border-color:var(--a-line,var(--line))}
+[data-theme="light"] .card-num{-webkit-text-stroke:1.6px var(--a,var(--blue))}
+[data-theme="light"] .vis{background:linear-gradient(160deg,var(--a-soft,rgba(14,107,168,.10)),rgba(255,255,255,.55));border-color:var(--a-line,var(--line))}
+/* Local-search mock: cyan on a white card would be ~1.9:1, so light uses --cyan-ink */
+[data-theme="light"] .sbar::before{border-color:var(--cyan-ink)}
+[data-theme="light"] .sres .ic{color:var(--cyan-ink)}
+
+/* Comparison table header, CTA band and idle filter pills */
+[data-theme="light"] .comp-table thead th{background:#e3effa}
+[data-theme="light"] .cta-in{background:linear-gradient(135deg,#eaf3fb,#e8f5e4)}
+[data-theme="light"] .pill:not(.on){background:#eef6fd;border-color:#c9dff0}
+[data-theme="light"] .pill:not(.on):hover{border-color:var(--cyan)}
 </style>
 
 <!-- =====================================================================
@@ -941,7 +1299,8 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
           { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Social Media Management & Ads", "description": "Strategy, content and paid campaigns measured against real business results.", "serviceType": "Social media marketing" } },
           { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "WhatsApp Automation", "description": "Automated enquiries, bookings, follow-ups and order updates on WhatsApp.", "serviceType": "Conversational automation" } },
           { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "POS & Inventory Systems", "description": "Real-time point of sale and inventory control that cuts errors and stockouts.", "serviceType": "Business systems" } },
-          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Google Business Profile Optimization", "description": "Local search and Google Maps optimization that turns searches into visits.", "serviceType": "Local SEO" } }
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Google Business Profile Optimization", "description": "Local search and Google Maps optimization that turns searches into visits.", "serviceType": "Local SEO" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Local SEO & Google Maps", "description": "Google Business Profile setup, searchable page structure and fast local landing pages that turn nearby searches into enquiries.", "serviceType": "Local search optimization" } }
         ]
       }
     },
@@ -990,7 +1349,12 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
         {
           "@type": "Question",
           "name": "How do you measure success?",
-          "acceptedAnswer": { "@type": "Answer", "text": "We agree on key metrics upfront, such as enquiries, response times, sales and cost savings, and report on them regularly so you always see what your investment is delivering." }
+          "acceptedAnswer": { "@type": "Answer", "text": "We agree on key metrics upfront, such as enquiries, response times, sales, and cost savings, and report on them regularly so you always see what your investment is delivering." }
+        },
+        {
+          "@type": "Question",
+          "name": "Will my website show up on Google?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Search visibility is a process, not a switch. We set the fundamentals up properly — Google Business Profile, on-page structure, speed and content — and report on rankings and enquiries as they build. Nobody honest can promise a #1 position, but you will always know what is being worked on and what it is producing." }
         },
         {
           "@type": "Question",
@@ -1051,6 +1415,10 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
     <symbol id="i-user" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></g></symbol>
     <symbol id="i-layers" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></g></symbol>
     <symbol id="i-chart" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></g></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></g></symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></g></symbol>
+    <symbol id="i-dl" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></g></symbol>
+    <symbol id="i-cross" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></g></symbol>
     <symbol id="i-wa" viewBox="0 0 32 32"><path fill="currentColor" d="M16 3C9 3 3.3 8.6 3.3 15.5c0 2.4.7 4.7 2 6.7L3 29l7-2.2c1.9 1 4 1.6 6 1.6 7 0 12.7-5.6 12.7-12.5S23 3 16 3zm0 22.6c-1.9 0-3.7-.5-5.3-1.5l-.4-.2-4.1 1.3 1.3-4-.3-.4a10 10 0 0 1-1.6-5.3C5.6 9.9 10.3 5.4 16 5.4S26.4 9.9 26.4 15.5 21.7 25.6 16 25.6zm5.7-7.5c-.3-.2-1.9-.9-2.2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7.1a8.3 8.3 0 0 1-4.1-3.6c-.3-.6.3-.5.9-1.7.1-.2 0-.4 0-.5l-1-2.3c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4s-1.2 1.2-1.2 2.9 1.2 3.4 1.4 3.6 2.4 3.7 5.8 5.1c2.1.9 2.9 1 4 .8.6-.1 1.9-.8 2.1-1.5s.3-1.4.2-1.5-.3-.2-.6-.4z"/></symbol>
   </defs>
 </svg>
@@ -1079,10 +1447,12 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
             <a href="#whatsapp"><span class="mi"><svg class="ic"><use href="#i-chat"/></svg></span><span><b>WhatsApp Automation</b><small>Reply in seconds</small></span></a>
             <a href="#pos"><span class="mi"><svg class="ic"><use href="#i-pos"/></svg></span><span><b>POS &amp; Inventory</b><small>Real-time control</small></span></a>
             <a href="#gbp"><span class="mi"><svg class="ic"><use href="#i-pin"/></svg></span><span><b>Google Business Profile</b><small>Win local search</small></span></a>
+            <a href="#seo"><span class="mi"><svg class="ic"><use href="#i-chart"/></svg></span><span><b>Local SEO</b><small>Get found on Google</small></span></a>
           </div>
         </li>
-        <li><a href="#approach">Our Approach</a></li>
-        <li><a href="#process">Process</a></li>
+        <li><a href="#work">Work</a></li>
+        <li><a href="#approach">Approach</a></li>
+        <li><a href="#pricing">Pricing</a></li>
         <li><a href="#why">Why Us</a></li>
         <li><a href="#faq">FAQ</a></li>
         <li><a href="#contact" class="btn btn-primary btn-sm">Book a Strategy Call</a></li>
@@ -1141,9 +1511,9 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
             <div class="dash-bar"><i></i><i></i><i></i><span>omniflow / growth-overview</span><em class="live">LIVE PREVIEW</em></div>
             <div class="dash-body">
               <div class="kpis">
-                <div class="kpi"><small>New leads</small><b data-count="128">0</b><em>▲ growing</em></div>
-                <div class="kpi"><small>Avg. reply</small><b><span data-count="12">0</span>s</b><em>▲ instant</em></div>
-                <div class="kpi"><small>Stock sync</small><b><span data-count="100">0</span>%</b><em>● real-time</em></div>
+                <div class="kpi"><small>Lead inbox</small><b>Example</b><em>Illustrative flow</em></div>
+                <div class="kpi"><small>Reply channel</small><b>WhatsApp</b><em>Configured per scope</em></div>
+                <div class="kpi"><small>Stock sync</small><b>Optional</b><em>POS integration</em></div>
               </div>
               <div class="chart">
                 <div class="chart-head"><span>Inbound enquiries</span><b>Last 12 weeks</b></div>
@@ -1179,12 +1549,33 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
 
     </div>
 
-    <div class="stats reveal">
-      <div class="stat"><b class="gt"><span data-count="5">0</span></b><span>Digital services</span></div>
-      <div class="stat"><b class="gt"><span data-count="4">0</span></b><span>Growth stages covered</span></div>
-      <div class="stat"><b class="gt"><span data-count="24">0</span>/7</b><span>Automated customer replies</span></div>
-      <div class="stat"><b class="gt"><span data-count="1">0</span></b><span>Accountable partner</span></div>
+    <div class="stats reveal" aria-label="Service capabilities">
+      <div class="stat"><b class="gt">Attract</b><span>Web, Google &amp; social</span></div>
+      <div class="stat"><b class="gt">Convert</b><span>WhatsApp journeys</span></div>
+      <div class="stat"><b class="gt">Operate</b><span>POS &amp; inventory</span></div>
+      <div class="stat"><b class="gt">Scale</b><span>Clear reporting</span></div>
     </div>
+
+    <div class="guarantees reveal" aria-label="Risk-reversal guarantees">
+      <div class="g-item">
+        <span class="g-ico"><svg class="ic"><use href="#i-shield"/></svg></span>
+        <div><b>100% Ownership &amp; Docs</b><small>Full code, domains, ad accounts &amp; handover docs are yours from day one.</small></div>
+      </div>
+      <div class="g-item">
+        <span class="g-ico"><svg class="ic"><use href="#i-layers"/></svg></span>
+        <div><b>Milestone Payments</b><small>Pay in clear stages tied to verified deliverables — never 100% upfront.</small></div>
+      </div>
+      <div class="g-item">
+        <span class="g-ico"><svg class="ic"><use href="#i-clock"/></svg></span>
+        <div><b>Free 30-Day Support</b><small>Post-launch bug fixes, staff training &amp; fine-tuning included at zero extra cost.</small></div>
+      </div>
+      <div class="g-item">
+        <span class="g-ico"><svg class="ic"><use href="#i-check"/></svg></span>
+        <div><b>Transparent Scope</b><small>Written deliverables &amp; timelines agreed upfront — zero surprise add-on fees.</small></div>
+      </div>
+    </div>
+
+    <div class="proof-bar" id="proof" hidden aria-label="Verified proof points"><ul id="proofList"></ul></div>
   </div>
 </section>
 
@@ -1232,6 +1623,36 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
       </div>
     </div>
 
+    <div class="vs-grid reveal">
+      <div class="vs-card before">
+        <div class="vs-head">
+          <h3>Before OmniFlow</h3>
+          <span class="vs-badge">Disconnected Vendors</span>
+        </div>
+        <ul class="vs-list">
+          <li><svg class="ic"><use href="#i-cross"/></svg><span>Chasing 4–5 freelancers and agencies who blame each other when leads drop</span></li>
+          <li><svg class="ic"><use href="#i-cross"/></svg><span>Slow brochure website that fails to capture or track WhatsApp &amp; phone enquiries</span></li>
+          <li><svg class="ic"><use href="#i-cross"/></svg><span>Hours-late replies to after-hours WhatsApp, Facebook, and Instagram messages</span></li>
+          <li><svg class="ic"><use href="#i-cross"/></svg><span>Manual spreadsheets and cash register tallies causing stockouts and billing errors</span></li>
+          <li><svg class="ic"><use href="#i-cross"/></svg><span>Boosted posts and ad spend with no visibility into actual sales return</span></li>
+        </ul>
+      </div>
+
+      <div class="vs-card after">
+        <div class="vs-head">
+          <h3>With OmniFlow Digital</h3>
+          <span class="vs-badge">One Connected Engine</span>
+        </div>
+        <ul class="vs-list">
+          <li><svg class="ic"><use href="#i-check"/></svg><span>One accountable team managing web, social ads, WhatsApp, POS, and Google Maps</span></li>
+          <li><svg class="ic"><use href="#i-check"/></svg><span>Fast, conversion-engineered website wired directly into your WhatsApp &amp; CRM flow</span></li>
+          <li><svg class="ic"><use href="#i-check"/></svg><span>24/7 automated WhatsApp replies, appointment bookings, and instant lead capture</span></li>
+          <li><svg class="ic"><use href="#i-check"/></svg><span>Real-time POS &amp; multi-branch inventory synced with low-stock alerts and staff roles</span></li>
+          <li><svg class="ic"><use href="#i-check"/></svg><span>Clear monthly ROI reporting tying every campaign to real enquiries and revenue</span></li>
+        </ul>
+      </div>
+    </div>
+
     <p class="bridge reveal">There's a better way to grow. It starts with one accountable partner covering every channel.</p>
   </div>
 </section>
@@ -1242,7 +1663,7 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
 
     <div class="section-head reveal" style="margin-bottom:2.2rem">
       <span class="kicker">What We Do</span>
-      <h2>Five Services. <span class="gt">One Goal: Your Growth.</span></h2>
+      <h2>Six Services. <span class="gt">One Goal: Your Growth.</span></h2>
       <p>Use them together for maximum impact, or start with the one that solves your most urgent challenge.</p>
     </div>
 
@@ -1339,6 +1760,24 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
         <p class="desc">We optimize your Google presence so you rank higher in local search and Maps, and turn "near me" searches into calls, visits, and sales.</p>
         <a href="#contact" class="card-link" data-interest="Google Business Profile Optimization">Get Found Locally <svg class="ic"><use href="#i-arrow"/></svg></a>
       </article>
+
+      <!-- 6 LOCAL SEO -->
+      <article class="card reveal" id="localseo" data-stage="attract" style="--d:.3s">
+        <div class="card-head"><div class="card-icon"><svg class="ic"><use href="#i-chart"/></svg></div><span class="card-num">06</span></div>
+        <div class="vis" aria-hidden="true">
+          <div class="srch">
+            <div class="sbar"></div>
+            <div class="sres on"><svg class="ic"><use href="#i-pin"/></svg></div>
+            <div class="sres"><svg class="ic"><use href="#i-pin"/></svg></div>
+            <div class="sres"><svg class="ic"><use href="#i-pin"/></svg></div>
+          </div>
+        </div>
+        <div class="tags"><span class="tag">Attract</span></div>
+        <h3>Local SEO &amp; Google Maps</h3>
+        <p class="outcome">Show up when nearby customers search.</p>
+        <p class="desc">We set up your Google Business Profile, structure your pages in plain, searchable language and keep them fast — so local searches turn into enquiries.</p>
+        <a href="#seo" class="card-link">See How Local Search Works <svg class="ic"><use href="#i-arrow"/></svg></a>
+      </article>
     </div>
 
     <!-- Audit banner -->
@@ -1352,6 +1791,174 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
       </div>
     </div>
 
+  </div>
+</section>
+
+<!-- ============ LOCAL SEO ============ -->
+<section class="sec bg2 glow" id="seo">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="kicker">Local Search</span>
+      <h2>Get Found by the Customers <span class="gt">Who Are Already Searching.</span></h2>
+      <p>Most buyers search Google before they message anyone. We make sure your business shows up — and that the page they land on turns that search into an enquiry.</p>
+    </div>
+
+    <div class="seo-grid">
+      <article class="seo-card reveal">
+        <div class="seo-ico"><svg class="ic"><use href="#i-pin"/></svg></div>
+        <h3>Google Business Profile &amp; Maps</h3>
+        <p>Complete profile, right categories, photos, opening hours and a simple review flow — so you appear on Maps when nearby customers search.</p>
+      </article>
+      <article class="seo-card reveal" style="--d:.1s">
+        <div class="seo-ico"><svg class="ic"><use href="#i-layers"/></svg></div>
+        <h3>Local keywords, plain structure</h3>
+        <p>Titles, headings and service copy written around how people actually search in your area, with clean markup Google can read easily.</p>
+      </article>
+      <article class="seo-card reveal" style="--d:.2s">
+        <div class="seo-ico"><svg class="ic"><use href="#i-clock"/></svg></div>
+        <h3>Fast, mobile-first pages</h3>
+        <p>Speed, mobile layout and one clear next step per page — because a slow page loses the visitor before they ever contact you.</p>
+      </article>
+    </div>
+
+    <div class="center-cta reveal">
+      <a href="#contact" class="btn btn-primary" data-magnetic data-interest="Google Business Profile Optimization">Check My Google Visibility <svg class="ic"><use href="#i-arrow"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROOF OF WORK (#work) ============ -->
+<section class="sec bg1" id="work">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="kicker">Solution Blueprints</span>
+      <h2>Business Bottlenecks. <span class="gt">Connected Solution Architectures.</span></h2>
+      <p>Illustrative solution blueprints—not published client case studies or performance claims.</p>
+    </div>
+
+    <div class="work-grid">
+      <!-- Case 1 -->
+      <article class="case-card reveal">
+        <div class="case-top">
+          <span class="tag">Clinic &amp; Service Booking</span>
+          <span class="tag g">Web + WhatsApp + GBP</span>
+        </div>
+        <h3>Healthcare, Salon &amp; Service Appointments</h3>
+        <div class="case-steps">
+          <div class="case-step">
+            <small>Problem</small>
+            <p>Missed phone calls during busy hours, manual paper appointment diaries, and high last-minute no-show rates.</p>
+          </div>
+          <div class="case-step">
+            <small>Solution Architecture</small>
+            <p>Mobile-first booking website + 24/7 WhatsApp slot selection &amp; automated reminder flow + Google Maps "Book on WhatsApp" action.</p>
+          </div>
+          <div class="case-step out">
+            <small>Planned Outcome</small>
+            <p>A connected appointment journey with clearer enquiry handling and reminder workflows. We will publish this once live.</p>
+          </div>
+        </div>
+        <a href="case-studies.html#clinic" class="card-link" data-interest="WhatsApp Automation">Explore This Clinic Blueprint <svg class="ic"><use href="#i-arrow"/></svg></a>
+      </article>
+
+      <!-- Case 2 -->
+      <article class="case-card reveal" style="--d:.1s">
+        <div class="case-top">
+          <span class="tag">Retail &amp; Multi-Branch POS</span>
+          <span class="tag g">POS + Stock + WhatsApp</span>
+        </div>
+        <h3>Retail Store &amp; Multi-Counter Inventory</h3>
+        <div class="case-steps">
+          <div class="case-step">
+            <small>Problem</small>
+            <p>Stockouts on bestsellers, manual Excel reconciliation across counters, and customers asking "Is this in stock?" with slow answers.</p>
+          </div>
+          <div class="case-step">
+            <small>Solution Architecture</small>
+            <p>Cloud POS &amp; barcode inventory system + automated low-stock alerts + WhatsApp product availability &amp; order reservation flow.</p>
+          </div>
+          <div class="case-step out">
+            <small>Planned Outcome</small>
+            <p>A defined workflow linking checkout, inventory updates, and customer stock enquiries. We will publish this once live.</p>
+          </div>
+        </div>
+        <a href="case-studies.html#retail" class="card-link" data-interest="POS &amp; Inventory Systems">Explore This Retail Blueprint <svg class="ic"><use href="#i-arrow"/></svg></a>
+      </article>
+
+      <!-- Case 3 -->
+      <article class="case-card reveal" style="--d:.2s">
+        <div class="case-top">
+          <span class="tag">Restaurant &amp; Local Brand</span>
+          <span class="tag g">GBP + Social Ads + Web</span>
+        </div>
+        <h3>Café, Restaurant &amp; Local Hospitality</h3>
+        <div class="case-steps">
+          <div class="case-step">
+            <small>Problem</small>
+            <p>Heavy commission fees on third-party delivery apps and low visibility when nearby customers search Google Maps for places to eat.</p>
+          </div>
+          <div class="case-step">
+            <small>Solution Architecture</small>
+            <p>Google Business Profile optimization + fast digital menu &amp; direct WhatsApp ordering/table booking + geo-targeted Meta ad campaigns.</p>
+          </div>
+          <div class="case-step out">
+            <small>Planned Outcome</small>
+            <p>A direct path from local discovery to a menu, booking, or order. We will publish this once live.</p>
+          </div>
+        </div>
+        <a href="case-studies.html#hospitality" class="card-link" data-interest="Google Business Profile Optimization">Explore This Hospitality Blueprint <svg class="ic"><use href="#i-arrow"/></svg></a>
+      </article>
+    </div>
+
+    <!-- Try Live WhatsApp Demo bar -->
+    <div class="demo-bar reveal" id="demoBar">
+      <div class="demo-info">
+        <span class="tag g" style="margin-bottom:.6rem;display:inline-block">Interactive Preview</span>
+        <h3>Try Live WhatsApp Demo</h3>
+        <p>Click a scenario below to preview how our automated WhatsApp flows qualify enquiries in seconds — or test it live on your phone.</p>
+        <div class="demo-btns" role="group" aria-label="Choose a WhatsApp demo scenario">
+          <button type="button" class="demo-chip on" data-demo="clinic" aria-pressed="true">Clinic Booking</button>
+          <button type="button" class="demo-chip" data-demo="retail" aria-pressed="false">Retail Stock Check</button>
+          <button type="button" class="demo-chip" data-demo="restaurant" aria-pressed="false">Table &amp; Menu Order</button>
+        </div>
+      </div>
+      <div class="demo-preview" aria-live="polite">
+        <div class="dp-in" id="demoIn">Hi! Do you have any consultation slots open tomorrow afternoon?</div>
+        <div class="dp-out" id="demoOut">Hello! 👋 Yes — we have 2:30 PM and 4:15 PM available tomorrow. Reply 1 or 2 to confirm and receive your instant reminder.</div>
+        <div class="dp-foot">
+          <span>⚡ Automated reply · &lt; 3 seconds</span>
+          <a href="https://wa.me/94000000000?text=Hi%20OmniFlow!%20I'd%20like%20to%20test%20the%20live%20WhatsApp%20automation%20demo." target="_blank" rel="noopener" id="demoWaLink">Test on WhatsApp →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHAT HAPPENS NEXT (#nextSteps) ============ -->
+<section class="sec bg2" id="nextSteps" aria-labelledby="nextStepsHeading">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="kicker">A Clear Next Step</span>
+      <h2 id="nextStepsHeading">What happens after you send</h2>
+      <p>We keep the first conversation simple and agree on scope before any work begins.</p>
+    </div>
+    <ol class="next-steps">
+      <li class="next-step reveal">
+        <span class="num" aria-hidden="true">1</span>
+        <h3>A personal reply</h3>
+        <p data-reply-promise2>We reply within 1 business day via WhatsApp.</p>
+      </li>
+      <li class="next-step reveal" style="--d:.1s">
+        <span class="num" aria-hidden="true">2</span>
+        <h3>A scoping call</h3>
+        <p>We clarify your priorities, current tools, constraints, and the right first milestone.</p>
+      </li>
+      <li class="next-step reveal" style="--d:.2s">
+        <span class="num" aria-hidden="true">3</span>
+        <h3>A milestone plan</h3>
+        <p>You receive a clear scope, sequence, and timeline before you decide whether to proceed.</p>
+      </li>
+    </ol>
   </div>
 </section>
 
@@ -1441,6 +2048,178 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
         <div><h3>Honest advice</h3><p>We recommend only what your business actually needs, and work with the tools you already use wherever we can.</p></div>
       </div>
     </div>
+
+    <!-- Free Lead Magnet card (#blueprint) -->
+    <div class="cta reveal" id="blueprint">
+      <div class="cta-in">
+        <div>
+          <span class="tag g" style="margin-bottom:.55rem;display:inline-block">Free Lead Magnet · Instant .TXT Download</span>
+          <h3>25-Point SME Digital Growth &amp; Automation Blueprint</h3>
+          <p>Download our practical self-audit checklist covering Website Conversion, Google Business Profile, WhatsApp Automation, Paid Ads ROI, and POS &amp; Inventory Control.</p>
+          <div class="bp-meta">
+            <span class="tag">5 Web Checks</span>
+            <span class="tag">5 Google Maps Checks</span>
+            <span class="tag">5 WhatsApp Flows</span>
+            <span class="tag">5 Ad ROI Checks</span>
+            <span class="tag g">5 POS &amp; Stock Checks</span>
+          </div>
+        </div>
+        <div class="bp-actions">
+          <button type="button" class="btn btn-primary" id="downloadBlueprint" data-magnetic>
+            Download Free .TXT Checklist <svg class="ic"><use href="#i-dl"/></svg>
+          </button>
+          <a href="#contact" class="btn btn-glass" data-interest="Free Digital Growth Audit">Get a Free Guided Audit →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRICING & PACKAGES (#pricing) ============ -->
+<section class="sec bg2 glow" id="pricing">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="kicker">Engagement Models</span>
+      <h2>Transparent Scope. <span class="gt">Built Around Your Growth Stage.</span></h2>
+      <p>Start with a focused single-channel launch or combine services into one accountable growth engine. Every engagement uses milestone-based payments and includes 30 days of free post-launch support.</p>
+    </div>
+
+    <div class="price-grid">
+      <!-- Tier 1: Starter / MVP -->
+      <article class="p-tier reveal" data-tier="starter">
+        <span class="p-badge">Focused Scope</span>
+        <h3>Starter / MVP</h3>
+        <div class="p-scope">Single-Channel Launch</div>
+        <div class="p-price" data-pricing="starter" hidden><span class="gt">—</span></div>
+        <p class="p-time">Typical delivery: 1–2 weeks · Milestone payments</p>
+        <p class="p-desc">Ideal for fixing your single most urgent bottleneck quickly — such as a high-converting website or Google Maps + WhatsApp setup.</p>
+        <ul class="p-list">
+          <li><svg class="ic"><use href="#i-check"/></svg><span>Choice of 1 core pillar (Website OR WhatsApp Automation + Google Business Profile)</span></li>
+          <li><svg class="ic"><use href="#i-check"/></svg><span>Mobile-first responsive setup &amp; speed optimization</span></li>
+          <li><svg class="ic"><use href="#i-check"/></svg><span>Direct WhatsApp lead capture &amp; basic analytics wiring</span></li>
+          <li><svg class="ic"><use href="#i-check"/></svg><span>Full ownership of code, accounts &amp; handover docs</span></li>
+          <li><svg class="ic"><use href="#i-check"/></svg><span>Free 30-day post-launch support &amp; walkthrough</span></li>
+        </ul>
+        <a href="#contact" class="btn btn-glass btn-block" data-interest="Starter / MVP Package" data-booking-tier="starter">Request Starter Scope <svg class="ic"><use href="#i-arrow"/></svg></a>
+      </article>
+
+      <!-- Tier 2: Growth / Professional -->
+      <article class="p-tier featured reveal" style="--d:.1s" data-tier="growth">
+        <span class="p-badge">Most Popular - Best Value Bundle</span>
+        <h3>Growth / Professional</h3>
+        <div class="p-scope">Multi-Channel Growth Engine</div>
+        <div class="p-price" data-pricing="growth" hidden><span class="gt">—</span></div>
+        <p class="p-time">Typical delivery: 2–4 weeks · Milestone payments</p>
+        <p class="p-desc">Our complete attraction + conversion bundle for ambitious SMEs ready to capture leads and reply 24/7 under one roof.</p>
+        <ul class="p-list">
+          <li><svg class="ic"><use href="#i-check"/></svg><span>Custom conversion-focused Website + SEO foundation</span></li>
+          <li><svg class="ic"><use href="#i-check"/></svg><span>24/7 WhatsApp Automation (enquiries, booking &amp; follow-up flows)</span></li>
+          <li><svg class="ic"><use href="#i-check"/></svg><span>Google Business Profile optimization &amp; local search pack setup</span></li>
+          <li><svg class="ic"><use href="#i-check"/></svg><span>Social Media Management &amp; ROI-tracked Meta/Google ad campaigns</span></li>
+          <li><svg class="ic"><use href="#i-check"/></svg><span>Monthly performance reporting + 30-day priority support</span></li>
+        </ul>
+        <a href="#contact" class="btn btn-primary btn-block" data-magnetic data-interest="Full Growth Package (All Services)" data-booking-tier="growth">Start With Growth Bundle <svg class="ic"><use href="#i-arrow"/></svg></a>
+      </article>
+
+      <!-- Tier 3: Custom / Enterprise -->
+      <article class="p-tier reveal" style="--d:.2s" data-tier="enterprise">
+        <span class="p-badge">Custom Architecture</span>
+        <h3>Custom / Enterprise</h3>
+        <div class="p-scope">Full Digital + POS Stack</div>
+        <div class="p-price" data-pricing="enterprise" hidden><span class="gt">—</span></div>
+        <p class="p-time">Typical delivery: 4–6+ weeks · Custom milestones</p>
+        <p class="p-desc">End-to-end marketing and operational transformation for multi-branch retail, clinics, hospitality, and scaling teams.</p>
+        <ul class="p-list">
+          <li><svg class="ic"><use href="#i-check"/></svg><span>Everything in Growth / Professional across all channels</span></li>
+          <li><svg class="ic"><use href="#i-check"/></svg><span>Cloud POS &amp; Multi-Branch Inventory rollout with barcode &amp; role control</span></li>
+          <li><svg class="ic"><use href="#i-check"/></svg><span>Custom workflows, CRM / payment gateway integrations &amp; data migration</span></li>
+          <li><svg class="ic"><use href="#i-check"/></svg><span>Hands-on staff training, SOP documentation &amp; change management</span></li>
+          <li><svg class="ic"><use href="#i-check"/></svg><span>Dedicated account partner &amp; ongoing optimization SLA</span></li>
+        </ul>
+        <a href="#contact" class="btn btn-glass btn-block" data-interest="Custom / Enterprise Architecture" data-booking-tier="enterprise">Scope Custom Architecture <svg class="ic"><use href="#i-arrow"/></svg></a>
+      </article>
+    </div>
+
+    <div class="pricing-note reveal" id="pricingNote">
+      <b>How pricing works:</b> Every proposal is scoped after your free strategy call — no hidden fees. We work on clear milestone payments (40% / 40% / 20%) tied to verified deliverables. Starter covers a single-channel launch, Growth bundles web + WhatsApp + Google + social ads, and Custom / Enterprise includes full POS &amp; multi-branch rollout with staff training and SLA. <span id="pricingPublishNote">Optional price publishing is controlled via <code>SITE.pricing</code> — enable it when you want transparent starting prices on the site.</span>
+    </div>
+
+    <!-- Feature Comparison Table (.comp-table) -->
+    <div class="comp-wrap reveal">
+      <table class="comp-table" aria-label="Tier feature comparison">
+        <thead>
+          <tr>
+            <th scope="col">Deliverable / Capability</th>
+            <th scope="col">Starter / MVP</th>
+            <th scope="col">Growth / Professional</th>
+            <th scope="col">Custom / Enterprise</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Conversion Website &amp; Technical SEO</th>
+            <td>Core landing / 1 pillar</td>
+            <td class="yes">✓ Multi-page custom site</td>
+            <td class="yes">✓ Custom web + integrations</td>
+          </tr>
+          <tr>
+            <th scope="row">Google Business Profile &amp; Local SEO</th>
+            <td class="yes">✓ Setup &amp; verification</td>
+            <td class="yes">✓ Full local pack optimization</td>
+            <td class="yes">✓ Multi-location GBP management</td>
+          </tr>
+          <tr>
+            <th scope="row">24/7 WhatsApp Automation Flows</th>
+            <td>Instant greeting &amp; lead capture</td>
+            <td class="yes">✓ Booking, qualification &amp; reminders</td>
+            <td class="yes">✓ Custom catalog, order &amp; CRM sync</td>
+          </tr>
+          <tr>
+            <th scope="row">Social Media &amp; Paid Ads Management</th>
+            <td>Optional add-on</td>
+            <td class="yes">✓ Content + ROI-tracked ad campaigns</td>
+            <td class="yes">✓ Full-funnel multi-channel scaling</td>
+          </tr>
+          <tr>
+            <th scope="row">POS &amp; Real-Time Inventory System</th>
+            <td>Optional single-pillar choice</td>
+            <td>Optional module</td>
+            <td class="yes">✓ Single or multi-branch POS rollout</td>
+          </tr>
+          <tr>
+            <th scope="row">Code Ownership, Docs &amp; 30-Day Support</th>
+            <td class="yes">✓ Included</td>
+            <td class="yes">✓ Included + monthly ROI review</td>
+            <td class="yes">✓ Included + staff training &amp; SLA</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Interactive Bundle & Timeline Estimator (#estimator) -->
+    <div class="estimator reveal" id="estimator" aria-label="Interactive bundle and timeline estimator">
+      <div class="est-left">
+        <span class="tag" style="margin-bottom:.5rem;display:inline-block">Interactive Scope Builder</span>
+        <h3>Bundle &amp; Timeline Estimator</h3>
+        <p>Select the channels you want to launch or upgrade. We'll recommend the best engagement tier and estimate your delivery timeline.</p>
+        <div class="est-checks" role="group" aria-label="Select services to include in your bundle">
+          <label class="est-opt"><input type="checkbox" value="Web Design & Development" data-weeks="2" checked> <span>Web Design &amp; Development</span></label>
+          <label class="est-opt"><input type="checkbox" value="WhatsApp Automation" data-weeks="1" checked> <span>WhatsApp Automation</span></label>
+          <label class="est-opt"><input type="checkbox" value="Google Business Profile Optimization" data-weeks="1" checked> <span>Google Business Profile</span></label>
+          <label class="est-opt"><input type="checkbox" value="Social Media Management & Ads" data-weeks="1"> <span>Social Media &amp; Ads</span></label>
+          <label class="est-opt"><input type="checkbox" value="POS & Inventory Systems" data-weeks="2"> <span>POS &amp; Inventory Systems</span></label>
+        </div>
+      </div>
+
+      <div class="est-summary" aria-live="polite">
+        <div class="est-row"><span>Selected channels</span><b id="estCount">3 services</b></div>
+        <div class="est-row"><span>Recommended tier</span><b id="estTier" class="gt">Growth / Professional</b></div>
+        <div class="est-row"><span>Estimated timeline</span><b id="estTime">3–4 weeks</b></div>
+        <div class="est-row"><span>Payment structure</span><b>40% / 40% / 20% Milestones</b></div>
+        <p class="est-note" id="estNote">Includes full ownership, handover documentation, and 30 days of free post-launch support.</p>
+        <a href="#contact" class="btn btn-primary btn-block" id="estApplyBtn">Send This Scope to OmniFlow <svg class="ic"><use href="#i-arrow"/></svg></a>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -1475,6 +2254,10 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
         <div class="ans">We agree on key metrics upfront, such as enquiries, response times, sales, and cost savings, and report on them regularly so you always see what your investment is delivering.</div>
       </details>
       <details>
+        <summary>Will my website show up on Google? <span class="pm"><svg class="ic"><use href="#i-plus"/></svg></span></summary>
+        <div class="ans">Search visibility is a process, not a switch. We set the fundamentals up properly — Google Business Profile, on-page structure, speed and content — and report on rankings and enquiries as they build. Nobody honest can promise a #1 position, but you will always know what is being worked on and what it is producing.</div>
+      </details>
+      <details>
         <summary>Are there long-term contracts? <span class="pm"><svg class="ic"><use href="#i-plus"/></svg></span></summary>
         <div class="ans">Projects have clearly defined deliverables. Terms for ongoing plans are confirmed in your proposal before you commit to anything.</div>
       </details>
@@ -1503,13 +2286,17 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
           <span class="c-ico"><svg class="ic"><use href="#i-chat"/></svg></span>
           <span><small>WhatsApp</small><b data-wa-label>+94 00 000 0000</b></span>
         </a>
+        <a class="c-card" href="#contactForm" id="bookingCard" data-booking-link>
+          <span class="c-ico"><svg class="ic"><use href="#i-cal"/></svg></span>
+          <span><small>Direct Calendar</small><b data-booking-label>Book a 30-Min Discovery Slot →</b></span>
+        </a>
         <a class="c-card" href="mailto:hello@yourdomain.com">
           <span class="c-ico"><svg class="ic"><use href="#i-mail"/></svg></span>
           <span><small>Email</small><b data-email-label>hello@yourdomain.com</b></span>
         </a>
         <div class="c-card">
           <span class="c-ico"><svg class="ic"><use href="#i-pin"/></svg></span>
-          <span><small>Location</small><b>[City, Country]</b></span>
+          <span><small>Location</small><b data-location>Negombo, Sri Lanka</b></span>
         </div>
         <div class="c-card">
           <span class="c-ico"><svg class="ic"><use href="#i-clock"/></svg></span>
@@ -1524,56 +2311,54 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
         <form id="contactForm" novalidate>
           <div class="form-head">
             <h3>Book Your Free Strategy Call</h3>
-            <p>Fill in the form and we'll get back to you shortly.</p>
+            <p>Only 3 required fields — takes less than 30 seconds.</p>
           </div>
 
           <div class="fgrid">
             <div class="field">
               <label for="name">Full name <i>*</i></label>
-              <input id="name" name="name" type="text" placeholder="Your name" autocomplete="name">
+              <input id="name" name="name" type="text" placeholder="Your name" autocomplete="name" required>
               <span class="err">Please enter your name.</span>
             </div>
             <div class="field">
-              <label for="business">Business name <i>*</i></label>
-              <input id="business" name="business" type="text" placeholder="Your company" autocomplete="organization">
-              <span class="err">Please enter your business name.</span>
-            </div>
-            <div class="field">
-              <label for="email">Work email <i>*</i></label>
-              <input id="email" name="email" type="email" placeholder="you@company.com" autocomplete="email">
-              <span class="err">Please enter a valid email address.</span>
-            </div>
-            <div class="field">
-              <label for="phone">WhatsApp / Phone <i>*</i></label>
-              <input id="phone" name="phone" type="tel" placeholder="+94 7X XXX XXXX" autocomplete="tel">
+              <label for="phone" id="waLabel">WhatsApp number <i>*</i></label>
+              <input id="phone" name="phone" type="tel" placeholder="+94 7X XXX XXXX" autocomplete="tel" required>
               <span class="err">Please enter a valid phone number.</span>
             </div>
             <div class="field">
               <label for="service">I'm interested in <i>*</i></label>
-              <select id="service" name="service">
+              <select id="service" name="service" required>
                 <option value="" selected disabled>Select a service</option>
                 <option value="Free Digital Growth Audit">Free Digital Growth Audit</option>
+                <option value="Starter / MVP Package">Starter / MVP Package</option>
+                <option value="Full Growth Package (All Services)">Full Growth Package (All Services)</option>
+                <option value="Custom / Enterprise Architecture">Custom / Enterprise Architecture</option>
                 <option value="Web Design &amp; Development">Web Design &amp; Development</option>
                 <option value="Social Media Management &amp; Ads">Social Media Management &amp; Ads</option>
                 <option value="WhatsApp Automation">WhatsApp Automation</option>
                 <option value="POS &amp; Inventory Systems">POS &amp; Inventory Systems</option>
                 <option value="Google Business Profile Optimization">Google Business Profile Optimization</option>
-                <option value="Full Growth Package (All Services)">Full Growth Package (All Services)</option>
               </select>
               <span class="err">Please choose a service.</span>
             </div>
             <div class="field">
-              <label for="budget">Monthly budget <i>*</i></label>
+              <label for="business">Business name <span>(optional)</span></label>
+              <input id="business" name="business" type="text" placeholder="Your company" autocomplete="organization">
+            </div>
+            <div class="field">
+              <label for="email">Work email <span>(optional)</span></label>
+              <input id="email" name="email" type="email" placeholder="you@company.com" autocomplete="email">
+              <span class="err">Please enter a valid email address.</span>
+            </div>
+            <div class="field">
+              <label for="budget">Estimated budget <span>(optional)</span></label>
               <!-- Edit these ranges/currency to match your market -->
               <select id="budget" name="budget">
-                <option value="" selected disabled>Select a range</option>
-                <option>Under $500</option>
-                <option>$500 – $1,500</option>
-                <option>$1,500 – $5,000</option>
-                <option>$5,000+</option>
-                <option>Not sure yet</option>
+                <option value="" selected>Not sure yet / Discuss on call</option>
+                <option value="Starter / MVP Scope">Starter / MVP Scope</option>
+                <option value="Growth / Professional Bundle">Growth / Professional Bundle</option>
+                <option value="Custom / Enterprise Rollout">Custom / Enterprise Rollout</option>
               </select>
-              <span class="err">Please select a budget range.</span>
             </div>
             <div class="field full">
               <label for="message">Tell us about your goals <span>(optional)</span></label>
@@ -1581,7 +2366,7 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
             </div>
             <div class="field full">
               <label class="consent">
-                <input type="checkbox" id="consent" name="consent" value="yes">
+                <input type="checkbox" id="consent" name="consent" value="yes" required>
                 <span class="box"><svg class="ic"><use href="#i-tick"/></svg></span>
                 <span>I agree to be contacted about my enquiry. Your details are never shared.</span>
               </label>
@@ -1595,7 +2380,7 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
           <div class="form-foot">
             <div class="form-fail" id="formFail" role="alert" hidden>Something went wrong. Please try again, or message us directly on WhatsApp.</div>
             <button type="submit" class="btn btn-primary btn-block" id="sendBtn">Send My Request <svg class="ic"><use href="#i-arrow"/></svg></button>
-            <p class="secure"><svg class="ic"><use href="#i-lock"/></svg> 100% confidential · We reply within [1 business day]</p>
+            <p class="secure" id="replyPromise"><svg class="ic"><use href="#i-lock"/></svg> We reply within <span data-response-time>1 business day</span> via <span data-reply-channel>WhatsApp</span>.</p>
           </div>
         </form>
 
@@ -1609,6 +2394,39 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
       </div>
     </div>
 
+  </div>
+</section>
+
+<!-- ============ CALENDAR PANEL (#calendarPanel) ============ -->
+<section class="sec bg2" id="calendarPanel" aria-label="Book a discovery call">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="kicker">Direct Calendar</span>
+      <h2>Book Your <span class="gt">30-Min Strategy Call</span></h2>
+      <p>Pick a time that works for you — our calendar loads only when you need it, keeping the page fast. Supports Calendly and Cal.com.</p>
+    </div>
+
+    <div class="calendar-panel reveal" id="calendarEmbedWrap">
+      <div class="cal-head">
+        <h3>Choose Your Slot</h3>
+        <small id="calTierLabel">Growth / Professional · 30 minutes</small>
+      </div>
+      <div class="cal-body" id="calBody">
+        <div class="cal-placeholder" id="calPlaceholder">
+          <p>Click below to load the live calendar. No tracking until you interact.</p>
+          <div class="cal-actions">
+            <button type="button" class="btn btn-primary" id="loadCalendarBtn" data-magnetic>Load Calendar <svg class="ic"><use href="#i-arrow"/></svg></button>
+            <a href="https://wa.me/94000000000?text=Hi%20OmniFlow!%20I'd%20like%20to%20book%20a%20strategy%20call." target="_blank" rel="noopener" class="btn btn-glass">Or message on WhatsApp →</a>
+          </div>
+          <p class="calendar-note" style="margin-top:.6rem">Calendar provider configured via <code>SITE.booking</code> — supports Calendly (<code>calendly.com</code>) and Cal.com (<code>cal.com</code>). Lazy-loaded for performance.</p>
+        </div>
+        <iframe class="cal-iframe" id="calIframe" title="Booking calendar" loading="lazy" hidden data-src=""></iframe>
+      </div>
+    </div>
+
+    <div class="center-cta reveal" style="margin-top:1.4rem">
+      <a href="#contact" class="btn btn-glass" data-interest="Free Digital Growth Audit">Prefer to send details first? Use the form →</a>
+    </div>
   </div>
 </section>
 </main>
@@ -1644,14 +2462,16 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
           <li><a href="#whatsapp">WhatsApp Automation</a></li>
           <li><a href="#pos">POS &amp; Inventory</a></li>
           <li><a href="#gbp">Google Business Profile</a></li>
+          <li><a href="#seo">Local SEO</a></li>
         </ul>
       </div>
 
       <div class="f-col">
         <h4>Company</h4>
         <ul>
+          <li><a href="#work">Proof of Work</a></li>
           <li><a href="#approach">Our Approach</a></li>
-          <li><a href="#process">How We Work</a></li>
+          <li><a href="#pricing">Pricing &amp; Scope</a></li>
           <li><a href="#why">Why OmniFlow</a></li>
           <li><a href="#faq">FAQ</a></li>
           <li><a href="#contact">Contact</a></li>
@@ -1663,7 +2483,7 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
         <ul>
           <li><a href="mailto:hello@yourdomain.com" data-email-label>hello@yourdomain.com</a></li>
           <li><a href="https://wa.me/94000000000" target="_blank" rel="noopener" data-wa-label>+94 00 000 0000</a></li>
-          <li><a href="#contact">[City, Country]</a></li>
+          <li><a href="#contact" data-location>Negombo, Sri Lanka</a></li>
           <li><a href="#contact" data-interest="Free Digital Growth Audit">Free Growth Audit →</a></li>
         </ul>
       </div>
@@ -1671,11 +2491,20 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
 
     <div class="f-bottom">
       <span>© <span id="copyYear">2025</span> OmniFlow Digital. All rights reserved.</span>
-      <!-- Link these to real pages once you create them -->
-      <nav aria-label="Legal"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Cookie Policy</a></nav>
+      <nav aria-label="Legal"><a href="legal.html#privacy">Privacy Policy</a><a href="legal.html#terms">Terms of Service</a><a href="legal.html#cookies">Cookie Policy</a></nav>
     </div>
   </div>
 </footer>
+
+<!-- Mobile sticky bottom CTA bar -->
+<nav class="m-bar" aria-label="Mobile quick actions">
+  <a href="https://wa.me/94000000000" target="_blank" rel="noopener" class="btn btn-glass btn-sm">
+    <svg class="ic" viewBox="0 0 32 32"><use href="#i-wa"/></svg> WhatsApp Us
+  </a>
+  <a href="#contact" class="btn btn-primary btn-sm" data-interest="Free Digital Growth Audit">
+    Book Free Call <svg class="ic"><use href="#i-arrow"/></svg>
+  </a>
+</nav>
 
 <!-- Floating buttons -->
 <div class="fab">
@@ -1697,10 +2526,138 @@ const $ = (s,r=document)=>r.querySelector(s), $$ = (s,r=document)=>[...r.querySe
    simply keeps the two in sync.)
 ===================================================== */
 const SITE = {
-  whatsapp : '94000000000',            // country code + number, digits only, no + or spaces
-  waLabel  : '+94 00 000 0000',        // how the number is displayed on the page
-  email    : 'hello@yourdomain.com'
+  whatsapp     : '94000000000',        // country code + number, digits only, no + or spaces
+  waLabel      : '+94 00 000 0000',    // how the number is displayed on the page
+  email        : 'hello@yourdomain.com',
+  location     : 'Negombo, Sri Lanka',
+  bookingUrl   : '',                   // optional: direct calendar link (e.g. 'https://calendly.com/your-handle/30min')
+  booking      : {                     // tiered booking integration by depth + estimator channel
+    default    : '',                   // fallback calendar URL (Calendly or Cal.com)
+    starter    : '',                   // Starter / MVP tier calendar
+    growth     : '',                   // Growth / Professional tier calendar
+    enterprise : '',                   // Custom / Enterprise tier calendar
+    estimator  : ''                    // Estimator-generated bundle channel
+  },
+  calendar     : {                     // Calendly / Cal.com widget embed config
+    provider   : '',                   // 'calendly' or 'cal' — auto-detected from URL if empty
+    url        : '',                   // alias for booking.default — kept for backwards compat
+    lazy       : true                  // lazy-load iframe via IntersectionObserver
+  },
+  proof        : { enabled: true, items: [] }, // Add verified proof only; this ships empty.
+  pricing      : {                     // optional price publishing + how pricing works note
+    enabled    : false,                // set true to publish starting prices
+    starter    : 'LKR 85,000',
+    growth     : 'LKR 195,000',
+    enterprise : 'Custom Quote',
+    note       : 'How pricing works: milestone-based, transparent scope, 40/40/20 payments. Enable SITE.pricing.enabled to show starting prices.'
+  },
+  form         : {
+    showPhone: true,
+    phoneRequired: true,
+    showEmail: true,
+    emailRequired: false,
+    replyChannel: 'WhatsApp',
+    replyTime: '1 business day'
+  },
+  gaId         : '',                   // optional: Google Analytics 4 ID (e.g. 'G-XXXXXXXXXX')
+  clarityId    : ''                    // optional: Microsoft Clarity project ID
 };
+
+function formPolicy(){
+  const cfg = SITE.form || {};
+  const form = $('#contactForm');
+  if(!form) return;
+
+  function configureField(name, show, required, labelText, placeholder){
+    const control = form.elements[name];
+    if(!control) return;
+    const field = control.closest('.field');
+    const label = field ? field.querySelector('label[for="' + control.id + '"]') : null;
+    if(field) field.hidden = !show;
+    control.disabled = !show;
+    control.required = Boolean(show && required);
+    control.setAttribute('aria-required', String(Boolean(show && required)));
+    if(placeholder !== undefined) control.placeholder = placeholder;
+    if(label){
+      label.replaceChildren(document.createTextNode(labelText));
+      const marker = document.createElement(show && required ? 'i' : 'span');
+      marker.textContent = show && required ? '*' : '(optional)';
+      label.append(' ', marker);
+    }
+    if(field && !show) field.classList.remove('bad');
+  }
+
+  const channel = cfg.replyChannel || 'WhatsApp';
+  const replyTime = cfg.replyTime || '1 business day';
+  configureField('phone', cfg.showPhone !== false, cfg.phoneRequired === true,
+    channel + ' number', channel === 'WhatsApp' ? '+94 7X XXX XXXX' : 'Your phone number');
+  configureField('email', cfg.showEmail !== false, cfg.emailRequired === true,
+    'Work email', 'you@company.com');
+  $$('[data-response-time]').forEach(el => { el.textContent = replyTime; });
+  $$('[data-reply-channel]').forEach(el => { el.textContent = channel; });
+  $$('[data-reply-promise2]').forEach(el => { el.textContent = 'We reply within ' + replyTime + ' via ' + channel + '.'; });
+}
+
+function renderProofBar(){
+  const proofEl = $('#proof'), list = $('#proofList');
+  if(!proofEl || !list) return;
+  const config = SITE.proof || {};
+  const items = config.enabled === false ? [] : (Array.isArray(config.items) ? config.items : []);
+  list.replaceChildren();
+  items.forEach(item => {
+    if(!item || typeof item !== 'object') return;
+    const li = document.createElement('li');
+    li.className = 'proof-item';
+    if(item.value){
+      const value = document.createElement('b');
+      value.textContent = item.value;
+      li.append(value);
+    }
+    if(item.label){
+      const label = document.createElement('span');
+      label.textContent = item.label;
+      li.append(label);
+    }
+    if(item.sub){
+      const detail = document.createElement('small');
+      detail.textContent = item.sub;
+      li.append(detail);
+    }
+    if(li.childNodes.length) list.append(li);
+  });
+  proofEl.hidden = list.children.length === 0;
+}
+
+formPolicy();
+renderProofBar();
+
+/* ---------- Optional analytics loader + event helper ---------- */
+function trackEvent(name, params){
+  try{
+    if(typeof window.gtag === 'function') window.gtag('event', name, params || {});
+    if(typeof window.plausible === 'function') window.plausible(name, {props: params || {}});
+    if(typeof window.clarity === 'function') window.clarity('event', name);
+  }catch(e){}
+}
+(function initAnalytics(){
+  if(SITE.gaId && !/^G-X+$/i.test(SITE.gaId)){
+    const s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(SITE.gaId);
+    document.head.appendChild(s);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function(){ window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    window.gtag('config', SITE.gaId);
+  }
+  if(SITE.clarityId && !/^X+$|^YOUR_/i.test(SITE.clarityId)){
+    (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src='https://www.clarity.ms/tag/'+encodeURIComponent(i);
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window,document,'clarity','script',SITE.clarityId);
+  }
+})();
 
 /* Keep every contact link + visible label in sync with SITE */
 (function syncContacts(){
@@ -1708,12 +2665,55 @@ const SITE = {
   $$('a[href^="https://wa.me/"]').forEach(a => {
     const q = a.getAttribute('href').split('?')[1];
     a.href = waHref + (q ? '?' + q : '');
+    a.addEventListener('click', () => trackEvent('whatsapp_click', {location: a.className || 'link'}));
   });
   $$('[data-wa-label]').forEach(el => el.textContent = SITE.waLabel);
   $$('a[href^="mailto:"], [data-email-label]').forEach(el => {
     if(el.tagName === 'A') el.href = 'mailto:' + SITE.email;
     el.textContent = SITE.email;
   });
+  $$('[data-location]').forEach(el => el.textContent = SITE.location || el.textContent);
+
+  // Booking integration tiered by depth (Starter / Growth / Enterprise) + estimator channel
+  const bookingCfg = SITE.booking || {};
+  const defaultBooking = bookingCfg.default || SITE.bookingUrl || (SITE.calendar && SITE.calendar.url) || '';
+  function resolveBookingUrl(tier){
+    if(!tier) return defaultBooking;
+    return bookingCfg[tier] || defaultBooking;
+  }
+  $$('[data-booking-link]').forEach(a => {
+    const tier = a.getAttribute('data-booking-tier');
+    const url = tier ? resolveBookingUrl(tier) : defaultBooking;
+    if(url){
+      a.href = url;
+      a.target = '_blank';
+      a.rel = 'noopener';
+    }
+    a.addEventListener('click', () => trackEvent('calendar_click', {configured: Boolean(url), tier: tier || 'default'}));
+  });
+  // also support any element with data-booking-tier that is not already handled
+  $$('[data-booking-tier]').forEach(a => {
+    if(a.hasAttribute('data-booking-link')) return;
+    const url = resolveBookingUrl(a.getAttribute('data-booking-tier'));
+    if(url){
+      a.href = url;
+      a.target = '_blank';
+      a.rel = 'noopener';
+    }
+  });
+
+  // Optional price publishing (SITE.pricing)
+  if(SITE.pricing && SITE.pricing.enabled){
+    const map = {starter: SITE.pricing.starter, growth: SITE.pricing.growth, enterprise: SITE.pricing.enterprise};
+    $$('[data-pricing]').forEach(el => {
+      const k = el.getAttribute('data-pricing');
+      if(map[k]){
+        el.textContent = map[k];
+        el.hidden = false;
+      }
+    });
+  }
+
 })();
 
 /* ---------- Logo loader: tries several file names, falls back to SVG icon ---------- */
@@ -1922,6 +2922,261 @@ faqs.forEach(d => d.addEventListener('toggle', () => {
   if(d.open) faqs.forEach(o => { if(o !== d) o.open = false; });
 }));
 
+/* ---------- Live WhatsApp Demo Bar (#demoBar) ---------- */
+(function(){
+  const SCENARIOS = {
+    clinic: {
+      inTxt: 'Hi! Do you have any consultation slots open tomorrow afternoon?',
+      outTxt: 'Hello! 👋 Yes — we have 2:30 PM and 4:15 PM available tomorrow. Reply 1 or 2 to confirm and receive your instant reminder.',
+      waMsg: 'Hi OmniFlow! I would like to test the Clinic & Service Booking WhatsApp automation flow.'
+    },
+    retail: {
+      inTxt: 'Hi, is the Wireless Barcode Scanner in stock at your main branch?',
+      outTxt: 'In stock ✅ (6 units available at Main Branch). Would you like to reserve 1 for counter pickup or request same-day delivery?',
+      waMsg: 'Hi OmniFlow! I would like to test the Retail Stock Check & POS WhatsApp automation flow.'
+    },
+    restaurant: {
+      inTxt: 'Hey! Can we book a table for 4 tonight at 7:30 PM and see the menu?',
+      outTxt: 'Table for 4 at 7:30 PM is reserved ✅ Here is our digital menu link — reply with any pre-order items for priority kitchen prep!',
+      waMsg: 'Hi OmniFlow! I would like to test the Restaurant Table & Menu Order WhatsApp automation flow.'
+    }
+  };
+  const chips = $$('#demoBar .demo-chip');
+  const dIn = $('#demoIn'), dOut = $('#demoOut'), dLink = $('#demoWaLink');
+  if(!chips.length || !dIn || !dOut || !dLink) return;
+  chips.forEach(btn => btn.addEventListener('click', () => {
+    const key = btn.dataset.demo, sc = SCENARIOS[key];
+    if(!sc) return;
+    chips.forEach(c => { c.classList.toggle('on', c === btn); c.setAttribute('aria-pressed', String(c === btn)); });
+    dIn.textContent = sc.inTxt;
+    dOut.textContent = sc.outTxt;
+    dLink.href = 'https://wa.me/' + SITE.whatsapp + '?text=' + encodeURIComponent(sc.waMsg);
+    trackEvent('demo_scenario_select', {scenario: key});
+  }));
+})();
+
+/* ---------- Free Lead Magnet: 25-Point SME Blueprint (.txt download) ---------- */
+(function(){
+  const btn = $('#downloadBlueprint');
+  if(!btn) return;
+  const BLUEPRINT_TEXT = [
+    '====================================================================',
+    'OMNIFLOW DIGITAL — 25-POINT SME DIGITAL GROWTH & AUTOMATION BLUEPRINT',
+    'Innovating. Integrating. Accelerating.',
+    '====================================================================',
+    '',
+    'PILLAR 1: CONVERSION WEBSITE & TECHNICAL SEO (5 Checks)',
+    '[ ] 1. Clear value proposition and primary CTA above the fold on mobile',
+    '[ ] 2. Page load under 2.5 seconds on 4G mobile connections',
+    '[ ] 3. One-tap WhatsApp & short lead form (3 required fields or fewer)',
+    '[ ] 4. Schema.org JSON-LD, Open Graph tags, sitemap.xml & SSL security',
+    '[ ] 5. Trust signals: guarantees, case study outcomes & clear contact info',
+    '',
+    'PILLAR 2: GOOGLE BUSINESS PROFILE & LOCAL SEARCH (5 Checks)',
+    '[ ] 6. Verified Google Business Profile with exact NAP (Name, Address, Phone)',
+    '[ ] 7. Primary & secondary categories matched to high-intent local searches',
+    '[ ] 8. Direct booking / WhatsApp chat link and product/service catalog added',
+    '[ ] 9. Weekly photo updates and active Q&A / review response workflow',
+    '[ ] 10. UTM tracking on website & appointment links to measure Map calls/clicks',
+    '',
+    'PILLAR 3: 24/7 WHATSAPP AUTOMATION & CONVERSION (5 Checks)',
+    '[ ] 11. Instant (<15s) automated greeting and menu of common enquiries 24/7',
+    '[ ] 12. Automated lead qualification (Name, Service/Product, Preferred Time)',
+    '[ ] 13. Automated appointment reminders or order status updates to cut no-shows',
+    '[ ] 14. Seamless human handover for complex or VIP customer requests',
+    '[ ] 15. Broadcast list segmentation for repeat customers and seasonal offers',
+    '',
+    'PILLAR 4: SOCIAL MEDIA & PAID ADS ACCOUNTABILITY (5 Checks)',
+    '[ ] 16. Meta Pixel & Google Analytics 4 conversion events properly firing',
+    '[ ] 17. Ad campaigns optimized for qualified WhatsApp/web leads, not vanity likes',
+    '[ ] 18. Consistent brand proof, before/after results & educational short-form posts',
+    '[ ] 19. Retargeting audience setup for website visitors and social engagers',
+    '[ ] 20. Monthly ROI scorecard tracking Cost Per Lead (CPL) and actual sales',
+    '',
+    'PILLAR 5: POS, INVENTORY & DAILY OPERATIONS (5 Checks)',
+    '[ ] 21. Real-time stock deduction at billing across all counters/branches',
+    '[ ] 22. Automated low-stock alerts on top-selling SKUs before stockouts happen',
+    '[ ] 23. Role-based staff logins, shift cash reconciliation & audit trails',
+    '[ ] 24. Customer purchase history linked for loyalty and WhatsApp re-orders',
+    '[ ] 25. Single daily dashboard showing gross sales, margins, and top items',
+    '',
+    '--------------------------------------------------------------------',
+    'Want a free 30-minute walkthrough of this blueprint for your business?',
+    'WhatsApp : ' + SITE.waLabel + ' (https://wa.me/' + SITE.whatsapp + ')',
+    'Email    : ' + SITE.email,
+    '===================================================================='
+  ].join('\n');
+
+  btn.addEventListener('click', () => {
+    const blob = new Blob([BLUEPRINT_TEXT], {type: 'text/plain;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'OmniFlow-25-Point-SME-Digital-Growth-Blueprint.txt';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1500);
+    trackEvent('blueprint_download', {format: 'txt'});
+  });
+})();
+
+/* ---------- Interactive Bundle & Timeline Estimator (#estimator) ---------- */
+(function(){
+  const est = $('#estimator');
+  if(!est) return;
+  const boxes = $$('input[type="checkbox"]', est);
+  const countEl = $('#estCount'), tierEl = $('#estTier'), timeEl = $('#estTime'), applyBtn = $('#estApplyBtn');
+
+  function updateEstimator(){
+    const picked = boxes.filter(b => b.checked);
+    const n = picked.length;
+    const hasPos = picked.some(b => b.value.includes('POS'));
+    const rawWeeks = picked.reduce((acc, b) => acc + (+b.dataset.weeks || 1), 0);
+
+    let tier = 'Starter / MVP';
+    let time = '1–2 weeks';
+    let serviceVal = 'Starter / MVP Package';
+
+    if(n === 0){
+      tier = 'Select at least 1 channel';
+      time = '—';
+      serviceVal = 'Free Digital Growth Audit';
+    } else if(hasPos && n >= 3){
+      tier = 'Custom / Enterprise';
+      time = Math.max(4, rawWeeks - 1) + '–' + (rawWeeks + 1) + ' weeks';
+      serviceVal = 'Custom / Enterprise Architecture';
+    } else if(n >= 2){
+      tier = 'Growth / Professional';
+      time = Math.max(2, rawWeeks - 1) + '–' + rawWeeks + ' weeks';
+      serviceVal = 'Full Growth Package (All Services)';
+    } else {
+      tier = 'Starter / MVP';
+      time = rawWeeks === 1 ? '1–2 weeks' : '2–3 weeks';
+      serviceVal = picked[0].value;
+    }
+
+    countEl.textContent = n + (n === 1 ? ' service' : ' services');
+    tierEl.textContent = tier;
+    timeEl.textContent = time;
+    applyBtn.dataset.tier = tier;
+    applyBtn.dataset.time = time;
+    applyBtn.dataset.serviceVal = serviceVal;
+    applyBtn.dataset.bundle = picked.map(b => b.value).join(', ');
+  }
+
+  boxes.forEach(b => b.addEventListener('change', updateEstimator));
+  updateEstimator();
+
+  applyBtn.addEventListener('click', () => {
+    const serviceSel = $('#service'), msgBox = $('#message'), budgetSel = $('#budget');
+    if(serviceSel && applyBtn.dataset.serviceVal){
+      const match = [...serviceSel.options].find(o => o.value === applyBtn.dataset.serviceVal);
+      if(match){ serviceSel.value = match.value; serviceSel.closest('.field').classList.remove('bad'); }
+    }
+    if(budgetSel && applyBtn.dataset.tier){
+      if(applyBtn.dataset.tier.includes('Starter')) budgetSel.value = 'Starter / MVP Scope';
+      else if(applyBtn.dataset.tier.includes('Growth')) budgetSel.value = 'Growth / Professional Bundle';
+      else if(applyBtn.dataset.tier.includes('Custom')) budgetSel.value = 'Custom / Enterprise Rollout';
+    }
+    if(msgBox && applyBtn.dataset.bundle){
+      const channel = SITE.booking && SITE.booking.estimator ? ' via Estimator Channel: ' + SITE.booking.estimator : '';
+      msgBox.value = `Estimated Bundle (${applyBtn.dataset.tier} · ${applyBtn.dataset.time}): ${applyBtn.dataset.bundle}${channel}`;
+    }
+    trackEvent('estimator_apply', {tier: applyBtn.dataset.tier, count: boxes.filter(b => b.checked).length});
+
+    // If estimator has its own booking channel, update calendar panel tier label and auto-scroll to calendar
+    try{
+      const calLabel = $('#calTierLabel');
+      if(calLabel && applyBtn.dataset.tier){
+        calLabel.textContent = applyBtn.dataset.tier + ' · ' + applyBtn.dataset.time;
+      }
+      const estUrl = SITE.booking && SITE.booking.estimator;
+      if(estUrl){
+        const iframe = $('#calIframe');
+        if(iframe) iframe.dataset.src = estUrl;
+      }
+    }catch(e){}
+  });
+})();
+
+/* ---------- Calendly / Cal.com widget embed (#calendarPanel, lazy-loaded) + CSP frame-src ---------- */
+(function(){
+  const wrap = $('#calendarEmbedWrap'), placeholder = $('#calPlaceholder'), iframe = $('#calIframe'), loadBtn = $('#loadCalendarBtn'), tierLabel = $('#calTierLabel');
+  if(!wrap || !iframe) return;
+
+  function detectProvider(url){
+    if(!url) return '';
+    if(url.includes('calendly.com')) return 'calendly';
+    if(url.includes('cal.com') || url.includes('app.cal.com')) return 'cal';
+    return '';
+  }
+  function getBookingUrl(tier){
+    const cfg = SITE.booking || {};
+    const calCfg = SITE.calendar || {};
+    const url = (tier && cfg[tier]) || cfg.default || calCfg.url || calCfg.default || SITE.bookingUrl || '';
+    return url;
+  }
+  function loadCalendar(url, tier){
+    const finalUrl = url || getBookingUrl(tier) || getBookingUrl();
+    if(!finalUrl){
+      placeholder.innerHTML = '<p>No calendar URL configured. Set <code>SITE.booking.default</code> or <code>SITE.bookingUrl</code> to your Calendly / Cal.com link.</p>';
+      return;
+    }
+    const provider = (SITE.calendar && SITE.calendar.provider) || detectProvider(finalUrl) || 'calendly';
+    iframe.dataset.src = finalUrl;
+    iframe.src = finalUrl;
+    iframe.hidden = false;
+    placeholder.hidden = true;
+    if(tierLabel) tierLabel.textContent = (tier ? (tier.charAt(0).toUpperCase() + tier.slice(1) + ' · ') : '') + provider + ' · 30 minutes';
+    trackEvent('calendar_load', {provider, tier: tier || 'default', url: finalUrl});
+  }
+
+  // Tiered booking integration: buttons with data-booking-tier should update calendar
+  $$('[data-booking-tier]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tier = btn.getAttribute('data-booking-tier');
+      const url = getBookingUrl(tier);
+      if(url){
+        iframe.dataset.src = url;
+        // if already loaded, switch src immediately
+        if(!iframe.hidden) iframe.src = url;
+        if(tierLabel) tierLabel.textContent = tier.charAt(0).toUpperCase() + tier.slice(1) + ' · 30 minutes';
+        // scroll to calendar panel
+        const panel = $('#calendarPanel');
+        if(panel) panel.scrollIntoView({behavior: reduce ? 'auto' : 'smooth', block: 'start'});
+        trackEvent('calendar_tier_select', {tier, url});
+      }
+    });
+  });
+
+  if(loadBtn){
+    loadBtn.addEventListener('click', () => loadCalendar());
+  }
+
+  // Lazy-load via IntersectionObserver if SITE.calendar.lazy is true (default)
+  const shouldLazy = !(SITE.calendar && SITE.calendar.lazy === false);
+  if(shouldLazy && 'IntersectionObserver' in window){
+    const ioCal = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          // preload data-src but don't auto-show until user clicks, to respect privacy
+          const url = getBookingUrl();
+          if(url) iframe.dataset.src = url;
+          ioCal.unobserve(entry.target);
+        }
+      });
+    }, {rootMargin: '200px'});
+    ioCal.observe(wrap);
+  } else {
+    const url = getBookingUrl();
+    if(url) iframe.dataset.src = url;
+  }
+
+  // Estimator channel: when estimator applies, it may set iframe src to estimator channel
+  window.OmniFlowLoadCalendar = loadCalendar;
+})();
+
 /* =====================================================
    CONTACT FORM
 ===================================================== */
@@ -1940,19 +3195,22 @@ faqs.forEach(d => d.addEventListener('toggle', () => {
   const form = $('#contactForm'), btn = $('#sendBtn'), ok = $('#formOk'), fail = $('#formFail');
   const service = $('#service');
 
+  /* Required fields follow SITE.form; optional email is validated only when supplied. */
+  const policy = SITE.form || {};
   const rules = {
     name:     v => v.trim().length >= 2,
-    business: v => v.trim().length >= 2,
-    email:    v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()),
-    phone:    v => /^\+?[\d\s()-]{7,}$/.test(v.trim()),
+    phone:    v => !v.trim() ? policy.phoneRequired !== true : /^\+?[\d\s()-]{7,}$/.test(v.trim()),
     service:  v => !!v,
-    budget:   v => !!v,
+    email:    v => !v.trim() ? policy.emailRequired !== true : /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()),
     consent:  (v, el) => el.checked
   };
+  const activeRules = Object.keys(rules).filter(n =>
+    n === 'phone' ? policy.showPhone !== false : n === 'email' ? policy.showEmail !== false : true
+  );
 
   /* Give every field a programmatic link to its own error message, so screen
      readers announce the reason instead of just "invalid". */
-  Object.keys(rules).forEach(n => {
+  activeRules.forEach(n => {
     const el = form.elements[n], err = el.closest('.field').querySelector('.err');
     if(err && !err.id){ err.id = (el.id || n) + '-err'; el.setAttribute('aria-describedby', err.id); }
   });
@@ -1964,7 +3222,7 @@ faqs.forEach(d => d.addEventListener('toggle', () => {
     el.setAttribute('aria-invalid', String(!valid));
     return valid;
   }
-  Object.keys(rules).forEach(n => {
+  activeRules.forEach(n => {
     const el = form.elements[n];
     el.addEventListener('blur', () => { if(el.value || el.type === 'checkbox') check(n); });
     el.addEventListener(el.tagName === 'SELECT' || el.type === 'checkbox' ? 'change' : 'input', () => {
@@ -1982,6 +3240,7 @@ faqs.forEach(d => d.addEventListener('toggle', () => {
     form.hidden = true; ok.hidden = false;
     ok.scrollIntoView({behavior: reduce ? 'auto' : 'smooth', block:'center'});
     ok.focus({preventScroll:true});
+    trackEvent('generate_lead', {service: service.value || 'unspecified'});
   }
 
   form.addEventListener('submit', async e => {
@@ -1990,7 +3249,7 @@ faqs.forEach(d => d.addEventListener('toggle', () => {
     if(form.elements['_gotcha'].value) return; // bot caught
 
     let firstBad = null;
-    for(const n of Object.keys(rules)){ if(!check(n) && !firstBad) firstBad = form.elements[n]; }
+    for(const n of activeRules){ if(!check(n) && !firstBad) firstBad = form.elements[n]; }
     if(firstBad){ firstBad.focus(); return; }
 
     const d = Object.fromEntries(new FormData(form));
@@ -2010,11 +3269,11 @@ faqs.forEach(d => d.addEventListener('toggle', () => {
 I'd like to book a strategy call.
 
 *Name:* ${d.name}
-*Business:* ${d.business}
-*Email:* ${d.email}
-*Phone:* ${d.phone}
+*Phone:* ${d.phone || '-'}
 *Interested in:* ${d.service}
-*Monthly budget:* ${d.budget}
+*Business:* ${d.business || '-'}
+*Email:* ${d.email || '-'}
+*Estimated budget:* ${d.budget || '-'}
 *Goals:* ${d.message || '-'}`;
       window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
       showOk();
