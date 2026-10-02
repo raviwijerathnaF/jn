@@ -88,6 +88,7 @@ const legalHtml = read('legal.html');
 const err404Html = read('404.html');
 const caseStudiesHtml = read('case-studies.html');
 const pagesCss = read('assets/pages.css');
+const servicesHtml = read('services.html');
 const headersTxt = read('_headers');
 const sitemapXml = read('sitemap.xml');
 const robotsTxt = read('robots.txt');
@@ -97,7 +98,7 @@ console.log('OmniFlow Digital — running verification checks...\n');
 
 /* 1. Files & image dimensions */
 const REQUIRED_FILES = [
-  'index.html', 'legal.html', '404.html', 'case-studies.html', 'assets/pages.css', '_headers',
+  'index.html', 'legal.html', '404.html', 'case-studies.html', 'services.html', 'assets/pages.css', '_headers',
   'README.md', 'robots.txt', 'sitemap.xml', 'site.webmanifest',
   'logo.svg', 'logo.png', 'favicon.ico', 'favicon-16.png', 'favicon-32.png',
   'apple-touch-icon.png', 'icon-192.png', 'icon-512.png', 'icon-maskable-512.png',
@@ -217,6 +218,48 @@ check('Services grid shows six cards (Local SEO included) in a uniform 3 + 3 des
   assert(/@media \(min-width:1101px\)\{\s*\.bento \.card/.test(indexHtml),
     'Desktop services grid rule is missing — cards would fall back to the 7/5 mosaic');
   assert(indexHtml.includes('<h2>Six Services.'), 'Services heading still says Five Services');
+  for (const id of svcCards) {
+    assert(indexHtml.includes(`href="services.html#${id}"`), `Card #${id} does not link to its own services.html#${id} page`);
+    assert(new RegExp(`href="services.html#${id}"[^>]*>|href="services.html#${id}"`).test(indexHtml), `Card #${id} detail link missing`);
+  }
+});
+
+/* Each service must be explained on its own page section, with an honest scope
+   note and a call to action — the "what is the benefit" promise from the cards. */
+check('services.html explains all six services with scope, deliverables and CTAs', () => {
+  const canonical = servicesHtml.match(/<link rel="canonical" href="https:\/\/yourdomain\.com\/services\.html">/);
+  assert(canonical, 'services.html needs its own canonical URL');
+  const svcIds = collectIds(servicesHtml);   // hoisted helper — this check runs before section 4
+  for (const id of ['web', 'social', 'whatsapp', 'pos', 'gbp', 'localseo']) {
+    assert(svcIds.has(id), `services.html is missing the #${id} section`);
+    const card = servicesHtml.match(new RegExp(`<article[^>]+id="${id}"[\\s\\S]*?<\\/article>`));
+    assert(card, `services.html #${id} is not an <article>`);
+    for (const part of ['What is slowing you down', 'What we build', 'What you get', 'What gets built', 'blueprint-note']) {
+      assert(card[0].includes(part), `services.html #${id} is missing "${part}"`);
+    }
+    assert((card[0].match(/<li>/g) || []).length === 6, `services.html #${id} must list exactly six deliverables`);
+    assert(/href="index\.html\?interest=[^"]+#contact"/.test(card[0]), `services.html #${id} needs a quote CTA that prefills the form`);
+    assert(/href="https:\/\/wa\.me\/\d+\?text=/.test(card[0]), `services.html #${id} needs a pre-filled WhatsApp CTA`);
+    assert(!/#1 on Google|guarantee(d)? (rank|top)|top of google/i.test(card[0]), `services.html #${id} must not promise rankings`);
+  }
+  assert(servicesHtml.includes('href="assets/pages.css"'), 'services.html must reuse assets/pages.css');
+  assert(servicesHtml.includes('<h1>') && servicesHtml.includes('class="subnav"'), 'services.html needs an h1 and the service subnav');
+  const ld = servicesHtml.match(/<script type="application\/ld\+json">\s*([\s\S]*?)\s*<\/script>\s*<\/body>/);
+  assert(ld, 'services.html needs its BreadcrumbList JSON-LD before </body>');
+  const d = JSON.parse(ld[1]);
+  assert(d['@type'] === 'BreadcrumbList' && d.itemListElement.length === 3, 'services.html BreadcrumbList needs 3 items');
+  assert(d.itemListElement[1].item === 'https://yourdomain.com/services.html', 'Breadcrumb #2 should be services.html');
+  assert(sitemapXml.includes('<loc>https://yourdomain.com/services.html</loc>'), 'sitemap.xml is missing services.html');
+
+  /* The quote CTAs hop back to index.html?interest=<service>#contact — every one of
+     those targets must exist as an <option> in the real contact form (decoded). */
+  const decode = v => v.replace(/&amp;/g, '&').replace(/&#38;/g, '&');
+  const formOptions = [...indexHtml.matchAll(/<option value="([^"]+)"/g)].map(m => decode(m[1]));
+  const prefills = [...servicesHtml.matchAll(/index\.html\?interest=([^"#]+)#contact/g)].map(m => decodeURIComponent(m[1]));
+  assert(prefills.length === 6, `expected 6 prefill CTAs on services.html, found ${prefills.length}`);
+  for (const wanted of prefills) {
+    assert(formOptions.includes(wanted), `services.html CTA prefills "${wanted}", which is not an option in the contact form`);
+  }
 });
 
 check('Light-theme depth tokens, brand bars and readable .fw-num stroke are present', () => {
@@ -298,13 +341,15 @@ const indexIds = collectIds(indexHtml);
 const legalIds = collectIds(legalHtml);
 const errIds = collectIds(err404Html);
 const caseStudiesIds = collectIds(caseStudiesHtml);
+const servicesIds = collectIds(servicesHtml);
 
 check('All in-page #anchor links and cross-page links resolve to real targets', () => {
   const pages = [
     { name: 'index.html', html: indexHtml, ids: indexIds },
     { name: 'legal.html', html: legalHtml, ids: legalIds },
     { name: '404.html', html: err404Html, ids: errIds },
-    { name: 'case-studies.html', html: caseStudiesHtml, ids: caseStudiesIds }
+    { name: 'case-studies.html', html: caseStudiesHtml, ids: caseStudiesIds },
+    { name: 'services.html', html: servicesHtml, ids: servicesIds }
   ];
   for (const p of pages) {
     const hrefs = [...p.html.matchAll(/\bhref="([^"]+)"/g)].map(x => x[1]);
@@ -314,10 +359,13 @@ check('All in-page #anchor links and cross-page links resolve to real targets', 
         const id = h.slice(1);
         assert(p.ids.has(id), `${p.name} has broken anchor ${h}`);
       } else {
-        const [filePart, hashPart] = h.split('#');
+        const [filePart, hashPart] = h.split('?')[0].split('#');
         assert(fs.existsSync(path.join(ROOT, filePart)), `${p.name} links to missing file ${filePart}`);
         if (hashPart) {
-          const targetIds = filePart === 'index.html' ? indexIds : filePart === 'legal.html' ? legalIds : collectIds(read(filePart));
+          const targetIds = filePart === 'index.html' ? indexIds
+            : filePart === 'legal.html' ? legalIds
+            : filePart === 'services.html' ? servicesIds
+            : collectIds(read(filePart));
           assert(targetIds.has(hashPart), `${p.name} links to missing hash #${hashPart} in ${filePart}`);
         }
       }
@@ -326,7 +374,7 @@ check('All in-page #anchor links and cross-page links resolve to real targets', 
 });
 
 check('All SVG <use href="#..."> icons reference defined <symbol> IDs', () => {
-  for (const [name, html, ids] of [['index.html', indexHtml, indexIds], ['legal.html', legalHtml, legalIds], ['404.html', err404Html, errIds]]) {
+  for (const [name, html, ids] of [['index.html', indexHtml, indexIds], ['legal.html', legalHtml, legalIds], ['404.html', err404Html, errIds], ['services.html', servicesHtml, servicesIds]]) {
     const uses = [...html.matchAll(/<use href="#([^"]+)"/g)].map(x => x[1]);
     assert(uses.length > 0, `${name} has no SVG <use> references`);
     for (const u of uses) {
@@ -397,6 +445,8 @@ check('CRO sections (.guarantees, .vs-grid, #blueprint, #work, .demo-bar, #prici
   assert(indexHtml.includes('class="comp-table"'), 'Missing .comp-table in #pricing');
   assert(indexIds.has('estimator'), 'Missing #estimator in #pricing');
   assert(indexIds.has('bookingCard') && indexHtml.includes('data-booking-link'), 'Missing Direct Calendar booking card in #contact');
+  assert(/<a class="c-card" href="#calendarPanel" id="bookingCard" data-booking-link>/.test(indexHtml),
+    'Direct Calendar card must point at #calendarPanel (the booking panel), not the contact form');
   assert(indexHtml.includes('class="m-bar"'), 'Missing mobile sticky bottom CTA bar (.m-bar)');
 });
 
@@ -407,6 +457,8 @@ check('Calendly / Cal.com widget embed (#calendarPanel, lazy-loaded) + CSP frame
   assert(indexHtml.includes('calendly.com') && indexHtml.includes('cal.com'), 'Missing Calendly / Cal.com references in #calendarPanel');
   assert(headersTxt.includes('frame-src') && headersTxt.includes('calendly.com') && headersTxt.includes('cal.com'), '_headers CSP must include frame-src with calendly.com and cal.com');
   assert(indexHtml.includes('IntersectionObserver'), 'Missing IntersectionObserver for lazy-loading calendar');
+  assert(indexHtml.includes('showNoCalendar()') && !indexHtml.includes('No calendar URL configured. Set'),
+    'Calendar panel needs the visitor-facing fallback (and no developer-facing error text) when SITE.booking is empty');
 });
 
 check('Trust layer: empty config-driven proof bar, ROI removal, #nextSteps and placeholder cleanup', () => {
@@ -453,7 +505,7 @@ check('Accessibility landmarks, skip-links, form ARIA wiring and noscript fallba
 });
 
 check('Light theme default and no-JavaScript fallback are explicit on every page', () => {
-  for (const [name, html] of [['index.html', indexHtml], ['legal.html', legalHtml], ['404.html', err404Html], ['case-studies.html', caseStudiesHtml]]) {
+  for (const [name, html] of [['index.html', indexHtml], ['legal.html', legalHtml], ['404.html', err404Html], ['case-studies.html', caseStudiesHtml], ['services.html', servicesHtml]]) {
     const root = html.match(/<html[^>]*>/i);
     assert(root && /data-theme="light"/.test(root[0]) && /data-default-theme="light"/.test(root[0]), `${name} should default to light without JavaScript`);
     const boot = html.indexOf("var def=h.getAttribute('data-default-theme')||'system'");
@@ -501,7 +553,7 @@ check('Hero honesty guard blocks unsupported percentages/client counts and caps 
 
 /* 7. JavaScript syntax check across all HTML files */
 check('All inline <script> blocks in index.html, legal.html, 404.html, and case-studies.html compile without syntax errors', () => {
-  for (const [name, html] of [['index.html', indexHtml], ['legal.html', legalHtml], ['404.html', err404Html], ['case-studies.html', caseStudiesHtml]]) {
+  for (const [name, html] of [['index.html', indexHtml], ['legal.html', legalHtml], ['404.html', err404Html], ['case-studies.html', caseStudiesHtml], ['services.html', servicesHtml]]) {
     const scripts = [...html.matchAll(/<script(?![^>]*type="application\/ld\+json")[^>]*>([\s\S]*?)<\/script>/gi)];
     assert(scripts.length >= 2, `${name} expected at least 2 script blocks`);
     scripts.forEach((s, idx) => {
