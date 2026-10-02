@@ -165,6 +165,16 @@ def light_tint_pairs(v, css):
             pairs.append((f".vis #{svc} tint: --{name} on panel", tok, chip))
         pairs.append((f".card-num stroke #{svc} (--{a_fg} on card tint, 3:1 large-graphic)", v[a_fg], card_bot))
 
+    # #localseo: fixed amber accent (--a is a literal hex, not a shared token) —
+    # the icon glyph must stay legible on its own chip and on a green chip stop.
+    localseo_fg, localseo_soft = css_pick(
+        css, r'\[data-theme="light"\] #localseo\{--a:(#[0-9a-fA-F]{6});--a-soft:(rgba\([^)]*\))', "#localseo palette")
+    pairs.append(("[index.html · light] #localseo icon glyph on chip", localseo_fg, blend_rgba_on_hex(rgba_of(localseo_soft), card_bot)))
+    pairs.append(("[index.html · light] #localseo glyph on 2nd chip stop", localseo_fg, blend_rgba_on_hex((155, 212, 74, 0.14), "#ffffff")))
+    # the cyan search glyphs are re-tinted --cyan-ink in light (raw --cyan is ~1.9:1 on white)
+    pairs.append(("[index.html · light] .sres / .sbar glyph + ring (--cyan-ink on row bg)", cyan_ink, v["bg-2"]))
+    pairs.append(("[index.html · light] .sres glyph on local-search panel tint", cyan_ink, blend_rgba_on_hex(rgba_of(localseo_soft), card_bot)))
+
     # guarantee-strip icon chips and the SEO icon chip over the lower card tint
     for i, (fg_tok, rgba) in enumerate(((blue, (14, 107, 168, .10)), (green, (58, 118, 8, .10)),
                                         (cyan_ink, (10, 114, 150, .10)), (navy, (8, 58, 99, .09))), 1):
