@@ -18,7 +18,7 @@
      ===================================================================== -->
 
 <title>OmniFlow Digital | Innovating. Integrating. Accelerating.</title>
-<meta name="description" content="OmniFlow Digital handles your website, social media, WhatsApp automation, POS and Google presence under one roof, so you attract more customers and run your business smoothly.">
+<meta name="description" content="OmniFlow Digital handles your website, local SEO, social media, WhatsApp automation, POS and Google presence under one roof, so you attract more customers and run your business smoothly.">
 <meta name="author" content="OmniFlow Digital">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 <link rel="canonical" href="https://yourdomain.com/">
@@ -31,14 +31,14 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="OmniFlow Digital">
 <meta property="og:title" content="OmniFlow Digital | Innovating. Integrating. Accelerating.">
-<meta property="og:description" content="One partner for your website, social media &amp; ads, WhatsApp automation, POS and Google Business Profile — so you win more customers and run your business smoothly.">
+<meta property="og:description" content="One partner for your website, local SEO, social media &amp; ads, WhatsApp automation, POS and Google Business Profile — so you win more customers and run your business smoothly.">
 <meta property="og:url" content="https://yourdomain.com/">
 <meta property="og:image" content="https://yourdomain.com/og-banner.png">
 <meta property="og:image:secure_url" content="https://yourdomain.com/og-banner.png">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="OmniFlow Digital — Web, Social &amp; Ads, WhatsApp Automation, POS and Google Business Profile">
+<meta property="og:image:alt" content="OmniFlow Digital — Web, Local SEO, Social &amp; Ads, WhatsApp Automation, POS and Google Business Profile">
 <meta property="og:locale" content="en_US">
 <!-- Optional: uncomment and add your Facebook App ID for FB Insights / domain verification
 <meta property="fb:app_id" content="YOUR_FACEBOOK_APP_ID"> -->
@@ -46,7 +46,7 @@
 <!-- ============ X / Twitter card ============ -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="OmniFlow Digital | Innovating. Integrating. Accelerating.">
-<meta name="twitter:description" content="Website, social media &amp; ads, WhatsApp automation, POS and Google Business Profile — handled by one accountable partner.">
+<meta name="twitter:description" content="Website, local SEO, social media &amp; ads, WhatsApp automation, POS and Google Business Profile — handled by one accountable partner.">
 <meta name="twitter:image" content="https://yourdomain.com/og-banner.png">
 <meta name="twitter:image:alt" content="OmniFlow Digital social share card">
 
@@ -283,6 +283,7 @@ main:focus,main:focus-visible{outline:0}
 .has-mega:hover .mega,.has-mega:focus-within .mega{opacity:1;visibility:visible;translate:-50% 0}
 .mega a{display:flex;gap:.8rem;align-items:center;padding:.8rem;border-radius:14px;transition:background .3s,transform .3s var(--ease)}
 .mega a:hover{background:var(--card);transform:translateX(4px)}
+.mega a.mega-all{grid-column:1/-1;margin-top:.25rem;padding-top:.85rem;border-top:1px solid var(--line);border-radius:0 0 14px 14px}
 .mega .mi{
   width:42px;height:42px;flex:none;border-radius:12px;display:grid;place-items:center;font-size:1.3rem;
   color:#fff;background:linear-gradient(135deg,var(--blue),var(--cyan));
@@ -632,6 +633,10 @@ main:focus,main:focus-visible{outline:0}
 .desc{font-size:.95rem;margin-bottom:1.5rem}
 .card-link{margin-top:auto;display:inline-flex;align-items:center;gap:.5rem;align-self:flex-start;font-family:'Poppins',sans-serif;font-weight:600;font-size:.92rem;color:var(--ink);transition:gap .35s var(--ease),color .3s}
 .card-link .ic{font-size:1.15rem;transition:transform .35s var(--ease)}
+.card-quote{display:inline-flex;align-items:center;gap:.4rem;margin-top:.45rem;align-self:flex-start;font-family:'Poppins',sans-serif;font-weight:600;font-size:.8rem;color:var(--muted);transition:color .3s,gap .35s var(--ease)}
+.card-quote .ic{font-size:.95rem}
+.card-quote:hover{color:var(--ink);gap:.6rem}
+[data-theme="light"] .card-quote:hover{color:var(--blue)}
 .card:hover .card-link{gap:.85rem;color:var(--green)}
 [data-theme="light"] .card:hover .card-link{color:var(--blue)}
 
@@ -1050,7 +1055,11 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
 /* =====================================================
    FLOATING UI
 ===================================================== */
-.fab{position:fixed;right:20px;bottom:20px;z-index:150;display:grid;gap:.7rem;justify-items:end}
+.fab{position:fixed;right:20px;bottom:20px;z-index:150;display:grid;gap:.7rem;justify-items:end;
+  transition:opacity .4s var(--ease),translate .4s var(--ease),visibility .4s}
+/* while the hero demo chat is on screen the button is faded out so the two
+   never overlap in the same corner (class is added by script, so no-JS keeps it visible) */
+.fab.fab-late{opacity:0;visibility:hidden;translate:0 14px;pointer-events:none}
 .fab a,.fab button{
   width:54px;height:54px;border-radius:50%;border:0;display:grid;place-items:center;cursor:pointer;font-size:1.6rem;
   transition:transform .35s var(--ease),box-shadow .35s;
@@ -1448,6 +1457,7 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
             <a href="#pos"><span class="mi"><svg class="ic"><use href="#i-pos"/></svg></span><span><b>POS &amp; Inventory</b><small>Real-time control</small></span></a>
             <a href="#gbp"><span class="mi"><svg class="ic"><use href="#i-pin"/></svg></span><span><b>Google Business Profile</b><small>Win local search</small></span></a>
             <a href="#seo"><span class="mi"><svg class="ic"><use href="#i-chart"/></svg></span><span><b>Local SEO</b><small>Get found on Google</small></span></a>
+            <a href="services.html" class="mega-all"><span class="mi"><svg class="ic"><use href="#i-arrow"/></svg></span><span><b>All six services</b><small>What is included, who it suits, timeline</small></span></a>
           </div>
         </li>
         <li><a href="#work">Work</a></li>
@@ -1692,7 +1702,8 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
         <h3>Web Design &amp; Development</h3>
         <p class="outcome">Websites built to win business, not just look good.</p>
         <p class="desc">We design fast, conversion-focused websites that turn visitors into qualified enquiries and make your brand look as credible as it is.</p>
-        <a href="#contact" class="card-link" data-interest="Web Design &amp; Development">Explore Web Design <svg class="ic"><use href="#i-arrow"/></svg></a>
+        <a href="services.html#web" class="card-link">See How Web Design Works <svg class="ic"><use href="#i-arrow"/></svg></a>
+        <a href="#contact" class="card-quote" data-interest="Web Design &amp; Development">or get a quote now <svg class="ic"><use href="#i-arrow"/></svg></a>
       </article>
 
       <!-- 2 SOCIAL -->
@@ -1708,7 +1719,8 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
         <h3>Social Media Management &amp; Ads</h3>
         <p class="outcome">Content that builds your brand. Campaigns that build your revenue.</p>
         <p class="desc">From strategy and content to paid campaigns, we keep your brand visible, engaging, and accountable to real, measurable results.</p>
-        <a href="#contact" class="card-link" data-interest="Social Media Management &amp; Ads">Grow Your Audience <svg class="ic"><use href="#i-arrow"/></svg></a>
+        <a href="services.html#social" class="card-link">See How Social &amp; Ads Work <svg class="ic"><use href="#i-arrow"/></svg></a>
+        <a href="#contact" class="card-quote" data-interest="Social Media Management &amp; Ads">or get a quote now <svg class="ic"><use href="#i-arrow"/></svg></a>
       </article>
 
       <!-- 3 WHATSAPP -->
@@ -1724,7 +1736,8 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
         <h3>WhatsApp Automation</h3>
         <p class="outcome">Reply in seconds. Sell around the clock.</p>
         <p class="desc">Automate enquiries, bookings, follow-ups, and order updates on the app your customers already use, so no lead goes cold, even at 2 a.m.</p>
-        <a href="#contact" class="card-link" data-interest="WhatsApp Automation">Automate My Conversations <svg class="ic"><use href="#i-arrow"/></svg></a>
+        <a href="services.html#whatsapp" class="card-link">See How WhatsApp Automation Works <svg class="ic"><use href="#i-arrow"/></svg></a>
+        <a href="#contact" class="card-quote" data-interest="WhatsApp Automation">or get a quote now <svg class="ic"><use href="#i-arrow"/></svg></a>
       </article>
 
       <!-- 4 POS -->
@@ -1742,7 +1755,8 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
         <h3>POS &amp; Inventory Systems</h3>
         <p class="outcome">Total control of your sales, stock, and staff.</p>
         <p class="desc">Replace spreadsheets and guesswork with a real-time system that cuts errors, prevents stockouts, and shows you exactly where your money goes.</p>
-        <a href="#contact" class="card-link" data-interest="POS &amp; Inventory Systems">Streamline My Operations <svg class="ic"><use href="#i-arrow"/></svg></a>
+        <a href="services.html#pos" class="card-link">See How POS &amp; Inventory Works <svg class="ic"><use href="#i-arrow"/></svg></a>
+        <a href="#contact" class="card-quote" data-interest="POS &amp; Inventory Systems">or get a quote now <svg class="ic"><use href="#i-arrow"/></svg></a>
       </article>
 
       <!-- 5 GBP -->
@@ -1758,7 +1772,8 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
         <h3>Google Business Profile Optimization</h3>
         <p class="outcome">Be the first business customers find nearby.</p>
         <p class="desc">We optimize your Google presence so you rank higher in local search and Maps, and turn "near me" searches into calls, visits, and sales.</p>
-        <a href="#contact" class="card-link" data-interest="Google Business Profile Optimization">Get Found Locally <svg class="ic"><use href="#i-arrow"/></svg></a>
+        <a href="services.html#gbp" class="card-link">See How Google Profile Works <svg class="ic"><use href="#i-arrow"/></svg></a>
+        <a href="#contact" class="card-quote" data-interest="Google Business Profile Optimization">or get a quote now <svg class="ic"><use href="#i-arrow"/></svg></a>
       </article>
 
       <!-- 6 LOCAL SEO -->
@@ -1776,7 +1791,8 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
         <h3>Local SEO &amp; Google Maps</h3>
         <p class="outcome">Show up when nearby customers search.</p>
         <p class="desc">We set up your Google Business Profile, structure your pages in plain, searchable language and keep them fast — so local searches turn into enquiries.</p>
-        <a href="#seo" class="card-link">See How Local Search Works <svg class="ic"><use href="#i-arrow"/></svg></a>
+        <a href="services.html#localseo" class="card-link">See How Local Search Works <svg class="ic"><use href="#i-arrow"/></svg></a>
+        <a href="#contact" class="card-quote" data-interest="Local SEO &amp; Google Maps">or get a quote now <svg class="ic"><use href="#i-arrow"/></svg></a>
       </article>
     </div>
 
@@ -2141,7 +2157,7 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
     </div>
 
     <div class="pricing-note reveal" id="pricingNote">
-      <b>How pricing works:</b> Every proposal is scoped after your free strategy call — no hidden fees. We work on clear milestone payments (40% / 40% / 20%) tied to verified deliverables. Starter covers a single-channel launch, Growth bundles web + WhatsApp + Google + social ads, and Custom / Enterprise includes full POS &amp; multi-branch rollout with staff training and SLA. <span id="pricingPublishNote">Optional price publishing is controlled via <code>SITE.pricing</code> — enable it when you want transparent starting prices on the site.</span>
+      <b>How pricing works:</b> Every proposal is scoped after your free strategy call — no hidden fees. We work on clear milestone payments (40% / 40% / 20%) tied to verified deliverables. Starter covers a single-channel launch, Growth bundles web + WhatsApp + local SEO + social ads, and Custom / Enterprise includes full POS &amp; multi-branch rollout with staff training and SLA. <span id="pricingPublishNote">Optional price publishing is controlled via <code>SITE.pricing</code> — enable it when you want transparent starting prices on the site.</span>
     </div>
 
     <!-- Feature Comparison Table (.comp-table) -->
@@ -2208,6 +2224,7 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
           <label class="est-opt"><input type="checkbox" value="Google Business Profile Optimization" data-weeks="1" checked> <span>Google Business Profile</span></label>
           <label class="est-opt"><input type="checkbox" value="Social Media Management & Ads" data-weeks="1"> <span>Social Media &amp; Ads</span></label>
           <label class="est-opt"><input type="checkbox" value="POS & Inventory Systems" data-weeks="2"> <span>POS &amp; Inventory Systems</span></label>
+          <label class="est-opt"><input type="checkbox" value="Local SEO & Google Maps" data-weeks="1"> <span>Local SEO &amp; Google Maps</span></label>
         </div>
       </div>
 
@@ -2286,7 +2303,7 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
           <span class="c-ico"><svg class="ic"><use href="#i-chat"/></svg></span>
           <span><small>WhatsApp</small><b data-wa-label>+94 00 000 0000</b></span>
         </a>
-        <a class="c-card" href="#contactForm" id="bookingCard" data-booking-link>
+        <a class="c-card" href="#calendarPanel" id="bookingCard" data-booking-link>
           <span class="c-ico"><svg class="ic"><use href="#i-cal"/></svg></span>
           <span><small>Direct Calendar</small><b data-booking-label>Book a 30-Min Discovery Slot →</b></span>
         </a>
@@ -2338,6 +2355,7 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
                 <option value="WhatsApp Automation">WhatsApp Automation</option>
                 <option value="POS &amp; Inventory Systems">POS &amp; Inventory Systems</option>
                 <option value="Google Business Profile Optimization">Google Business Profile Optimization</option>
+                <option value="Local SEO &amp; Google Maps">Local SEO &amp; Google Maps</option>
               </select>
               <span class="err">Please choose a service.</span>
             </div>
@@ -2463,6 +2481,7 @@ a.c-card:hover{transform:translateX(7px);border-color:var(--cyan);box-shadow:0 1
           <li><a href="#pos">POS &amp; Inventory</a></li>
           <li><a href="#gbp">Google Business Profile</a></li>
           <li><a href="#seo">Local SEO</a></li>
+          <li><a href="services.html">All Services →</a></li>
         </ul>
       </div>
 
@@ -2740,6 +2759,18 @@ function onScroll(){
 }
 addEventListener('scroll', onScroll, {passive:true}); onScroll();
 toTop.addEventListener('click', () => scrollTo({top:0, behavior:'smooth'}));
+
+/* Keep the floating WhatsApp button off the hero's demo chat panel: hide it
+   while #home is on screen, bring it back the moment the hero scrolls away.
+   Progressive enhancement — without JS the button simply stays visible. */
+(function(){
+  const fab = $('.fab'), hero = $('#home');
+  if(!fab || !hero || !('IntersectionObserver' in window)) return;
+  fab.classList.add('fab-late');
+  new IntersectionObserver(entries => {
+    entries.forEach(e => fab.classList.toggle('fab-late', e.isIntersecting));
+  }, {threshold: .12}).observe(hero);
+})();
 
 /* ---------- Mobile menu (keyboard + screen-reader friendly) ---------- */
 const mt = $('#menuToggle'), nl = $('#navLinks');
@@ -3117,10 +3148,22 @@ faqs.forEach(d => d.addEventListener('toggle', () => {
     const url = (tier && cfg[tier]) || cfg.default || calCfg.url || calCfg.default || SITE.bookingUrl || '';
     return url;
   }
+  /* No booking URL configured yet: never promise a calendar that cannot load.
+     Set SITE.booking.default (or SITE.bookingUrl / SITE.calendar.url) to your
+     Calendly / Cal.com link and the live calendar flow switches back on. */
+  function showNoCalendar(){
+    const waText = encodeURIComponent("Hi OmniFlow! I'd like to book a strategy call.");
+    placeholder.innerHTML =
+      '<p><b>Online booking isn\'t connected yet.</b> Message us on WhatsApp or send your details, and we\'ll confirm a time that works for you.</p>' +
+      '<div class="cal-actions">' +
+        '<a class="btn btn-primary" href="#contact">Send My Details <svg class="ic"><use href="#i-arrow"/></svg></a>' +
+        '<a class="btn btn-glass" href="https://wa.me/' + SITE.whatsapp + '?text=' + waText + '" target="_blank" rel="noopener">Or message on WhatsApp →</a>' +
+      '</div>';
+  }
   function loadCalendar(url, tier){
     const finalUrl = url || getBookingUrl(tier) || getBookingUrl();
     if(!finalUrl){
-      placeholder.innerHTML = '<p>No calendar URL configured. Set <code>SITE.booking.default</code> or <code>SITE.bookingUrl</code> to your Calendly / Cal.com link.</p>';
+      showNoCalendar();
       return;
     }
     const provider = (SITE.calendar && SITE.calendar.provider) || detectProvider(finalUrl) || 'calendly';
@@ -3149,6 +3192,10 @@ faqs.forEach(d => d.addEventListener('toggle', () => {
       }
     });
   });
+
+  // While no booking URL is configured, show the honest path immediately
+  // instead of a "Load Calendar" button that can only fail.
+  if(!getBookingUrl()) showNoCalendar();
 
   if(loadBtn){
     loadBtn.addEventListener('click', () => loadCalendar());
@@ -3235,6 +3282,22 @@ faqs.forEach(d => d.addEventListener('toggle', () => {
     const val = a.dataset.interest;
     if([...service.options].some(o => o.value === val)){ service.value = val; service.closest('.field').classList.remove('bad'); }
   }));
+
+  /* Service detail pages (services.html) link back as index.html?interest=<service>#contact,
+     so the visitor lands on a form that already knows what they asked about. */
+  (function prefillFromQuery(){
+    let wanted = '';
+    try{ wanted = new URLSearchParams(location.search).get('interest') || ''; }catch(e){}
+    if(!wanted) return;
+    const match = [...service.options].find(o => o.value === wanted);
+    if(match){
+      service.value = match.value;
+      service.closest('.field').classList.remove('bad');
+      trackEvent('service_prefill', {service: match.value});
+    }
+    /* tidy the URL so a refresh / share does not repeat the prefill */
+    try{ history.replaceState(null, '', location.pathname + (location.hash || '#contact')); }catch(e){}
+  })();
 
   function showOk(){
     form.hidden = true; ok.hidden = false;

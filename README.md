@@ -10,6 +10,7 @@ Single-page marketing site — HTML + CSS + JavaScript (build step එකක් 
 | ගොනුව | කුමක්ද |
 |---|---|
 | `index.html` | ප්‍රධාන වෙබ් අඩවිය — HTML, CSS (`<style>`), JavaScript (`<script>`) එකම ගොනුවක |
+| `services.html` | සේවා 6ේ විස්තර පිටුව — එක service එකකට section එකක් (problem → what we build → outcome → what gets built → CTA) |
 | `legal.html` | Privacy Policy (`#privacy`), Terms of Service (`#terms`), සහ Cookie Policy (`#cookies`) පිටුව |
 | `404.html` | Custom 404 "Page Not Found" පිටුව (`noindex`) |
 | `assets/pages.css` | `legal.html` සහ `404.html` සඳහා පොදු stylesheet එක (dark/light themes + WCAG AA) |
