@@ -125,7 +125,7 @@ main:focus,main:focus-visible{outline:0}
   padding:.88rem 1.55rem;border-radius:999px;border:1.5px solid transparent;cursor:pointer;white-space:nowrap;
   transition:transform .3s var(--ease),box-shadow .3s var(--ease),border-color .3s;
 }
-.btn-primary{color:var(--btn-fg);background:#0c5c93;background:var(--btn-bg);box-shadow:0 12px 28px var(--btn-glow)}
+.btn-primary{color:var(--btn-fg);background:var(--btn-bg);box-shadow:0 12px 28px var(--btn-glow)}
 .btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 36px var(--btn-glow)}
 .btn-glass{color:var(--ink);background:var(--card);border-color:var(--line)}
 .btn-glass:hover{transform:translateY(-2px);border-color:var(--cyan)}
