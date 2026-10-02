@@ -154,7 +154,7 @@ def light_tint_pairs(v, css):
     pairs.append((".pill:not(.on) (--ink on tint, hover)", ink, pill_bg))
 
     # per-service palette -> .card-icon chip and .vis panel, over the card tint
-    palette = {"web": blue, "social": green, "whatsapp": cyan_ink, "pos": navy, "gbp": green}
+    palette = {"web": blue, "social": green, "automation": cyan_ink, "pos": navy, "gbp": green}
     for svc, fg in palette.items():
         a_fg, a_soft = css_pick(
             css, r'\[data-theme="light"\] #%s\{--a:var\(--([\w-]+)\);--a-soft:(rgba\([^)]*\))' % svc, f"#{svc} palette")

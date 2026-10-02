@@ -101,15 +101,22 @@ Form එකේ දැනටමත් client-side validation, honeypot spam prote
 * පළමු බැලීමේදී පරිශීලකගේ OS theme එක (prefers-color-scheme) අනුගමනය කරනවා — හැම විටම dark වලින් පටන් ගන්න ඕන නම් `index.html` එකේ `<head>` ඇති script එකේ `matchMedia` පේළිය මකන්න
 * Theme එකට අනුව mobile browser UI colour එක (`theme-color`) මාරු වෙනවා
 * Responsive: 1100px / 1024px / 960px / 900px / 700px breakpoints
-* Glassmorphism header, mega menu, bento grid, 3D tilt, marquee, animated counters, live WhatsApp chat simulation
+* Glassmorphism header, mega menu, bento grid, 3D tilt, marquee, animated counters, live chat simulation
 
 **Conversion & CRO**
 * Hero Risk-Reversal Guarantee Strip (`.guarantees`: 100% Ownership & Docs, Milestone Payments, Free 30-Day Support, Transparent Scope)
 * `#problem` "Before OmniFlow vs. With OmniFlow Digital" comparison (`.vs-grid`)
 * `#why` Free Lead Magnet (`#blueprint` — 25-Point SME Digital Growth & Automation Blueprint instant `.txt` checklist download)
-* `#work` ("Proof of Work") section: 3 Problem → Solution Architecture → Outcome case studies (Clinic & Service Booking, Retail & Multi-Branch POS, Restaurant & Local Brand) + interactive "Try Live WhatsApp Demo" bar (`.demo-bar`)
+* `#work` ("Proof of Work") section: 3 Problem → Solution Architecture → Outcome case studies (Clinic & Service Booking, Retail & Multi-Branch POS, Restaurant & Local Brand) + interactive "Try Live Chat Demo" bar (`.demo-bar`)
 * `#pricing` section: `Starter / MVP` (Focused Scope), `Growth / Professional` (Most Popular - Best Value Bundle), `Custom / Enterprise` (Custom Architecture) + Feature Comparison Table (`.comp-table`) + Interactive Bundle & Timeline Estimator (`#estimator`)
 * Low-friction `#contact` form (3 required fields: `name`, `phone`, `service` + `consent`), Direct Calendar (`SITE.bookingUrl`) card, `SITE.clarityId` support, සහ Mobile Sticky Bottom CTA Bar (`.m-bar`)
+
+**Chat & Lead Automation (සේවාව #3 — කලින් නම "WhatsApp Automation")**
+* WhatsApp එකට පමණක් සීමා නැහැ — පාරිභෝගිකයන් දැනටමත් භාවිතා කරන chat app එකේ replies / bookings / follow-ups automate කරනවා. WhatsApp ඒ අතරින් එක option එකක් පමණයි
+* **Human Handoff** (නියෝජිතයෙකුට සම්බන්ධ කිරීම) client ගේ ව්‍යාපාරයේ ස්වභාවය අනුව මේ ඕනෑම ක්‍රමයකින් කළ හැක: Slack · Email · Telegram · Discord · WhatsApp / SMS
+* **Lead Generation** සඳහා නම්, පාරිභෝගිකයා ලබාදෙන දුරකථන අංක හෝ ගැටලු කෙලින්ම Google Sheet එකකට හෝ HubSpot වැනි CRM එකකට යැවිය හැක
+* මේ සේවාව පෙනෙන තැන්: `index.html` (service card `#automation`, mega menu, marquee, pricing, estimator, contact form option, footer), `services.html#automation`, `404.html`, `legal.html`
+* නම නැවත වෙනස් කරන්න ඕන නම්: `Chat & Lead Automation` සහ `Chat &amp; Lead Automation` Find & Replace කරන්න (anchor එක `#automation`), `tools/test-site.js` හි `NAME` constant එකත්, `tools/make-assets.py` හි `og_banner()` text එකත් update කර `og-banner.png` නැවත generate කරන්න
 
 **SEO & Social**
 * Open Graph + X/Twitter card tags (WhatsApp/Facebook/LinkedIn share preview)
