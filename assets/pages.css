@@ -201,7 +201,7 @@ main:focus,main:focus-visible{outline:0}
 .blueprint-flow section{padding:1rem;border:1px solid var(--line);border-radius:16px;background:var(--card)}
 .blueprint-flow h3{font-size:1rem;margin:0 0 .45rem}
 .blueprint-flow p{font-size:.9rem;margin:0}
-.doc-card ul.blueprint-build-list{grid-template-columns:repeat(2,minmax(0,1fr));padding-left:1.2rem}
+.doc-card ul.blueprint-build-list{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:1.8rem;padding-left:1.2rem}
 .blueprint-note{padding:.85rem 1rem;border-left:3px solid var(--cyan);border-radius:0 12px 12px 0;background:var(--card);color:var(--ink)}
 .blueprint-note strong{font-weight:700}
 /* CTA row used by the services page — layout only, colours come from .btn tokens */

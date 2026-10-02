@@ -287,14 +287,14 @@ def og_banner(w=1200, h=630):
     tag = "Innovating. Integrating. Accelerating."
     draw_tracked(d, (x + 2 * ss, y + int(H * 0.150)), tag, f_tag, hex2rgb("#2fd0e8") + (255,), tracking=ss)
 
-    body = "Websites · Social & Ads · WhatsApp Automation"
+    body = "Websites · Social & Ads · Chat & Lead Automation"
     body2 = "POS & Inventory · Google Business Profile"
     d.text((x + 2 * ss, y + int(H * 0.232)), body, font=f_body, fill=hex2rgb(TEXT) + (255,))
     d.text((x + 2 * ss, y + int(H * 0.232) + int(H * 0.058)), body2, font=f_body, fill=hex2rgb(TEXT) + (255,))
 
     # service chips (drawn on their own layer so the translucent glass
     # fill/outline genuinely blends with the background)
-    chips = ["Web", "Social & Ads", "WhatsApp", "POS", "Google"]
+    chips = ["Web", "Social & Ads", "Chat & Leads", "POS", "Google"]
     overlay = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     od = ImageDraw.Draw(overlay)
     cx = x + 2 * ss

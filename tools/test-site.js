@@ -230,7 +230,7 @@ check('services.html explains all six services with scope, deliverables and CTAs
   const canonical = servicesHtml.match(/<link rel="canonical" href="https:\/\/yourdomain\.com\/services\.html">/);
   assert(canonical, 'services.html needs its own canonical URL');
   const svcIds = collectIds(servicesHtml);   // hoisted helper — this check runs before section 4
-  for (const id of ['web', 'social', 'whatsapp', 'pos', 'gbp', 'localseo']) {
+  for (const id of ['web', 'social', 'automation', 'pos', 'gbp', 'localseo']) {
     assert(svcIds.has(id), `services.html is missing the #${id} section`);
     const card = servicesHtml.match(new RegExp(`<article[^>]+id="${id}"[\\s\\S]*?<\\/article>`));
     assert(card, `services.html #${id} is not an <article>`);
@@ -259,6 +259,67 @@ check('services.html explains all six services with scope, deliverables and CTAs
   assert(prefills.length === 6, `expected 6 prefill CTAs on services.html, found ${prefills.length}`);
   for (const wanted of prefills) {
     assert(formOptions.includes(wanted), `services.html CTA prefills "${wanted}", which is not an option in the contact form`);
+  }
+});
+
+/* The chat service used to be sold as "WhatsApp Automation". It is channel-neutral now: any
+   chat app in front, a human handoff to whichever tool the client's team already uses, and
+   leads routed to a Google Sheet or CRM. WhatsApp stays as OmniFlow's own contact channel and
+   as one supported route — it just must not be the service's name any more. */
+check('Chat & Lead Automation: one name everywhere, WhatsApp-only label gone, handoff and lead-routing options documented', () => {
+  const NAME = 'Chat & Lead Automation';
+  const decode = v => v.replace(/&amp;/g, '&');
+
+  // 1) The old, WhatsApp-only label must not survive where a visitor, crawler, share card or the OG-banner generator can see it.
+  const published = [['index.html', indexHtml], ['services.html', servicesHtml], ['404.html', err404Html], ['legal.html', legalHtml],
+    ['case-studies.html', caseStudiesHtml], ['site.webmanifest', read('site.webmanifest')], ['tools/make-assets.py', read('tools/make-assets.py')]];
+  for (const [file, text] of published) {
+    assert(!/WhatsApp[\s-]+Automation/i.test(text), `${file} still labels the service "WhatsApp Automation" — it is "${NAME}" now`);
+  }
+  const idxIds = collectIds(indexHtml), svcIds = collectIds(servicesHtml);
+  assert(idxIds.has('automation') && svcIds.has('automation'), 'The service anchor must be #automation on index.html and services.html');
+  assert(!idxIds.has('whatsapp') && !svcIds.has('whatsapp'), 'A stale #whatsapp service id is still around');
+  assert(!/href="(?:index\.html|services\.html)?#whatsapp"/.test(indexHtml + servicesHtml + err404Html), 'A link still points at the retired #whatsapp anchor');
+
+  // 2) index.html: one name for the card, schema, form option, estimator and every quote link.
+  const card = indexHtml.match(/<article class="card[^"]*" id="automation"[\s\S]*?<\/article>/);
+  assert(card, 'index.html is missing the #automation service card');
+  assert(decode(card[0]).includes(`<h3>${NAME}</h3>`) && card[0].includes('href="services.html#automation"'),
+    '#automation card needs the new title and its services.html#automation link');
+  assert(/hand(?: |-)?off/i.test(card[0]) && /Slack/.test(card[0]),
+    '#automation card must say the handoff reaches the team in its own tool (Slack, email, Telegram …), not just WhatsApp');
+  assert(/Google Sheets/.test(card[0]) && /CRM/.test(card[0]),
+    '#automation card must say leads can go straight to a Google Sheet or a CRM');
+  const formOptions = [...indexHtml.matchAll(/<option value="([^"]+)"/g)].map(m => decode(m[1]));
+  assert(formOptions.includes(NAME), `Contact form needs a "${NAME}" option`);
+  for (const m of indexHtml.matchAll(/data-interest="([^"]+)"/g)) {
+    assert(formOptions.includes(decode(m[1])), `data-interest="${m[1]}" is not an option in the contact form`);
+  }
+  const estimator = [...indexHtml.matchAll(/<input type="checkbox" value="([^"]+)" data-weeks=/g)].map(m => decode(m[1]));
+  assert(estimator.includes(NAME), `The estimator needs a "${NAME}" checkbox`);
+  for (const v of estimator) assert(formOptions.includes(v), `Estimator option "${v}" is not an option in the contact form`);
+  const ld = [...indexHtml.matchAll(/<script type="application\/ld\+json">\s*([\s\S]*?)\s*<\/script>/g)].map(m => m[1]).join('\n');
+  assert(ld.includes(`"name": "${NAME}"`), 'JSON-LD Offer must be named for the new service');
+
+  // 3) services.html spells out the flexible handoff routes and the Sheet / CRM lead routing.
+  const art = servicesHtml.match(/<article[^>]+id="automation"[\s\S]*?<\/article>/);
+  assert(art, 'services.html is missing the #automation article');
+  assert(decode(art[0]).includes(`<span>${NAME}</span>`), 'services.html #automation heading must use the new name');
+  for (const route of ['Slack', 'Email', 'Telegram', 'Discord', 'SMS', 'Google Sheets', 'CRM', 'HubSpot']) {
+    assert(art[0].includes(route), `services.html #automation must list "${route}" as a handoff / lead-routing option`);
+  }
+  assert(/blueprint-chip[^>]*>WhatsApp/.test(art[0]), 'WhatsApp must stay in the list of supported handoff routes');
+  // Handoff channels (a person takes over) and lead destinations (a Sheet / CRM receives the contact details) are two separate lists.
+  const chipGroup = label => {
+    const g = art[0].match(new RegExp(`aria-label="${label}"[^>]*>([\\s\\S]*?)</div>`));
+    return g ? decode(g[1].replace(/<[^>]+>/g, ' ')) : '';
+  };
+  const handoffGroup = chipGroup('Human handoff channels'), leadGroup = chipGroup('Lead capture destinations');
+  for (const r of ['Slack', 'Email', 'Telegram', 'Discord', 'WhatsApp', 'SMS']) {
+    assert(handoffGroup.includes(r), `services.html "Human handoff channels" group must list ${r}`);
+  }
+  for (const r of ['Google Sheets', 'CRM', 'HubSpot']) {
+    assert(leadGroup.includes(r), `services.html "Lead capture destinations" group must list ${r}`);
   }
 });
 
@@ -313,7 +374,7 @@ check('Light-theme colour layer: luminance-checked tokens, light-only rules, tin
   assert(css.includes('#pricing.sec.bg2{background:linear-gradient(180deg,#e8f5e4,var(--bg-2) 45%)}'), '#pricing band missing');
   assert(/\.kicker\{[^}]*background:rgba\(14,107,168,\.09\);border:1px solid rgba\(14,107,168,\.18\);padding:\.38rem \.9rem;border-radius:999px/.test(css), 'Kicker pill missing');
   assert(/\.kicker::before,\s*\[data-theme="light"\] \.kicker::after\{display:none\}/.test(css), 'Kicker ::before/::after must be hidden in light');
-  const palette = { web: 'blue', social: 'green', whatsapp: 'cyan-ink', pos: 'navy', gbp: 'green' };
+  const palette = { web: 'blue', social: 'green', automation: 'cyan-ink', pos: 'navy', gbp: 'green' };
   for (const [id, tok] of Object.entries(palette)) {
     assert(new RegExp(`\\[data-theme="light"\\] #${id}\\{--a:var\\(--${tok}\\);--a-soft:[^;]+;--a-line:[^}]+\\}`).test(css), `#${id} palette (--a/--a-soft/--a-line → ${tok}) missing`);
   }
