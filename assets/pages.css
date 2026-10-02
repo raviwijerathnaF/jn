@@ -179,8 +179,8 @@ main:focus,main:focus-visible{outline:0}
 .doc-card p:last-child{margin-bottom:0}
 .doc-card ul{list-style:disc;padding-left:1.35rem;margin:.5rem 0 .95rem;display:grid;gap:.4rem}
 .doc-card li{font-size:.95rem}
-.doc-card a{color:var(--cyan);text-decoration:underline;text-underline-offset:3px}
-.doc-card a:hover{color:var(--green)}
+.doc-card a:not(.btn){color:var(--cyan);text-decoration:underline;text-underline-offset:3px}
+.doc-card a:not(.btn):hover{color:var(--green)}
 .doc-card code{
   font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
   font-size:.86em;color:var(--ink);background:var(--card);border:1px solid var(--line);
