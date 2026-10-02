@@ -207,6 +207,18 @@ check('Local SEO section #seo sits between #services and #work with 3 cards and 
   assert(/@media \(max-width:900px\)\{\.seo-grid\{grid-template-columns:1fr\}\}/.test(indexHtml), 'Missing 900px single-column rule for .seo-grid');
 });
 
+/* The services grid must show one card per service offered, and the
+   headline count must match (6 services = 6 cards = 3 + 3 on desktop). */
+check('Services grid shows six cards (Local SEO included) in a uniform 3 + 3 desktop layout', () => {
+  const svcBlock = indexHtml.slice(indexHtml.indexOf('<div class="bento">'), indexHtml.indexOf('<!-- Audit banner -->'));
+  const svcCards = [...svcBlock.matchAll(/<article class="card[^"]*" id="([a-z-]+)"/g)].map(m => m[1]);
+  assert(svcCards.length === 6, `Expected 6 service cards, found ${svcCards.length} (${svcCards.join(', ')})`);
+  assert(svcCards.includes('localseo'), 'Missing the Local SEO service card');
+  assert(/@media \(min-width:1101px\)\{\s*\.bento \.card/.test(indexHtml),
+    'Desktop services grid rule is missing — cards would fall back to the 7/5 mosaic');
+  assert(indexHtml.includes('<h2>Six Services.'), 'Services heading still says Five Services');
+});
+
 check('Light-theme depth tokens, brand bars and readable .fw-num stroke are present', () => {
   assert(/:root\{[^}]*--wash:#0a2740;/.test(indexHtml), 'Dark --wash token missing');
   assert(/\[data-theme="light"\]\{[^}]*--wash:#[0-9a-f]{6};/i.test(indexHtml), 'Light --wash token missing');
@@ -263,6 +275,9 @@ check('Light-theme colour layer: luminance-checked tokens, light-only rules, tin
     assert(new RegExp(`\\[data-theme="light"\\] #${id}\\{--a:var\\(--${tok}\\);--a-soft:[^;]+;--a-line:[^}]+\\}`).test(css), `#${id} palette (--a/--a-soft/--a-line → ${tok}) missing`);
   }
   assert(/\.card-icon\{[^}]*var\(--a/.test(css) && /\.card-num\{-webkit-text-stroke:1\.6px var\(--a/.test(css) && /\.vis\{[^}]*var\(--a-soft/.test(css), '.card-icon/.card-num/.vis must consume the --a palette');
+  assert(/\[data-theme="light"\] #localseo\{--a:#8a4b00;--a-soft:rgba\(138,75,0,\.20\);--a-line:rgba\(138,75,0,\.5\)\}/.test(css), '#localseo amber palette (--a/--a-soft/--a-line) missing');
+  assert(css.includes('[data-theme="light"] .sres .ic{color:var(--cyan-ink)}') && css.includes('[data-theme="light"] .sbar::before{border-color:var(--cyan-ink)}'),
+    'Local-search mock glyphs must switch to --cyan-ink in the light theme');
   assert(/\.comp-table thead th\{background:#/.test(css) && /\.cta-in\{background:/.test(css) && /\.pill:not\(\.on\)\{background:/.test(css), 'comp-table head, .cta-in and .pill:not(.on) tints missing');
   // Dark theme must not have picked up any of the new light tokens.
   assert(!dark['cyan-ink'] && !dark.a, 'Dark :root must not receive the light-only colour tokens');
